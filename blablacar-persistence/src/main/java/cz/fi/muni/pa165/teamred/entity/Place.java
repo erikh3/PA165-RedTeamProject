@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.teamred.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * @author Erik Horváth
@@ -53,10 +54,7 @@ public class Place {
 
         Place other = (Place) o;
 
-        if (name == null) {
-            return other.getName() == null;
-        }
-        return name.equals(other.getName());
+        return Objects.equals(name, other.getName());
     }
 
     @Override

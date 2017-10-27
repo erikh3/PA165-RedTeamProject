@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.teamred.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * @author Erik Horváth
@@ -64,18 +65,7 @@ public class Driver/* extends User*/ {
 
         Driver other = (Driver) o;
 
-        if (carDescription == null) {
-            if (other.getCarDescription() != null) {
-                return false;
-            }
-        } else if (!carDescription.equals(other.getCarDescription())) {
-            return false;
-        }
-
-        if (note == null) {
-            return other.getNote() == null;
-        }
-        return note.equals(other.getNote());
+        return Objects.equals(carDescription, other.getCarDescription()) && Objects.equals(note, other.getNote());
     }
 
     @Override
