@@ -30,7 +30,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public void delete(Comment c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        em.remove(c);
     }
 
     @Override
