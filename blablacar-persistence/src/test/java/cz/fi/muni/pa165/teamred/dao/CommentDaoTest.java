@@ -89,8 +89,11 @@ public class CommentDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void deleteNonExistent() {
+        commentDao.create(positiveComment);
+        
         Comment comment = new Comment();
-
+        comment.setRide(brnoToPraha);
+        comment.setText("Empty");
         commentDao.delete(comment);
 
         List<Comment> comments = getAllComments();
@@ -136,7 +139,7 @@ public class CommentDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void getCommentsWithRideIdNull() {
-        assertThatThrownBy(() -> commentDao.getCommentsWithRideId(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> commentDao.getCommentsWithRideId(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -148,7 +151,7 @@ public class CommentDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void getCommentsWithNonExistentUserId() {
-        List<Comment> comments = commentDao.getCommentsWithUserId(katka.getId());
+        List<Comment> comments = commentDao.getCommentsWithUserId(-16L);
 
         assertThat(comments).isEmpty();
     }

@@ -32,7 +32,6 @@ public class Comment {
     @Column(nullable=false)
     private String text;
 
-    @NotNull
     @ManyToOne
     private User author;
 

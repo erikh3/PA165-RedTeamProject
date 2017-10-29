@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.teamred.dao;
 
+import cz.fi.muni.pa165.teamred.entity.Driver;
 import cz.fi.muni.pa165.teamred.entity.Passenger;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -8,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Calendar;
 import java.util.Date;
+import org.testng.annotations.BeforeMethod;
 
 /**
  * Created by Jozef Cibík on 29.10.2017.
@@ -21,10 +23,17 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         Calendar cal = Calendar.getInstance();
         cal.set(2017, Calendar.NOVEMBER, 25);
         Date date = cal.getTime();
+        
+        Driver driver = new Driver();
+        driver.setCarDescription("AUDI A8");
+        driver.setNote("Test note 1.");
+        driver.setName("Jan");
+        driver.setSurename("Mrkva");
+        driver.setNickname("janci");
 
         Ride ride = new Ride();
         ride.setPrice(12.5);
-        ride.setDriver(DriverDaoTest.createMilos());
+        ride.setDriver(driver);
         ride.setAvailableSeats(4);
         ride.setDeparture(date);
         ride.setSourcePlace(PlaceDaoTest.createBrnoHlavniNadrazi());
