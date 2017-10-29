@@ -3,12 +3,15 @@ package cz.fi.muni.pa165.teamred.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Erik Horváth
  */
 @Entity
-public class Driver/* extends User*/ {
+public class Driver extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +22,8 @@ public class Driver/* extends User*/ {
 
     private String note;
 
-//    private Set<Ride> rides;
+    @OneToMany(mappedBy = "driver")
+    private Set<Ride> rides = new HashSet<>();
 
     public Driver() {
 
@@ -52,10 +56,10 @@ public class Driver/* extends User*/ {
     public void setNote(String note) {
         this.note = note;
     }
-//
-//    public Set<Ride> getRides() {
-//        return Collections.unmodifiableSet(rides);
-//    }
+
+    public Set<Ride> getRides() {
+        return Collections.unmodifiableSet(rides);
+    }
 
     @Override
     public boolean equals(Object o) {

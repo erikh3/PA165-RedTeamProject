@@ -2,7 +2,9 @@ package cz.fi.muni.pa165.teamred.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Erik Horváth
@@ -17,9 +19,14 @@ public class Place {
     @Column(nullable = false, unique = true)
     private String name;
 
-//    private Set<Ride> rides;
+    @ManyToMany
+    private Set<Ride> rides = new HashSet<>();
 
     public Place() {
+    }
+
+    public Place(String name) {
+        this.name = name;
     }
 
     public Place(Long id) {
