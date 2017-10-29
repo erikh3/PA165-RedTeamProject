@@ -33,16 +33,20 @@ public class Ride {
 
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "DRIVER_ID")
     private Driver driver;
 
-
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "PASSENGER_ID")
     private Set<Passenger> passengers;
 
     @NotNull
-    private City sourceCity;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Place sourceCity;
 
     @NotNull
-    private City destinationCity;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Place destinationCity;
 
     private Set<Comment> comments;
 
@@ -83,11 +87,11 @@ public class Ride {
         this.passengers.add(p);
     }
 
-    public void setSourceCity(City city){
+    public void setSourceCity(Place city){
         this.sourceCity = city;
     }
 
-    public void setDestinationCity(City city){
+    public void setDestinationCity(Place city){
         this.destinationCity = city;
     }
 
@@ -116,11 +120,11 @@ public class Ride {
         return passengers;                          //return Collections.unmodifiableSet(passengers);
     }
 
-    public City getSourceCity(){
+    public Place getSourceCity(){
         return this.sourceCity;
     }
 
-    public City getDestinationCity(){
+    public Place getDestinationCity(){
         return this.destinationCity;
     }
 
