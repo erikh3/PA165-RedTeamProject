@@ -21,7 +21,6 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 public class Comment {
-    
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -33,13 +32,15 @@ public class Comment {
     @Column(nullable=false)
     private String text;
 
-//    @ManyToOne(fetch=FetchType.LAZY)
-//    @JoinColumn(name="USER_ID")
-//    private User author;
-//
-//    @ManyToOne(fetch=FetchType.LAZY)
-//    @JoinColumn(name="RIDE_ID")
-//    private Ride ride;        
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="USER_ID")
+    private User author;
+
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="RIDE_ID")
+    private Ride ride;
 
     /**
      * @return the id
@@ -83,21 +84,21 @@ public class Comment {
         this.text = text;
     }
     
-//    public User getAuthor() {
-//        return author;
-//    }
-//
-//    public void setAuthor(User author) {
-//        this.author = author;
-//    }
-//
-//    public Ride getRide() {
-//        return ride;
-//    }
-//
-//    public void setRide(Ride ride) {
-//        this.ride = ride;
-//    }
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public Ride getRide() {
+        return ride;
+    }
+
+    public void setRide(Ride ride) {
+        this.ride = ride;
+    }
           
     @Override
     public int hashCode() {

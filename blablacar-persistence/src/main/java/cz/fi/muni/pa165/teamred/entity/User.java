@@ -12,6 +12,7 @@ import java.util.Set;
  * Created by Jozef Cibík on 25.10.2017.
  */
 @Entity
+@Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements Serializable{
 
