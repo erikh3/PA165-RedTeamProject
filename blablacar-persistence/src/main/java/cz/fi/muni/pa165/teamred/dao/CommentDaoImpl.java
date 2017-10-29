@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of CommentDao interface
@@ -19,26 +20,31 @@ public class CommentDaoImpl implements CommentDao {
     private EntityManager em;
 
     @Override
+    @Transactional
     public Comment findById(Long id) {
         return em.find(Comment.class, id);
     }
 
     @Override
-    public void create(Comment c) {
-        em.persist(c);
+    @Transactional
+    public void create(Comment comment) {
+        em.persist(comment);
     }
 
     @Override
-    public void delete(Comment c) {
-        em.remove(c);
+    @Transactional
+    public void delete(Comment comment) {
+        em.remove(em.contains(comment) ? comment : em.merge(comment));
     }
 
     @Override
+    @Transactional
     public List<Comment> findAll() {
         return em.createQuery("SELECT c FROM Comment c", Comment.class).getResultList();
     }
 
     @Override
+    @Transactional
     public List<Comment> getCommentsWithRideId(Long id) {
         try {
             return em.createQuery("SELECT c FROM Comment c WHERE c.ride.id = :id",
@@ -50,6 +56,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
+    @Transactional
     public List<Comment> getCommentsWithUserId(Long id) {
         try {
             return em.createQuery("SELECT c FROM Comment c WHERE c.user.id = :id",
