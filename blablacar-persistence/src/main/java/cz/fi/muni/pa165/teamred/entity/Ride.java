@@ -31,20 +31,20 @@ public class Ride {
     @NotNull
     private int availableSeats;
 
-    @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    private Driver driver;
-
-
-    private Set<Passenger> passengers;
-
-    @NotNull
-    private City sourceCity;
-
-    @NotNull
-    private City destinationCity;
-
-    private Set<Comment> comments;
+//    @NotNull
+//    @ManyToOne(cascade = CascadeType.PERSIST)
+//    private Driver driver;
+//
+//
+//    private Set<Passenger> passengers;
+//
+//    @NotNull
+//    private Place sourceCity;
+//
+//    @NotNull
+//    private Place destinationCity;
+//
+//    private Set<Comment> comments;
 
 
     /**
@@ -75,29 +75,29 @@ public class Ride {
         this.availableSeats = seats;
     }
 
-    public void setDriver(Driver d){
-        this.driver = d;
-    }
-
-    public void addPassenger(Passenger p){
-        this.passengers.add(p);
-    }
-
-    public void setSourceCity(City city){
-        this.sourceCity = city;
-    }
-
-    public void setDestinationCity(City city){
-        this.destinationCity = city;
-    }
-
-    public void addComment(Comment c){
-        this.comments.add(c);
-    }
+//    public void setDriver(Driver d){
+//        this.driver = d;
+//    }
+//
+//    public void addPassenger(Passenger p){
+//        this.passengers.add(p);
+//    }
+//
+//    public void setSourceCity(Place city){
+//        this.sourceCity = city;
+//    }
+//
+//    public void setDestinationCity(Place city){
+//        this.destinationCity = city;
+//    }
+//
+//    public void addComment(Comment c){
+//        this.comments.add(c);
+//    }
 
     // getters
     public LocalDateTime getDeparture(){
-        return this.departure
+        return this.departure;
     }
 
     public double getPrice(){
@@ -108,52 +108,52 @@ public class Ride {
         return this.availableSeats;
     }
 
-    public Driver getDriver(){
-       return this.driver;
-    }
+//    public Driver getDriver(){
+//       return this.driver;
+//    }
+//
+//    public Set<Passenger> getPassengers(){
+//        return passengers;                          //return Collections.unmodifiableSet(passengers);
+//    }
+//
+//    public Place getSourceCity(){
+//        return this.sourceCity;
+//    }
+//
+//    public Place getDestinationCity(){
+//        return this.destinationCity;
+//    }
 
-    public Set<Passenger> getPassengers(){
-        return passengers;                          //return Collections.unmodifiableSet(passengers);
-    }
-
-    public City getSourceCity(){
-        return this.sourceCity;
-    }
-
-    public City getDestinationCity(){
-        return this.destinationCity;
-    }
-
-    public Set<Comment> getComments(){
-        return comments;                           //return Collections.unmodifiableSet(comments);
-    }
+//    public Set<Comment> getComments(){
+//        return comments;                           //return Collections.unmodifiableSet(comments);
+//    }
 
 
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (! (obj instanceof Ride))
-            return false;
-        Ride other = (Ride) obj;
-        if (driver == null) {
-            if (other.getDriver() != null)
-                return false;
-        } else if ((driver.equals(other.getDriver())) && (departure.equals(other.departure)))
-            return true;
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime*result+((driver == null)? 0 : driver.hashCode())+((departure == null)? 0 : departure.hashCode());
-        return result;
-    }
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj)
+//            return true;
+//        if (obj == null)
+//            return false;
+//        if (! (obj instanceof Ride))
+//            return false;
+//        Ride other = (Ride) obj;
+//        if (driver == null) {
+//            if (other.getDriver() != null)
+//                return false;
+//        } else if ((driver.equals(other.getDriver())) && (departure.equals(other.departure)))
+//            return true;
+//        return false;
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        final int prime = 31;
+//        int result = 1;
+//        result = prime*result+((driver == null)? 0 : driver.hashCode())+((departure == null)? 0 : departure.hashCode());
+//        return result;
+//    }
 
 
 

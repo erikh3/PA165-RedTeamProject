@@ -36,7 +36,7 @@ public class Comment {
     @ManyToOne
     private User author;
 
-    @ManyToOne
+    @ManyToOne  
     private Ride ride;        
 
     /**
