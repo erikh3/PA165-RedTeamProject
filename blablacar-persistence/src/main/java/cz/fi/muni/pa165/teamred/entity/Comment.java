@@ -21,7 +21,6 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 public class Comment {
-    
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -33,11 +32,15 @@ public class Comment {
     @Column(nullable=false)
     private String text;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="USER_ID")
     private User author;
 
-    @ManyToOne
-    private Ride ride;        
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="RIDE_ID")
+    private Ride ride;
 
     /**
      * @return the id
