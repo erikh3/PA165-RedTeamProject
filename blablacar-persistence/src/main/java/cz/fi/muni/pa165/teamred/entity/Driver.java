@@ -72,7 +72,11 @@ public class Driver extends User {
 
         Driver other = (Driver) o;
  
-        return Objects.equals(carDescription, other.getCarDescription()) && Objects.equals(note, other.getNote());
+        return Objects.equals(carDescription, other.getCarDescription())
+                && Objects.equals(note, other.getNote())
+                && Objects.equals(this.getName(), other.getName())
+                && Objects.equals(this.getSurename(), other.getSurename())
+                && Objects.equals(this.getNickname(), other.getNickname());
     }
 
     @Override
