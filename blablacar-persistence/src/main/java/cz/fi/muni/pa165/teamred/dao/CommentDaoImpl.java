@@ -19,6 +19,15 @@ public class CommentDaoImpl implements CommentDao {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Sets entity manager
+     *
+     * @param entityManager entity manager
+     */
+    void setEntityManager(EntityManager entityManager) {
+        this.em = entityManager;
+    }
+
     @Override
     public Comment findById(Long id) {
         if(id == null) {
