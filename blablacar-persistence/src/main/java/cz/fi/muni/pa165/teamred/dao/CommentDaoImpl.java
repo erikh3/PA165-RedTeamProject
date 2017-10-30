@@ -20,32 +20,39 @@ public class CommentDaoImpl implements CommentDao {
     private EntityManager em;
 
     @Override
-    @Transactional
     public Comment findById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Comment argument is null.");
+        }
         return em.find(Comment.class, id);
     }
 
     @Override
-    @Transactional
     public void create(Comment comment) {
+        if(comment == null) {
+            throw new IllegalArgumentException("Comment argument is null.");
+        }
         em.persist(comment);
     }
 
     @Override
-    @Transactional
     public void delete(Comment comment) {
+        if(comment == null) {
+            throw new IllegalArgumentException("Comment argument is null.");
+        }             
         em.remove(em.contains(comment) ? comment : em.merge(comment));
     }
 
     @Override
-    @Transactional
     public List<Comment> findAll() {
         return em.createQuery("SELECT c FROM Comment c", Comment.class).getResultList();
     }
 
     @Override
-    @Transactional
     public List<Comment> getCommentsWithRideId(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Comment argument is null.");
+        }
         try {
             return em.createQuery("SELECT c FROM Comment c WHERE c.ride.id = :id",
                                 Comment.class).setParameter("id", id)
@@ -56,10 +63,12 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    @Transactional
     public List<Comment> getCommentsWithUserId(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Comment argument is null.");
+        }
         try {
-            return em.createQuery("SELECT c FROM Comment c WHERE c.user.id = :id",
+            return em.createQuery("SELECT c FROM Comment c WHERE c.author.id = :id",
                                 Comment.class).setParameter("id", id)
                                 .getResultList();
         } catch (NoResultException nrf) {

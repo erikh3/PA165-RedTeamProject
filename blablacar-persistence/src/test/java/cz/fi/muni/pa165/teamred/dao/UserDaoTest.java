@@ -31,11 +31,6 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         // init
     }
 
-    @Test
-    void test() {
-        System.out.println("Ok");
-    }
-
     @SuppressWarnings("WeakerAccess")
     public static User createKatka() {
         User katka = new User();

@@ -32,16 +32,12 @@ public class Comment {
     @Column(nullable=false)
     private String text;
 
-    @NotNull
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="USER_ID")
+    @ManyToOne
     private User author;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="RIDE_ID")
-    private Ride ride;
-
+    @ManyToOne  
+    private Ride ride;        
     /**
      * @return the id
      */

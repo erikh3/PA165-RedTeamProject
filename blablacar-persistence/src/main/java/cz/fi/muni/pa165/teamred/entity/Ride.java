@@ -45,8 +45,7 @@ public class Ride {
 
     @ManyToMany
     private Set<Comment> comments;
-
-
+    
     /**
      * Default Constructor
      */
@@ -60,7 +59,6 @@ public class Ride {
     public Ride(Long rideId) {
         this.id = rideId;
     }
-
 
     // setters
     public void setId(Long id) {
