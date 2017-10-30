@@ -46,10 +46,6 @@ public class DriverDaoImplTest extends AbstractTestNGSpringContextTests {
         driver2.setNickname("kaluza");
     }
     
-    @AfterClass
-    public void release(){
-    }
-    
     @Test
     public void createFindDeleteTest(){
         driverDao.create(driver1);
@@ -85,9 +81,5 @@ public class DriverDaoImplTest extends AbstractTestNGSpringContextTests {
     public void findByIdNonExistingTest() {
         Driver driverFound = driverDao.findById(-1L);
         assertThat(driverFound).isNull();
-    }
-
-    private void each() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
