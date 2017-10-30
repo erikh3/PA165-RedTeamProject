@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -33,7 +32,7 @@ public class Ride {
     private Driver driver;
 
     @ManyToMany
-    private Set<Passenger> passengers = new HashSet<>();
+    private Set<Passenger> passengers;
 
     @NotNull
     @ManyToOne
@@ -146,7 +145,7 @@ public class Ride {
         if (driver == null) {
             if (other.getDriver() != null)
                 return false;
-        } else if ((driver.equals(other.getDriver())) && (departure.equals(other.departure)))
+        } else if ((driver.equals(other.getDriver())) && (departure.equals(other.getDeparture())))
             return true;
         return false;
     }
