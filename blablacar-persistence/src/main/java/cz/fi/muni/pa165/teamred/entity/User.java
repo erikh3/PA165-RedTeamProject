@@ -18,12 +18,12 @@ public class User implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     private Long id;
 
 
     @NotNull(message = "User Name cannot be null.")
-    @Column(name = "name", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     @Size(
             min = 2,
             max = 255,
@@ -32,17 +32,16 @@ public class User implements Serializable{
     private String name;
 
 
-    @NotNull(message = "User Name cannot be null.")
-    @Column(name = "surename", updatable = false, nullable = false)
+    @NotNull(message = "User Surename cannot be null.")
+    @Column(updatable = false, nullable = false)
     private String surename;
 
 
-    @NotNull(message = "User Name cannot be null.")
-    @Column(name = "nickname", updatable = false, nullable = false, unique = true)
+    @NotNull(message = "User Nickname cannot be null.")
+    @Column(updatable = false, nullable = false, unique = true)
     private String nickname;
 
     @OneToMany(mappedBy = "author")
-    @Column(name = "userComments")
     private Set<Comment> userComments;
 
     //______________________________________________________________________________________________________Constructors

@@ -37,6 +37,9 @@ public class CommentDaoTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private RideDao rideDao;
 
+    @Autowired
+    private PlaceDao placeDao;
+
     @PersistenceContext
     private EntityManager em;
 
@@ -48,6 +51,32 @@ public class CommentDaoTest extends AbstractTestNGSpringContextTests {
 
     private Ride brnoToPraha;
 
+
+
+    public Ride createRideBrnoToPraha() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2017, Calendar.NOVEMBER, 25);
+        Date date = cal.getTime();
+
+        Driver driver = new Driver();
+        driver.setCarDescription("AUDI A8");
+        driver.setNote("Test note 1.");
+        driver.setName("Jan");
+        driver.setSurename("Mrkva");
+        driver.setNickname("janci");
+
+        Ride ride = new Ride();
+        ride.setPrice(12.5);
+        ride.setDriver(driver);
+        ride.setAvailableSeats(4);
+        ride.setDeparture(date);
+        ride.setSourcePlace(PlaceDaoTest.createBrnoHlavniNadrazi());
+        ride.setDestinationPlace(PlaceDaoTest.createPrahaZoo());
+        ride.addPassenger(PassengerDaoTest.createRastislav());
+
+        return ride;
+    }
+
     @BeforeMethod
     void createComments() {
         Calendar cal = Calendar.getInstance();
@@ -58,7 +87,7 @@ public class CommentDaoTest extends AbstractTestNGSpringContextTests {
 
         userDao.create(katka);
 
-        brnoToPraha = RideDaoTest.createRideBrnoToPraha();
+        brnoToPraha = createRideBrnoToPraha();
 
         rideDao.create(brnoToPraha);
 

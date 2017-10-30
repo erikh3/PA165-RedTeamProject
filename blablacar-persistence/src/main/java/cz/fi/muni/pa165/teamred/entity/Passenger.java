@@ -16,8 +16,7 @@ import java.util.Set;
 @Entity
 public class Passenger extends User {
     @NotNull
-    @Column(name = "passengerRides")
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     private Set<Ride> rides = new HashSet<Ride>();
 
     public Passenger(){

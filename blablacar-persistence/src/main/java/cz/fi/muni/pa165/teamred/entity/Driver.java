@@ -16,8 +16,6 @@ public class Driver extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(nullable = false)
     private String carDescription;
 
     private String note;

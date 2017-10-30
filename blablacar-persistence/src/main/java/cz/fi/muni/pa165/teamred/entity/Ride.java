@@ -29,18 +29,18 @@ public class Ride {
     private int availableSeats;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Driver driver;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     private Set<Passenger> passengers = new HashSet<>();
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Place sourcePlace;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Place destinationPlace;
 
     @ManyToMany

@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.teamred.dao;
 
 import cz.fi.muni.pa165.teamred.entity.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,6 +13,7 @@ import java.util.List;
  * Created by Jozef Cibík on 25.10.2017.
  */
 @Repository
+@Transactional
 public class UserDaoImpl implements UserDao{
 
     @PersistenceContext
