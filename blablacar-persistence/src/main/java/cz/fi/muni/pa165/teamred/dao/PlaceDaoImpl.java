@@ -28,7 +28,6 @@ public class PlaceDaoImpl implements PlaceDao {
     }
 
     @Override
-    @Transactional
     public void delete(Place place) throws IllegalArgumentException {
         if (place == null) {
             throw new IllegalArgumentException("Place is null.");
@@ -37,13 +36,11 @@ public class PlaceDaoImpl implements PlaceDao {
     }
 
     @Override
-    @Transactional
     public List<Place> findAll() {
         return em.createQuery("select p from Place p", Place.class).getResultList();
     }
 
     @Override
-    @Transactional
     public Place findById(Long id) throws IllegalArgumentException {
         if (id == null) {
             throw new IllegalArgumentException("Id is null.");
@@ -52,12 +49,11 @@ public class PlaceDaoImpl implements PlaceDao {
     }
 
     @Override
-    @Transactional
     public Place findByName(String name) throws IllegalArgumentException {
         if (name == null) {
             throw new IllegalArgumentException("Name is null.");
         }
-
+        
         try {
             return em.createQuery("select p from Place p where p.name = :name", Place.class)
                     .setParameter("name", name)

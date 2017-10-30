@@ -19,8 +19,11 @@ public class Place {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany
-    private Set<Ride> rides = new HashSet<>();
+    @OneToMany(mappedBy = "sourcePlace", cascade=CascadeType.PERSIST)  
+    private Set<Ride> originatingRides = new HashSet<>();
+    
+    @OneToMany(mappedBy = "destinationPlace", cascade=CascadeType.PERSIST)  
+    private Set<Ride> destinatingRides = new HashSet<>();
 
     public Place() {
     }
@@ -49,9 +52,21 @@ public class Place {
         this.name = name;
     }
 
-//    public Set<Ride> getRides() {
-//        return Collections.unmodifiableSet(rides);
-//    }
+    public Set<Ride> getOriginatingRides() {
+        return originatingRides;
+    }
+
+    public void setOriginatingRides(Set<Ride> originatingRides) {
+        this.originatingRides = originatingRides;
+    }
+
+    public Set<Ride> getDestinatingRides() {
+        return destinatingRides;
+    }
+
+    public void setDestinatingRides(Set<Ride> destinatingRides) {
+        this.destinatingRides = destinatingRides;
+    }
 
     @Override
     public boolean equals(Object o) {

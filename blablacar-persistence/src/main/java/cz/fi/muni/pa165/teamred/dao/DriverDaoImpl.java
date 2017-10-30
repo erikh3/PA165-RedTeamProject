@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Erik Horváth
@@ -17,6 +18,7 @@ public class DriverDaoImpl implements DriverDao {
     private EntityManager em;
 
     @Override
+    @Transactional
     public void create(Driver driver) throws IllegalArgumentException {
         if(driver == null) {
             throw new IllegalArgumentException("Driver argument is null.");

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ public class Ride {
     private Long id;
 
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date departure;
 
     @NotNull
@@ -28,21 +29,21 @@ public class Ride {
     private int availableSeats;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
     private Driver driver;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.PERSIST)
     private Set<Passenger> passengers;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
     private Place sourcePlace;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
     private Place destinationPlace;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.PERSIST)
     private Set<Comment> comments;
     
     /**
@@ -145,7 +146,7 @@ public class Ride {
         if (driver == null) {
             if (other.getDriver() != null)
                 return false;
-        } else if ((driver.equals(other.getDriver())) && (departure.equals(other.getDeparture())))
+        } else if (Objects.equals(driver, other.getDriver()) && Objects.equals(departure,other.getDeparture()))
             return true;
         return false;
     }

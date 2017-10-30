@@ -20,8 +20,9 @@ public class Driver extends User {
 
     private String note;
 
-    @OneToMany(mappedBy = "driver")
+    @OneToMany(mappedBy = "driver", cascade=CascadeType.PERSIST)
     private Set<Ride> rides = new HashSet<>();
+
 
     public Driver() {
 
@@ -58,6 +59,10 @@ public class Driver extends User {
     public Set<Ride> getRides() {
         return Collections.unmodifiableSet(rides);
     }
+     
+    public void setRides(Set<Ride> rides) {
+        this.rides = rides;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -66,7 +71,7 @@ public class Driver extends User {
         if (!(o instanceof Driver)) return false;
 
         Driver other = (Driver) o;
-
+ 
         return Objects.equals(carDescription, other.getCarDescription()) && Objects.equals(note, other.getNote());
     }
 

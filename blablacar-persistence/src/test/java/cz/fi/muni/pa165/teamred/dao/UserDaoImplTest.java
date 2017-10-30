@@ -9,12 +9,10 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 import cz.fi.muni.pa165.teamred.PersistenceSampleApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.testng.annotations.BeforeMethod;
 
 /**
  * Created by Šimon on 29.10.2017.
@@ -25,7 +23,6 @@ import java.util.List;
 @Transactional
 public class UserDaoImplTest extends AbstractTestNGSpringContextTests {
 
-
     @Autowired
     private UserDao userDao;
 
@@ -33,8 +30,10 @@ public class UserDaoImplTest extends AbstractTestNGSpringContextTests {
     private User u2;
     private User u3;
 
+
     @BeforeMethod
-    public void createUsers(){
+    public void createTest(){
+        
         u1 = new User();
         u2 = new User();
         u3 = new User();
@@ -56,29 +55,24 @@ public class UserDaoImplTest extends AbstractTestNGSpringContextTests {
         userDao.create(u3);
     }
 
-
     @Test
-    public void delete() {
+    public void deleteTest() {
         Assert.assertNotNull(userDao.findById(u3.getId()));
         userDao.delete(u3);
         Assert.assertNull(userDao.findById(u3.getId()));
     }
 
-
     @Test
-    public void find() {
+    public void findByIdTest() {
         User found = userDao.findById(u1.getId());
         Assert.assertEquals(found.getName(), "name1");
-        Assert.assertEquals(found.getSurename(), "surneame1");
+        Assert.assertEquals(found.getSurename(), "surename1");
         Assert.assertEquals(found.getNickname(), "nickname1");
     }
 
     @Test
-    public void findAll() {
+    public void findAllTest() {
         List<User> found = userDao.findAll();
-        Assert.assertEquals(found.size(), 3);
+        assertThat(found).contains(u1,u2,u3);
     }
-
-
-
 }

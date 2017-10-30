@@ -1,7 +1,6 @@
 package cz.fi.muni.pa165.teamred.dao;
 
 import cz.fi.muni.pa165.teamred.PersistenceSampleApplicationContext;
-import cz.fi.muni.pa165.teamred.entity.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -10,18 +9,24 @@ import cz.fi.muni.pa165.teamred.entity.Place;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
+
 /**
  *
  * @author miroslav.laco@gmail.com
  */
+@Transactional
 @ContextConfiguration(classes = PersistenceSampleApplicationContext.class)
+@TestExecutionListeners(TransactionalTestExecutionListener.class)
 public class PlaceDaoImplTest extends AbstractTestNGSpringContextTests {
     
     @Autowired
     private PlaceDao placeDao;
     
-    private static Place place1, place2;
+    private Place place1, place2;
     
     @BeforeMethod
     void init() {

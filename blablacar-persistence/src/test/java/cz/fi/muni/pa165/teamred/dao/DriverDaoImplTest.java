@@ -12,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 
 /**
@@ -43,6 +44,10 @@ public class DriverDaoImplTest extends AbstractTestNGSpringContextTests {
         driver2.setName("Cyprian");
         driver2.setSurename("Kaluznik");
         driver2.setNickname("kaluza");
+    }
+    
+    @AfterClass
+    public void release(){
     }
     
     @Test
@@ -80,5 +85,9 @@ public class DriverDaoImplTest extends AbstractTestNGSpringContextTests {
     public void findByIdNonExistingTest() {
         Driver driverFound = driverDao.findById(-1L);
         assertThat(driverFound).isNull();
+    }
+
+    private void each() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
