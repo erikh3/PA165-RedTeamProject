@@ -39,38 +39,16 @@ public class PassengerDaoImplTest extends AbstractTestNGSpringContextTests {
     private double price = 100.00;
     
     @BeforeMethod
-    void init() {
-        
-//        fromCity = new Place("BRNO");
-//        toCity = new Place("TRENCIN");
-//        
-//        driver = new Driver();
-//        driver.setCarDescription("AUDI A8");
-//        driver.setNote("Test note 1.");
-//        driver.setName("Jan");
-//        driver.setSurename("Mrkva");
-//        driver.setNickname("janci");
-//        
-//        ride = new Ride();
-//        ride.setSourcePlace(fromCity);
-//        ride.setDestinationPlace(toCity);
-//        ride.setDriver(driver);
-//        ride.setAvailableSeats(seats);
-//        ride.setPrice(price);
-//        ride.setDeparture(new GregorianCalendar(2014, Calendar.FEBRUARY, 11)
-//                .getTime());
-        
+    void init() {      
         passenger1 = new Passenger();
         passenger1.setName("Jan");
         passenger1.setSurename("Mrkva");
         passenger1.setNickname("janci");
-        //passenger1.getRides().add(ride);
 
         passenger2 = new Passenger();
         passenger2.setName("Cyprian");
         passenger2.setSurename("Kaluznik");
         passenger2.setNickname("kaluza");
-        //passenger2.getRides().add(ride);
     }
     
     @Test
