@@ -1,10 +1,9 @@
 package cz.fi.muni.pa165.teamred.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Objects;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -72,16 +71,15 @@ public class Driver extends User {
 
         Driver other = (Driver) o;
  
-        return Objects.equals(carDescription, other.getCarDescription())
-                && Objects.equals(note, other.getNote())
-                && Objects.equals(this.getName(), other.getName())
-                && Objects.equals(this.getSurename(), other.getSurename())
-                && Objects.equals(this.getNickname(), other.getNickname());
+        return super.equals(o)
+                && Objects.equals(carDescription, other.getCarDescription())
+                && Objects.equals(note, other.getNote());
     }
 
     @Override
     public int hashCode() {
-        int result = carDescription != null ? carDescription.hashCode() : 0;
+        int result = super.hashCode();
+        result += carDescription != null ? carDescription.hashCode() : 0;
         result = 31 * result + (note != null ? note.hashCode() : 0);
         return result;
     }
