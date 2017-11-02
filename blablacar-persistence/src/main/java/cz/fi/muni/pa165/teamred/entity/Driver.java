@@ -3,7 +3,6 @@ package cz.fi.muni.pa165.teamred.entity;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -68,12 +67,7 @@ public class Driver extends User {
         if (this == o) return true;
         if (o == null) return false;
         if (!(o instanceof Driver)) return false;
-
-        Driver other = (Driver) o;
- 
-        return super.equals(o)
-                && Objects.equals(carDescription, other.getCarDescription())
-                && Objects.equals(note, other.getNote());
+        return super.equals(o);
     }
 
     @Override
