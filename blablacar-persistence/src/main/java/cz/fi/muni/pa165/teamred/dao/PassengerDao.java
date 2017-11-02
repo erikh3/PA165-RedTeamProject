@@ -17,6 +17,12 @@ public interface PassengerDao {
     public void create(Passenger passenger) throws IllegalArgumentException;
 
     /**
+     * Updates {@link cz.fi.muni.pa165.teamred.entity.Passenger} object in database
+     * @param passenger object which will be updated
+     */
+    public void update(Passenger passenger);
+
+    /**
      * Deletes {@link cz.fi.muni.pa165.teamred.entity.Passenger} from database
      * @param passenger ride to be deleted
      * @exception IllegalArgumentException if passenger is null

@@ -28,6 +28,11 @@ public class PlaceDaoImpl implements PlaceDao {
     }
 
     @Override
+    public void update(Place place) {
+        em.merge(place);
+    }
+
+    @Override
     public void delete(Place place) throws IllegalArgumentException {
         if (place == null) {
             throw new IllegalArgumentException("Place is null.");
