@@ -18,6 +18,12 @@ public interface PlaceDao {
     void create(Place place) throws IllegalArgumentException;
 
     /**
+     * Updates {@link cz.fi.muni.pa165.teamred.entity.Place} object in database
+     * @param place object which will be updated
+     */
+    void update(Place place);
+
+    /**
      * Deletes {@link cz.fi.muni.pa165.teamred.entity.Place} from database
      * @param place object which will be deleted
      * @throws IllegalArgumentException if place is null

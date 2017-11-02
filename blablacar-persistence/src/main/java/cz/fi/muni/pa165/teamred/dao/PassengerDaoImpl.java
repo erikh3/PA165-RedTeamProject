@@ -41,6 +41,11 @@ public class PassengerDaoImpl implements PassengerDao {
     }
 
     @Override
+    public void update(Passenger passenger) {
+        em.merge(passenger);
+    }
+
+    @Override
     public void delete(Passenger passenger) {
         if(passenger == null) {
             throw new IllegalArgumentException("Passenger argument is null.");

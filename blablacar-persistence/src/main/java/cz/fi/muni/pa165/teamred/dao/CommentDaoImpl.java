@@ -45,6 +45,11 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
+    public void update(Comment comment) {
+        em.merge(comment);
+    }
+
+    @Override
     public void delete(Comment comment) {
         if(comment == null) {
             throw new IllegalArgumentException("Comment argument is null.");

@@ -35,6 +35,11 @@ public class RideDaoImpl implements RideDao {
     }
 
     @Override
+    public void update(Ride ride) {
+        em.merge(ride);
+    }
+
+    @Override
     public void delete(Ride r) {
         if (r == null) {
             throw new IllegalArgumentException("Ride is null.");

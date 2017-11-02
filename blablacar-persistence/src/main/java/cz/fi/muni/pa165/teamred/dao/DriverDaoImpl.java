@@ -27,6 +27,11 @@ public class DriverDaoImpl implements DriverDao {
     }
 
     @Override
+    public void update(Driver driver) {
+        em.merge(driver);
+    }
+
+    @Override
     public void delete(Driver driver) throws IllegalArgumentException {
         if(driver == null) {
             throw new IllegalArgumentException("Driver argument is null.");

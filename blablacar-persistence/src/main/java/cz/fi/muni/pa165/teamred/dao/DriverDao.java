@@ -18,6 +18,12 @@ public interface DriverDao {
     void create(Driver driver) throws IllegalArgumentException;
 
     /**
+     * Updates {@link cz.fi.muni.pa165.teamred.entity.Driver} object in database
+     * @param driver object which will be updated
+     */
+    void update(Driver driver);
+
+    /**
      * Deletes {@link cz.fi.muni.pa165.teamred.entity.Driver} from database
      * @param driver object which will be deleted
      * @throws IllegalArgumentException if driver is null

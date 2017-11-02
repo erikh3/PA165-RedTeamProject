@@ -16,7 +16,13 @@ public interface CommentDao {
     * @exception IllegalArgumentException if comment argument is null
     */
     public void create(Comment comment) throws IllegalArgumentException;
-    
+
+    /**
+     * Updates {@link cz.fi.muni.pa165.teamred.entity.Comment} object in database
+     * @param comment {@link cz.fi.muni.pa165.teamred.entity.Comment} to be updated
+     */
+    public void update(Comment comment);
+
     /**
     * Deletes {@link cz.fi.muni.pa165.teamred.entity.Comment} object in database
     * @param comment {@link cz.fi.muni.pa165.teamred.entity.Comment} to be deleted 
