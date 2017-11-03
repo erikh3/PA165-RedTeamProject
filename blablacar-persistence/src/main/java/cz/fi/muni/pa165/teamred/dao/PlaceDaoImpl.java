@@ -29,6 +29,9 @@ public class PlaceDaoImpl implements PlaceDao {
 
     @Override
     public void update(Place place) {
+        if (place == null) {
+            throw new IllegalArgumentException("Place is null.");
+        }
         em.merge(place);
     }
 
@@ -42,7 +45,7 @@ public class PlaceDaoImpl implements PlaceDao {
 
     @Override
     public List<Place> findAll() {
-        return em.createQuery("select p from Place p", Place.class).getResultList();
+        return em.createQuery("select p from Place p ORDER BY p.name", Place.class).getResultList();
     }
 
     @Override

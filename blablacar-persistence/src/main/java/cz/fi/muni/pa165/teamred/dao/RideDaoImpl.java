@@ -15,15 +15,6 @@ public class RideDaoImpl implements RideDao {
 
     @PersistenceContext
     private EntityManager em;
-    
-    /**
-     * Sets entity manager
-     *
-     * @param entityManager entity manager
-     */
-    void setEntityManager(EntityManager entityManager) {
-        this.em = entityManager;
-    }
 
     @Override
     @Transactional
@@ -35,8 +26,11 @@ public class RideDaoImpl implements RideDao {
     }
 
     @Override
-    public void update(Ride ride) {
-        em.merge(ride);
+    public void update(Ride r) {
+        if (r == null) {
+            throw new IllegalArgumentException("Ride is null.");
+        }
+        em.merge(r);
     }
 
     @Override

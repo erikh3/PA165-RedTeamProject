@@ -2,10 +2,7 @@ package cz.fi.muni.pa165.teamred.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class represents a Ride in our application.
@@ -23,17 +20,10 @@ public class Ride {
     private Date departure;
 
     @NotNull
-    private double price;
-
-    @NotNull
     private int availableSeats;
 
     @NotNull
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    private Driver driver;
-
-    @ManyToMany(cascade=CascadeType.PERSIST)
-    private Set<Passenger> passengers;
+    private double seatPrice;
 
     @NotNull
     @ManyToOne(cascade=CascadeType.PERSIST)
@@ -43,22 +33,15 @@ public class Ride {
     @ManyToOne(cascade=CascadeType.PERSIST)
     private Place destinationPlace;
 
-    @ManyToMany(cascade=CascadeType.PERSIST)
-    private Set<Comment> comments;
-    
-    /**
-     * Default Constructor
-     */
-    public Ride() {
-    }
+    @NotNull
+    @ManyToOne(cascade=CascadeType.PERSIST)
+    private User driver;
 
-    /**
-     * Constructor
-     * @param rideId id
-     */
-    public Ride(Long rideId) {
-        this.id = rideId;
-    }
+    @ManyToMany(cascade=CascadeType.PERSIST)
+    private Set<User> passengers = new HashSet<>();
+
+    @ManyToMany(cascade=CascadeType.PERSIST)
+    private Set<Comment> comments = new HashSet<>();
 
     // setters
     public void setId(Long id) {
@@ -69,20 +52,16 @@ public class Ride {
         this.departure = dep;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setSeatPrice(double seatPrice) {
+        this.seatPrice = seatPrice;
     }
 
     public void setAvailableSeats(int seats) {
         this.availableSeats = seats;
     }
 
-    public void setDriver(Driver d) {
+    public void setDriver(User d) {
         this.driver = d;
-    }
-
-    public void addPassenger(Passenger p) {
-        this.passengers.add(p);
     }
 
     public void setSourcePlace(Place place) {
@@ -93,8 +72,12 @@ public class Ride {
         this.destinationPlace = place;
     }
 
-    public void addComment(Comment c) {
-        this.comments.add(c);
+    public void setPassengers(Set<User> passengers) {
+        this.passengers = passengers;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     // getters
@@ -106,20 +89,16 @@ public class Ride {
         return this.departure;
     }
 
-    public double getPrice() {
-        return this.price;
+    public double getSeatPrice() {
+        return this.seatPrice;
     }
 
     public int getAvailableSeats() {
         return this.availableSeats;
     }
 
-    public Driver getDriver() {
+    public User getDriver() {
        return this.driver;
-    }
-
-    public Set<Passenger> getPassengers() {
-        return Collections.unmodifiableSet(passengers);
     }
 
     public Place getSourcePlace() {
@@ -130,10 +109,24 @@ public class Ride {
         return this.destinationPlace;
     }
 
+    public Set<User> getPassengers() {
+        return Collections.unmodifiableSet(passengers);
+    }
+
     public Set<Comment> getComments() {
         return Collections.unmodifiableSet(comments);
     }
 
+    //adders
+    public void addPassenger(User p) {
+        this.passengers.add(p);
+    }
+
+    public void addComment(Comment c) {
+        this.comments.add(c);
+    }
+
+    //equals and hash
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -142,13 +135,11 @@ public class Ride {
             return false;
         if (! (obj instanceof Ride))
             return false;
+
         Ride other = (Ride) obj;
-        if (driver == null) {
-            if (other.getDriver() != null)
-                return false;
-        } else if (Objects.equals(driver, other.getDriver()) && Objects.equals(departure,other.getDeparture()))
-            return true;
-        return false;
+
+        return (Objects.equals(driver, other.getDriver()) &&
+                Objects.equals(departure,other.getDeparture()));
     }
 
     @Override
@@ -158,4 +149,5 @@ public class Ride {
         result = prime*result+((driver == null)? 0 : driver.hashCode())+((departure == null)? 0 : departure.hashCode());
         return result;
     }
+
 }

@@ -1,9 +1,9 @@
 package cz.fi.muni.pa165.teamred.dao;
 
 import cz.fi.muni.pa165.teamred.PersistenceSampleApplicationContext;
-import cz.fi.muni.pa165.teamred.entity.Driver;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
+import cz.fi.muni.pa165.teamred.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Created by Jozef Cibík on 29.10.2017.
@@ -49,7 +48,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
     private Ride validRide;
     private Ride invalidRide = new Ride();
 
-    private Driver validDriver = new Driver();
+    private User validDriver = new User();
 
     private Date date;
 
@@ -72,9 +71,9 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         //placeDao.create(toCity);
 
         validDriver.setName("John");
-        validDriver.setSurename("Doe");
+        validDriver.setSurname("Doe");
         validDriver.setNickname("j_doe");
-        validDriver.setCarDescription("Some description.");
+        //validDriver.setCarDescription("Some description.");
         //userDao.create(validDriver);
 
         validRide = new Ride();
@@ -83,14 +82,14 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         validRide.setDeparture(date);
         validRide.setSourcePlace(fromCity);
         validRide.setDestinationPlace(toCity);
-        validRide.setPrice(validPrice);
+        validRide.setSeatPrice(validPrice);
         
         Set<Ride> rideSet = new HashSet<Ride>();
         rideSet.add(validRide);
         
         fromCity.setOriginatingRides(rideSet);
-        toCity.setDestinatingRides(rideSet);
-        validDriver.setRides(rideSet);
+        toCity.setDestinationRides(rideSet);
+        //validDriver.setRides(rideSet);
         
         rideDao.create(validRide);
     }
