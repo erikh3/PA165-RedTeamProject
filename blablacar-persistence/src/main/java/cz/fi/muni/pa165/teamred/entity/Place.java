@@ -23,8 +23,9 @@ public class Place {
     private Set<Ride> originatingRides = new HashSet<>();
     
     @OneToMany(mappedBy = "destinationPlace", cascade=CascadeType.PERSIST)  
-    private Set<Ride> destinatingRides = new HashSet<>();
+    private Set<Ride> destinationRides = new HashSet<>();
 
+    //constructors
     public Place() {
     }
 
@@ -32,10 +33,7 @@ public class Place {
         this.name = name;
     }
 
-    public Place(Long id) {
-        this.id = id;
-    }
-
+    //getters and setters
     public Long getId() {
         return id;
     }
@@ -60,12 +58,12 @@ public class Place {
         this.originatingRides = originatingRides;
     }
 
-    public Set<Ride> getDestinatingRides() {
-        return destinatingRides;
+    public Set<Ride> getDestinationRides() {
+        return destinationRides;
     }
 
-    public void setDestinatingRides(Set<Ride> destinatingRides) {
-        this.destinatingRides = destinatingRides;
+    public void setDestinationRides(Set<Ride> destinationRides) {
+        this.destinationRides = destinationRides;
     }
 
     @Override

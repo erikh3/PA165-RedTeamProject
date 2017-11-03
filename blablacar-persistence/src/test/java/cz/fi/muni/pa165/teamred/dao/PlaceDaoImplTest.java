@@ -14,6 +14,10 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
+
 /**
  *
  * @author miroslav.laco@gmail.com
@@ -25,6 +29,9 @@ public class PlaceDaoImplTest extends AbstractTestNGSpringContextTests {
     
     @Autowired
     private PlaceDao placeDao;
+
+    @PersistenceContext
+    private EntityManager em;
     
     private Place place1, place2;
     
@@ -35,6 +42,39 @@ public class PlaceDaoImplTest extends AbstractTestNGSpringContextTests {
         
         place2 = new Place();
         place2.setName("Praha");
+
+        em.persist(place1);
+        em.persist(place2);
+        em.flush();
+    }
+
+    @Test
+    public void createTest() {
+        Place testPlace = new Place("Jicin");
+        placeDao.create(testPlace);
+
+        Place foundPlace = em.find(Place.class, testPlace.getId());
+        assertThat(foundPlace).isNotNull().isEqualTo(testPlace);
+    }
+
+    @Test
+    public void createNullPlaceTest() {
+        assertThatThrownBy(() -> placeDao.create(null)).hasRootCauseExactlyInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void createNullPlaceNameTest() {
+        Place testPlace = new Place();
+        testPlace.setName(null);
+        assertThatThrownBy(() -> placeDao.create(null))
+                .hasRootCauseExactlyInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    public void createNotUniquePlaceNameTest() {
+        Place testPlace = new Place(place1.getName());
+        assertThatThrownBy(() -> placeDao.create(testPlace))
+                .hasRootCauseExactlyInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

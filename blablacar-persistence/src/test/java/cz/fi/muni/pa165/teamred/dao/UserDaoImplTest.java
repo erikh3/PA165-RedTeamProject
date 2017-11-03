@@ -42,9 +42,9 @@ public class UserDaoImplTest extends AbstractTestNGSpringContextTests {
         u2.setName("name2");
         u3.setName("name3");
 
-        u1.setSurename("surename1");
-        u2.setSurename("surename2");
-        u3.setSurename("surename3");
+        u1.setSurname("surename1");
+        u2.setSurname("surename2");
+        u3.setSurname("surename3");
 
         u1.setNickname("nickname1");
         u2.setNickname("nickname2");
@@ -66,7 +66,7 @@ public class UserDaoImplTest extends AbstractTestNGSpringContextTests {
     public void findByIdTest() {
         User found = userDao.findById(u1.getId());
         Assert.assertEquals(found.getName(), "name1");
-        Assert.assertEquals(found.getSurename(), "surename1");
+        Assert.assertEquals(found.getSurname(), "surename1");
         Assert.assertEquals(found.getNickname(), "nickname1");
     }
 
