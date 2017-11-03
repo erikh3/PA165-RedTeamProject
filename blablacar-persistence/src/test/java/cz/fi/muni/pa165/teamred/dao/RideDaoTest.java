@@ -4,10 +4,7 @@ import cz.fi.muni.pa165.teamred.PersistenceSampleApplicationContext;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
-<<<<<<< HEAD
-import org.aspectj.lang.annotation.Before;
-=======
->>>>>>> 357a2cab5db47aaead8b71dec1cf19e9251e58aa
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -45,29 +42,14 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private RideDao rideDao;
 
-<<<<<<< HEAD
+
     private Date now = new GregorianCalendar(2017, Calendar.FEBRUARY, 11).getTime();
     private Date past = new GregorianCalendar(2017, Calendar.FEBRUARY, 10).getTime();
-=======
-    @Autowired
-    private PlaceDao placeDao;
-
-    @Autowired
-    private UserDao userDao;
-
-    private Ride validRide;
-    private Ride invalidRide = new Ride();
-
-    private User validDriver = new User();
-
-    private Date date;
->>>>>>> 357a2cab5db47aaead8b71dec1cf19e9251e58aa
 
     private int validSeats = 4;
     private int invalidSeats = -1;
 
     private double validPrice = 100.00;
-    private double invlidPrice = -1;
 
 
     private void initializeRide(Ride ride){
@@ -76,7 +58,6 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         validDriver.setName("John");
         validDriver.setSurname("Doe");
         validDriver.setNickname("j_doe");
-<<<<<<< HEAD
 
 
         ride.setDriver(validDriver);
@@ -84,19 +65,18 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         ride.setDeparture(now);
 
         Place validBrno = new Place("Brno");
-
         Place validTrencin = new Place("Trencin");
 
         ride.setSourcePlace(validBrno);
         ride.setDestinationPlace(validTrencin);
-        ride.setPrice(validPrice);
+        ride.setSeatPrice(validPrice);
 
         Set<Ride> rideSet = new HashSet<Ride>();
         rideSet.add(ride);
 
         validBrno.setOriginatingRides(rideSet);
-        validTrencin.setDestinatingRides(rideSet);
-        validDriver.setRidesAsDriver(rideSet);
+        validTrencin.setDestinationRides(rideSet);
+
     }
 
 
@@ -108,26 +88,6 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         Ride validRide = new Ride();
         initializeRide(validRide);
 
-=======
-        //validDriver.setCarDescription("Some description.");
-        //userDao.create(validDriver);
-
-        validRide = new Ride();
-        validRide.setDriver(validDriver);
-        validRide.setAvailableSeats(validSeats);
-        validRide.setDeparture(date);
-        validRide.setSourcePlace(fromCity);
-        validRide.setDestinationPlace(toCity);
-        validRide.setSeatPrice(validPrice);
-        
-        Set<Ride> rideSet = new HashSet<Ride>();
-        rideSet.add(validRide);
-        
-        fromCity.setOriginatingRides(rideSet);
-        toCity.setDestinationRides(rideSet);
-        //validDriver.setRides(rideSet);
-        
->>>>>>> 357a2cab5db47aaead8b71dec1cf19e9251e58aa
         rideDao.create(validRide);
         assertThat(validRide.getId()).isNotNull();
         assertThat(rideDao.findAll().size()).isEqualTo(1);
@@ -253,7 +213,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
     public void testUpdateValidPassengers(){
         User newPassenger = new User();
         newPassenger.setName("Adam");
-        newPassenger.setSurename("Smith");
+        newPassenger.setSurname("Smith");
         newPassenger.setNickname("smitty");
 
         Ride validRide = new Ride();
@@ -270,7 +230,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
     public void testUpdateValidDriver(){
         User newDriver = new User();
         newDriver.setName("Adam");
-        newDriver.setSurename("Smith");
+        newDriver.setSurname("Smith");
         newDriver.setNickname("smitty");
 
 
@@ -335,7 +295,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
     public void testUpdateInValidDriver(){
         User newDriver = new User();
         newDriver.setName("Adam");
-        newDriver.setSurename("Smith");
+        newDriver.setSurname("Smith");
         newDriver.setNickname("");
 
 
