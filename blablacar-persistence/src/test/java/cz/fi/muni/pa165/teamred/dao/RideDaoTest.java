@@ -4,7 +4,10 @@ import cz.fi.muni.pa165.teamred.PersistenceSampleApplicationContext;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
+<<<<<<< HEAD
 import org.aspectj.lang.annotation.Before;
+=======
+>>>>>>> 357a2cab5db47aaead8b71dec1cf19e9251e58aa
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -42,8 +45,23 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private RideDao rideDao;
 
+<<<<<<< HEAD
     private Date now = new GregorianCalendar(2017, Calendar.FEBRUARY, 11).getTime();
     private Date past = new GregorianCalendar(2017, Calendar.FEBRUARY, 10).getTime();
+=======
+    @Autowired
+    private PlaceDao placeDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    private Ride validRide;
+    private Ride invalidRide = new Ride();
+
+    private User validDriver = new User();
+
+    private Date date;
+>>>>>>> 357a2cab5db47aaead8b71dec1cf19e9251e58aa
 
     private int validSeats = 4;
     private int invalidSeats = -1;
@@ -56,8 +74,9 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         User validDriver = new User();
 
         validDriver.setName("John");
-        validDriver.setSurename("Doe");
+        validDriver.setSurname("Doe");
         validDriver.setNickname("j_doe");
+<<<<<<< HEAD
 
 
         ride.setDriver(validDriver);
@@ -89,6 +108,26 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         Ride validRide = new Ride();
         initializeRide(validRide);
 
+=======
+        //validDriver.setCarDescription("Some description.");
+        //userDao.create(validDriver);
+
+        validRide = new Ride();
+        validRide.setDriver(validDriver);
+        validRide.setAvailableSeats(validSeats);
+        validRide.setDeparture(date);
+        validRide.setSourcePlace(fromCity);
+        validRide.setDestinationPlace(toCity);
+        validRide.setSeatPrice(validPrice);
+        
+        Set<Ride> rideSet = new HashSet<Ride>();
+        rideSet.add(validRide);
+        
+        fromCity.setOriginatingRides(rideSet);
+        toCity.setDestinationRides(rideSet);
+        //validDriver.setRides(rideSet);
+        
+>>>>>>> 357a2cab5db47aaead8b71dec1cf19e9251e58aa
         rideDao.create(validRide);
         assertThat(validRide.getId()).isNotNull();
         assertThat(rideDao.findAll().size()).isEqualTo(1);

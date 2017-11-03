@@ -37,7 +37,8 @@ public class Comment {
 
     @NotNull
     @ManyToOne  
-    private Ride ride;        
+    private Ride ride;
+
     /**
      * @return the id
      */
@@ -95,33 +96,25 @@ public class Comment {
     public void setRide(Ride ride) {
         this.ride = ride;
     }
-          
+
+
     @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.created);
-        hash = 67 * hash + Objects.hashCode(this.text);
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comment)) return false;
+
+        Comment comment = (Comment) o;
+
+        return (Objects.equals(getCreated(), comment.getCreated()) &&
+                Objects.equals(getAuthor(), comment.getAuthor()) &&
+                Objects.equals(getRide(), comment.getRide()));
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Comment)) {
-            return false;
-        }
-        final Comment other = (Comment) obj;       
-        if (!Objects.equals(this.text, other.getText())) {
-            return false;
-        }
-        if (!Objects.equals(this.created, other.getCreated())) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        int result = getCreated().hashCode();
+        result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
+        result = 31 * result + getRide().hashCode();
+        return result;
     }
 }

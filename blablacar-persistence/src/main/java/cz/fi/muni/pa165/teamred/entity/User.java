@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -17,13 +18,13 @@ import java.util.Set;
 public class User implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long id;
 
 
     @NotNull(message = "User Name cannot be null.")
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false)
     @Size(
             min = 2,
             max = 255,
@@ -31,15 +32,19 @@ public class User implements Serializable{
     )
     private String name;
 
-
-    @NotNull(message = "User Surename cannot be null.")
-    @Column(updatable = false, nullable = false)
-    private String surename;
-
+    @NotNull(message = "User Surname cannot be null.")
+    @Column(nullable = false)
+    private String surname;
 
     @NotNull(message = "User Nickname cannot be null.")
-    @Column(updatable = false, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String nickname;
+
+    @OneToMany(mappedBy = "driver")
+    private Set<Ride> ridesAsDriver;
+
+    @ManyToMany(mappedBy = "passengers")
+    private Set<Ride> ridesAsPassenger;
 
     @OneToMany(mappedBy = "author")
     private Set<Comment> userComments;
@@ -71,12 +76,12 @@ public class User implements Serializable{
         this.name = name;
     }
 
-    public String getSurename() {
-        return surename;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setSurename(String surename) {
-        this.surename = surename;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getNickname() {
@@ -104,7 +109,7 @@ public class User implements Serializable{
 
         User user = (User) o;
 
-        return getNickname() != null ? getNickname().equals(user.getNickname()) : user.getNickname() == null;
+        return Objects.equals(getNickname(), user.getNickname());
     }
 
     @Override
