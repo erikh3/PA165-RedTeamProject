@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.teamred;
 
+import cz.fi.muni.pa165.teamred.dao.UserDao;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,16 +22,16 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories
-@ComponentScan(basePackages = "cz.fi.muni.pa165.teamred")
+@ComponentScan(basePackageClasses = {UserDao.class})
 public class PersistenceSampleApplicationContext {
 
     /**
      * Enables automatic translation of exceptions to DataAccessExceptions.
      */
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor postProcessor() {
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
+//    @Bean
+//    public PersistenceExceptionTranslationPostProcessor postProcessor() {
+//        return new PersistenceExceptionTranslationPostProcessor();
+//    }
 
     @Bean
     public JpaTransactionManager transactionManager() {
