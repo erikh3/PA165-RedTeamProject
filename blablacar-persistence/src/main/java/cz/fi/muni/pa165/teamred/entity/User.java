@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -41,13 +42,13 @@ public class User implements Serializable{
     private String nickname;
 
     @OneToMany(mappedBy = "driver")
-    private Set<Ride> ridesAsDriver;
+    private Set<Ride> ridesAsDriver = new HashSet<>();
 
     @ManyToMany(mappedBy = "passengers")
-    private Set<Ride> ridesAsPassenger;
+    private Set<Ride> ridesAsPassenger = new HashSet<>();
 
     @OneToMany(mappedBy = "author")
-    private Set<Comment> userComments;
+    private Set<Comment> userComments = new HashSet<>();
 
     //______________________________________________________________________________________________________Constructors
 
@@ -55,6 +56,10 @@ public class User implements Serializable{
     * Default Constructor
     */
     public User() {
+    }
+
+    public User(String nickname) {
+        this.nickname = nickname;
     }
 
 
@@ -100,6 +105,17 @@ public class User implements Serializable{
         this.userComments = userComments;
     }
 
+    public void addComment(Comment comment){
+        this.userComments.add(comment);
+    }
+
+    public void addRideAsPassenger(Ride ride){
+        this.ridesAsPassenger.add(ride);
+    }
+
+    public void addRideAsDriver(Ride ride){
+        this.ridesAsDriver.add(ride);
+    }
     //________________________________________________________________________________________Equals and HashCode method
 
     @Override
@@ -115,5 +131,15 @@ public class User implements Serializable{
     @Override
     public int hashCode() {
         return getNickname() != null ? getNickname().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
     }
 }

@@ -66,6 +66,13 @@ public class Place {
         this.destinationRides = destinationRides;
     }
 
+    public void addOriginatingRide(Ride ride){
+        this.originatingRides.add(ride);
+    }
+
+    public void addDestinationRide(Ride ride){
+        this.destinationRides.add(ride);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,5 +87,13 @@ public class Place {
     @Override
     public int hashCode() {
         return 31 + (name == null ? 0 : name.hashCode());
+    }
+
+    @Override
+    public String toString() {
+        return "Place{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

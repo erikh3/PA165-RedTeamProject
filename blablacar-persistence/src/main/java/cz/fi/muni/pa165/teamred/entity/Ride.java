@@ -150,4 +150,16 @@ public class Ride {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Ride{" +
+                "id=" + id +
+                ", departure=" + departure +
+                ", availableSeats=" + availableSeats +
+                ", seatPrice=" + seatPrice +
+                ", sourcePlace=" + sourcePlace +
+                ", destinationPlace=" + destinationPlace +
+                ", driver=" + driver +
+                '}';
+    }
 }
