@@ -57,6 +57,10 @@ public class User implements Serializable{
     public User() {
     }
 
+    public User(String nickname) {
+        this.nickname = nickname;
+    }
+
 
     //_______________________________________________________________________________________________Getters and Setters
 
