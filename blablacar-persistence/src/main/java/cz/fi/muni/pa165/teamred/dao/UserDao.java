@@ -16,6 +16,13 @@ public interface UserDao {
      * @param user to be added to db
      **/
     public void create(User user);
+
+    /**
+     * Updates a user in database
+     *
+     * @param user to update
+     */
+    public void update(User user);
     /**
     * Finds a user with id in database
     *

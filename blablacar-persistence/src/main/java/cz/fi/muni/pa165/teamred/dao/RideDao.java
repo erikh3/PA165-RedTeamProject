@@ -18,6 +18,11 @@ public interface RideDao {
      */
     public void create(Ride ride) throws IllegalArgumentException;
 
+    /**
+     * Updates {@link cz.fi.muni.pa165.teamred.entity.Ride} object in database
+     * @param ride object which will be updated
+     */
+    public void update(Ride ride);
 
     /**
      * Deletes {@link cz.fi.muni.pa165.teamred.entity.Ride} from database

@@ -20,16 +20,41 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public void create(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User is null.");
+        }
         entityManager.persist(user);
     }
 
     @Override
+    public void update(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User is null.");
+        }
+        entityManager.merge(user);
+    }
+
+    @Override
+    public void delete(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User is null.");
+        }
+        entityManager.remove(entityManager.contains(user) ? user : entityManager.merge(user));
+    }
+
+    @Override
     public User findById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("User id is null.");
+        }
         return entityManager.find(User.class,id);
     }
 
     @Override
     public User findByNickname(String nickname) {
+        if (nickname == null) {
+            throw new IllegalArgumentException("User nickname is null.");
+        }
         try {
             return entityManager
                     .createQuery
@@ -48,9 +73,4 @@ public class UserDaoImpl implements UserDao{
         return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
-    @Override
-    public void delete(User user) {
-        User mergedUser = entityManager.merge(user);
-        entityManager.remove(mergedUser);
-    }
 }

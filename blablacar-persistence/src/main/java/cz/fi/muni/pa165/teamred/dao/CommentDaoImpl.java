@@ -28,13 +28,6 @@ public class CommentDaoImpl implements CommentDao {
         this.em = entityManager;
     }
 
-    @Override
-    public Comment findById(Long id) {
-        if(id == null) {
-            throw new IllegalArgumentException("Comment argument is null.");
-        }
-        return em.find(Comment.class, id);
-    }
 
     @Override
     public void create(Comment comment) {
@@ -42,6 +35,14 @@ public class CommentDaoImpl implements CommentDao {
             throw new IllegalArgumentException("Comment argument is null.");
         }
         em.persist(comment);
+    }
+
+    @Override
+    public void update(Comment comment) {
+        if(comment == null) {
+            throw new IllegalArgumentException("Comment argument is null.");
+        }
+        em.merge(comment);
     }
 
     @Override
@@ -53,6 +54,14 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
+    public Comment findById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Comment id argument is null.");
+        }
+        return em.find(Comment.class, id);
+    }
+
+    @Override
     public List<Comment> findAll() {
         return em.createQuery("SELECT c FROM Comment c", Comment.class).getResultList();
     }
@@ -60,10 +69,10 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public List<Comment> getCommentsWithRideId(Long id) {
         if(id == null) {
-            throw new IllegalArgumentException("Comment argument is null.");
+            throw new IllegalArgumentException("Comment id argument is null.");
         }
         try {
-            return em.createQuery("SELECT c FROM Comment c WHERE c.ride.id = :id",
+            return em.createQuery("SELECT c FROM Comment c WHERE c.ride.id = :id ORDER BY c.created",
                                 Comment.class).setParameter("id", id)
                                 .getResultList();
         } catch (NoResultException nrf) {
@@ -74,10 +83,10 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public List<Comment> getCommentsWithUserId(Long id) {
         if(id == null) {
-            throw new IllegalArgumentException("Comment argument is null.");
+            throw new IllegalArgumentException("Comment id argument is null.");
         }
         try {
-            return em.createQuery("SELECT c FROM Comment c WHERE c.author.id = :id",
+            return em.createQuery("SELECT c FROM Comment c WHERE c.author.id = :id ORDER BY c.created",
                                 Comment.class).setParameter("id", id)
                                 .getResultList();
         } catch (NoResultException nrf) {
