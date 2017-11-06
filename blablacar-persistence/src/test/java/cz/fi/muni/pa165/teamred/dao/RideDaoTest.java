@@ -8,19 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,83 +35,176 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private RideDao rideDao;
 
-    @Autowired
-    private PlaceDao placeDao;
+    private Ride persistedRide;
 
-    @Autowired
-    private UserDao userDao;
-
-    private Ride validRide;
-    private Ride invalidRide = new Ride();
-
-    private User validDriver = new User();
-
-    private Date date;
+    private Date now = new GregorianCalendar(2017, Calendar.FEBRUARY, 11).getTime();
+    private Date past = new GregorianCalendar(2017, Calendar.FEBRUARY, 10).getTime();
 
     private int validSeats = 4;
     private int invalidSeats = -1;
 
     private double validPrice = 100.00;
-    private double invlidPrice = -1;
 
-    private Place fromCity;
-    private Place toCity;
-
-    @BeforeClass
-    public void init(){
-        
-        fromCity = new Place("BRNO");
-        toCity = new Place("TRENCIN");
-        date = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
-        //placeDao.create(fromCity);
-        //placeDao.create(toCity);
+    @BeforeMethod
+    void init() {
+        Ride ride = new Ride();
+        User validDriver = new User();
 
         validDriver.setName("John");
         validDriver.setSurname("Doe");
         validDriver.setNickname("j_doe");
-        //validDriver.setCarDescription("Some description.");
-        //userDao.create(validDriver);
 
-        validRide = new Ride();
-        validRide.setDriver(validDriver);
-        validRide.setAvailableSeats(validSeats);
-        validRide.setDeparture(date);
-        validRide.setSourcePlace(fromCity);
-        validRide.setDestinationPlace(toCity);
-        validRide.setSeatPrice(validPrice);
-        
+
+        ride.setDriver(validDriver);
+        ride.setAvailableSeats(validSeats);
+        ride.setDeparture(now);
+
+        Place validBrno = new Place("Brno");
+        Place validTrencin = new Place("Trencin");
+
+        ride.setSourcePlace(validBrno);
+        ride.setDestinationPlace(validTrencin);
+        ride.setSeatPrice(validPrice);
+
         Set<Ride> rideSet = new HashSet<Ride>();
-        rideSet.add(validRide);
-        
-        fromCity.setOriginatingRides(rideSet);
-        toCity.setDestinationRides(rideSet);
-        //validDriver.setRides(rideSet);
-        
-        rideDao.create(validRide);
+        rideSet.add(ride);
+
+        validBrno.setOriginatingRides(rideSet);
+        validTrencin.setDestinationRides(rideSet);
+
+
+        em.persist(ride);
+        em.flush();
+
+        this.persistedRide = ride;
     }
 
-    @AfterClass
-    public void release(){
+    private void initializeRide(Ride ride){
+        User validDriver = new User();
+
+        validDriver.setName("John");
+        validDriver.setSurname("Diggle");
+        validDriver.setNickname("arrow");
+
+
+        ride.setDriver(validDriver);
+        ride.setAvailableSeats(validSeats);
+        ride.setDeparture(now);
+
+        Place validBrno = new Place("Praha");
+        Place validTrencin = new Place("Jaroslavl");
+
+        ride.setSourcePlace(validBrno);
+        ride.setDestinationPlace(validTrencin);
+        ride.setSeatPrice(validPrice);
+
+        Set<Ride> rideSet = new HashSet<Ride>();
+        rideSet.add(ride);
+
+        validBrno.setOriginatingRides(rideSet);
+        validTrencin.setDestinationRides(rideSet);
+
+    }
+
+
+
+
+    //----------------------------------------------------------------------------------------------------Create Related
+    @Test
+    public void testCreateValidRide(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+
+        rideDao.create(validRide);
+        assertThat(validRide.getId()).isNotNull();
+        assertThat(rideDao.findAll().size()).isEqualTo(2);
+    }
+
+
+    @Test
+    public void testCreateInValidRideNullDriver(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+
+        validRide.setDriver(null);
+        assertThatThrownBy(() -> rideDao.create(validRide)).isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
-    public void testAllRides(){
-        //One Ride persisted
-        assertThat(rideDao.findAll().size()).isEqualTo(1);
+    public void testCreateInValidRidePastDeparture(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+
+        validRide.setDeparture(past);
+        assertThatThrownBy(() -> rideDao.create(validRide)).isInstanceOf(ConstraintViolationException.class);
     }
 
+
+    @Test
+    public void testCreateInValidRideNullDeparture(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+
+        validRide.setDeparture(null);
+        assertThatThrownBy(() -> rideDao.create(validRide)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    public void testCreateInValidRideNullSourcePlace(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+
+        validRide.setSourcePlace(null);
+        assertThatThrownBy(() -> rideDao.create(validRide)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+
+    @Test
+    public void testCreateInValidRideNullDestPlace(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+
+        validRide.setDestinationPlace(null);
+        assertThatThrownBy(() -> rideDao.create(validRide)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+
+    @Test
+    public void testCreateInValidRideInvalidSeats(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+
+        validRide.setAvailableSeats(invalidSeats);
+        assertThatThrownBy(() -> rideDao.create(validRide)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void testCreateNullRide(){
+        assertThatThrownBy(() -> rideDao.create(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    //------------------------------------------------------------------------------------------------------Find Related
     @Test
     public void testFindRideById(){
-        //Checking equality on objects
-        Ride foundRide = rideDao.findById(validRide.getId());
-        assertThat(rideDao.findById(validRide.getId())).isEqualTo(validRide);
-        //Checking Id's
-        assertThat(rideDao.findById(validRide.getId()).getId()).isEqualTo(validRide.getId());
+        assertThat(rideDao.findById(persistedRide.getId())).isEqualTo(persistedRide);
     }
+
+    @Test
+    public void findRideByInvalidId(){
+        assertThat(rideDao.findById(2L)).isEqualTo(null);
+    }
+
+    @Test
+    void testFindRideByNullId() {
+        assertThatThrownBy(() -> rideDao.findById(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    //----------------------------------------------------------------------------------------------------Delete Related
 
     @Test
     public void testDeleteRide(){
-        rideDao.delete(validRide);
+        Long id = rideDao.findAll().get(0).getId();
+        rideDao.delete(rideDao.findById(id));
         assertThat(rideDao.findAll().size()).isEqualTo(0);
     }
 
@@ -124,19 +213,91 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         assertThatThrownBy(() -> rideDao.delete(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
+    //----------------------------------------------------------------------------------------------------Update Related
     @Test
-    void testCreateNullRide() {
-        assertThatThrownBy(() -> rideDao.create(null)).isInstanceOf(IllegalArgumentException.class);
+    public void testUpdateValidDeparture(){
+        Date newTime = new GregorianCalendar(2017, Calendar.FEBRUARY, 19).getTime();
+        persistedRide.setDeparture(newTime);
+        rideDao.update(persistedRide);
     }
 
     @Test
-    void testFindRideByNullId() {
-        assertThatThrownBy(() -> rideDao.findById(null)).isInstanceOf(IllegalArgumentException.class);
+    public void testUpdateValidPassengers(){
+        User newPassenger = new User();
+        newPassenger.setName("Adam");
+        newPassenger.setSurname("Smith");
+        newPassenger.setNickname("smitty");
+
+        persistedRide.addPassenger(newPassenger);
+        rideDao.update(persistedRide);
+        assertThat(rideDao.findById(persistedRide.getId()).getPassengers().size()).isEqualTo(1);
     }
 
     @Test
-    public void findRideByInvalidId(){
-        assertThat(rideDao.findById(2L)).isEqualTo(null);
+    public void testUpdateValidDriver(){
+        User newDriver = new User();
+        newDriver.setName("Adam");
+        newDriver.setSurname("Smith");
+        newDriver.setNickname("smitty");
+
+        persistedRide.setDriver(newDriver);
+        rideDao.update(persistedRide);
+        assertThat(rideDao.findById(persistedRide.getId()).getDriver()).isEqualTo(newDriver);
     }
 
+    @Test
+    public void testUpdateValidAvailableSeates(){
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+        rideDao.create(validRide);
+
+        validRide.setAvailableSeats(3);
+        rideDao.update(validRide);
+        assertThat(rideDao.findById(validRide.getId()).getAvailableSeats()).isEqualTo(3);
+    }
+
+    @Test
+    public void testUpdateValidDestPlace(){
+
+        Ride validRide = new Ride();
+        initializeRide(validRide);
+        rideDao.create(validRide);
+
+        Place newPlace = new Place("New York");
+        validRide.setDestinationPlace(newPlace);
+        rideDao.update(validRide);
+        assertThat(rideDao.findById(validRide.getId()).getDestinationPlace()).isEqualTo(newPlace);
+    }
+
+    @Test
+    public void testUpdateValidSourcePlace(){
+        Place newPlace = new Place("New York");
+        persistedRide.setSourcePlace(newPlace);
+        rideDao.update(persistedRide);
+        assertThat(rideDao.findById(persistedRide.getId()).getSourcePlace()).isEqualTo(newPlace);
+    }
+
+
+    @Test
+    public void testUpdateInValidDeparture(){
+        persistedRide.setDeparture(past);
+        assertThatThrownBy(() -> rideDao.update(persistedRide)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    public void testUpdateInValidDriver(){
+        User newDriver = new User();
+        newDriver.setName("Adam");
+        newDriver.setSurname("Smith");
+        newDriver.setNickname("");
+
+        persistedRide.setDriver(newDriver);
+        assertThatThrownBy(() -> rideDao.update(persistedRide)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    public void testUpdateInValidAvailableSeates(){
+        persistedRide.setAvailableSeats(invalidSeats);
+        assertThatThrownBy(() -> rideDao.update(persistedRide)).isInstanceOf(ConstraintViolationException.class);
+    }
 }

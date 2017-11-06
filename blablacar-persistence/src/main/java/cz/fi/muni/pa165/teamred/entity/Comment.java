@@ -1,18 +1,9 @@
 package cz.fi.muni.pa165.teamred.entity;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 /**
  * Persistent entity Comment
@@ -116,5 +107,16 @@ public class Comment {
         result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
         result = 31 * result + getRide().hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", created=" + created +
+                ", text='" + text + '\'' +
+                ", author=" + author +
+                ", ride=" + ride +
+                '}';
     }
 }
