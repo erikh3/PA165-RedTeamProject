@@ -1,7 +1,10 @@
 package cz.fi.muni.pa165.teamred.entity;
 
+import org.hibernate.mapping.Collection;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -59,13 +62,14 @@ public class Place {
     }
 
     public Set<Ride> getDestinationRides() {
-        return destinationRides;
+        return Collections.unmodifiableSet(this.destinationRides);
     }
 
     public void setDestinationRides(Set<Ride> destinationRides) {
         this.destinationRides = destinationRides;
     }
 
+    //add and remove
     public void addOriginatingRide(Ride ride){
         this.originatingRides.add(ride);
     }
@@ -73,6 +77,15 @@ public class Place {
     public void addDestinationRide(Ride ride){
         this.destinationRides.add(ride);
     }
+
+    public boolean removeOriginatingRide(Ride ride){
+        return this.originatingRides.remove(ride);
+    }
+
+    public boolean removeDestinationRide(Ride ride){
+        return this.destinationRides.remove(ride);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

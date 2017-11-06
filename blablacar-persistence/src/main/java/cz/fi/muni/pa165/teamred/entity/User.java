@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -98,24 +99,35 @@ public class User implements Serializable{
     }
 
     public Set<Comment> getUserComments() {
-        return userComments;
+        return Collections.unmodifiableSet(this.userComments);
     }
 
     public void setUserComments(Set<Comment> userComments) {
         this.userComments = userComments;
     }
 
+    //__________________________________________________________________________________________________Adds and Removes
+
     public void addComment(Comment comment){
         this.userComments.add(comment);
+    }
+
+    public boolean removeComment(Comment comment){
+        this.userComments.remove(comment);
     }
 
     public void addRideAsPassenger(Ride ride){
         this.ridesAsPassenger.add(ride);
     }
 
+    public boolean removerRideAsPassenger(Ride ride){ return this.ridesAsPassenger.remove(ride); }
+
     public void addRideAsDriver(Ride ride){
         this.ridesAsDriver.add(ride);
     }
+
+    public boolean removerRideAsDriver(Ride ride){ return this.ridesAsDriver.remove(ride); }
+
     //________________________________________________________________________________________Equals and HashCode method
 
     @Override

@@ -126,6 +126,15 @@ public class Ride {
         this.comments.add(c);
     }
 
+    //removers
+    public boolean removePassenger(User p){
+        return this.passengers.remove(p);
+    }
+
+    public boolean removeComment(Comment c){
+        return this.comments.remove(c);
+    }
+
     //equals and hash
     @Override
     public boolean equals(Object obj) {
