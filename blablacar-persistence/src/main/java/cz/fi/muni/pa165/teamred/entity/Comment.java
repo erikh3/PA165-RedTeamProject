@@ -16,18 +16,21 @@ public class Comment {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date created;
 
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String text;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User author;
 
     @NotNull
-    @ManyToOne  
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Ride ride;
 
     /**
@@ -103,9 +106,9 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        int result = getCreated().hashCode();
+        int result = 31 + (getCreated() != null ? getCreated().hashCode() : 0);
         result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
-        result = 31 * result + getRide().hashCode();
+        result = 31 * result + (getRide() != null ? getRide().hashCode() : 0);
         return result;
     }
 

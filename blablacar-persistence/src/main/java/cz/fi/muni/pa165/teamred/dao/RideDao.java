@@ -7,35 +7,36 @@ import java.util.List;
 /**
  * Interface for {@link cz.fi.muni.pa165.teamred.entity.Ride} database access object
  *
- * Created by Šimon on 26.10.2017.
+ * @author Šimon Mačejovský
  */
 public interface RideDao {
 
     /**
      * Creates {@link cz.fi.muni.pa165.teamred.entity.Ride} object in database
-     * @param r ride to be created
+     * @param ride ride to be created
      * @exception IllegalArgumentException if ride is null
      */
-    public void create(Ride ride) throws IllegalArgumentException;
+    void create(Ride ride) throws IllegalArgumentException;
 
     /**
      * Updates {@link cz.fi.muni.pa165.teamred.entity.Ride} object in database
      * @param ride object which will be updated
+     * @exception IllegalArgumentException if ride is null
      */
-    public void update(Ride ride);
+    void update(Ride ride) throws IllegalArgumentException;
 
     /**
      * Deletes {@link cz.fi.muni.pa165.teamred.entity.Ride} from database
-     * @param r ride to be deleted
+     * @param ride ride to be deleted
      * @exception IllegalArgumentException if ride is null
      */
-    public void delete(Ride ride) throws IllegalArgumentException;
+    void delete(Ride ride) throws IllegalArgumentException;
 
     /**
      * Finds all {@link cz.fi.muni.pa165.teamred.entity.Ride} objects in database
      * @return list of {@link cz.fi.muni.pa165.teamred.entity.Ride} objects
      */
-    public List<Ride> findAll();
+    List<Ride> findAll();
 
     /**
      * Finds {@link cz.fi.muni.pa165.teamred.entity.Ride} by its id
@@ -43,5 +44,5 @@ public interface RideDao {
      * @return {@link cz.fi.muni.pa165.teamred.entity.Ride} or null if id was not found
      * @exception IllegalArgumentException if id is null
      */
-    public Ride findById(Long id) throws IllegalArgumentException;
+    Ride findById(Long id) throws IllegalArgumentException;
 }
