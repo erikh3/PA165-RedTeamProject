@@ -12,11 +12,10 @@ import java.util.Set;
 /**
  * This class represents a User in our application.
  *
- * Created by Jozef Cibík on 25.10.2017.
+ * Created by Jozef Cibík
  */
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements Serializable{
 
     @Id
@@ -113,7 +112,7 @@ public class User implements Serializable{
     }
 
     public boolean removeComment(Comment comment){
-        this.userComments.remove(comment);
+        return this.userComments.remove(comment);
     }
 
     public void addRideAsPassenger(Ride ride){

@@ -15,13 +15,14 @@ public interface CommentDao {
     * @param comment {@link cz.fi.muni.pa165.teamred.entity.Comment} to be saved to DB
     * @exception IllegalArgumentException if comment argument is null
     */
-    public void create(Comment comment) throws IllegalArgumentException;
+    void create(Comment comment) throws IllegalArgumentException;
 
     /**
      * Updates {@link cz.fi.muni.pa165.teamred.entity.Comment} object in database
      * @param comment {@link cz.fi.muni.pa165.teamred.entity.Comment} to be updated
+     * @exception IllegalArgumentException if comment is null
      */
-    public void update(Comment comment);
+    void update(Comment comment) throws IllegalArgumentException;
 
     /**
     * Deletes {@link cz.fi.muni.pa165.teamred.entity.Comment} object in database
@@ -29,8 +30,8 @@ public interface CommentDao {
     * from DB
     * @exception IllegalArgumentException if comment argument is null
     */
-    public void delete(Comment comment) throws IllegalArgumentException;
-    
+    void delete(Comment comment) throws IllegalArgumentException;
+
     /**
     * Finds {@link cz.fi.muni.pa165.teamred.entity.Comment} object in database
     * @param id unique id of desired object
@@ -38,15 +39,15 @@ public interface CommentDao {
     * specified id, or null if not found
     * @exception IllegalArgumentException if id argument is null
     */
-    public Comment findById(Long id) throws IllegalArgumentException;
-    
+    Comment findById(Long id) throws IllegalArgumentException;
+
     /**
     * Finds all {@link cz.fi.muni.pa165.teamred.entity.Comment} objects in 
     * database
     * @return All {@link cz.fi.muni.pa165.teamred.entity.Comment} objects in DB
     */
-    public List<Comment> findAll();
-    
+    List<Comment> findAll();
+
     /**
     * Finds {@link cz.fi.muni.pa165.teamred.entity.Comment} objects in database
     * which belongs to specific {@link cz.fi.muni.pa165.teamred.entity.Ride}
@@ -55,8 +56,8 @@ public interface CommentDao {
     * to specified {@link cz.fi.muni.pa165.teamred.entity.Ride}
     * @exception IllegalArgumentException if id argument is null
     */
-    public List<Comment> getCommentsWithRideId(Long id) throws IllegalArgumentException;
-    
+    List<Comment> getCommentsWithRideId(Long id) throws IllegalArgumentException;
+
     /**
     * Finds {@link cz.fi.muni.pa165.teamred.entity.Comment} objects in database
     * which belongs to specific {@link cz.fi.muni.pa165.teamred.entity.User}
@@ -65,5 +66,5 @@ public interface CommentDao {
     * to specified {@link cz.fi.muni.pa165.teamred.entity.User}
     * @exception IllegalArgumentException if id argument is null
     */
-    public List<Comment> getCommentsWithUserId(Long id) throws IllegalArgumentException;
+    List<Comment> getCommentsWithUserId(Long id) throws IllegalArgumentException;
 }

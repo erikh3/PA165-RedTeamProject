@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Persistent entity Place
+ *
  * @author Erik Horváth
  */
 @Entity
@@ -22,10 +24,10 @@ public class Place {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "sourcePlace", cascade=CascadeType.PERSIST)  
+    @OneToMany(mappedBy = "sourcePlace", cascade = CascadeType.PERSIST)
     private Set<Ride> originatingRides = new HashSet<>();
     
-    @OneToMany(mappedBy = "destinationPlace", cascade=CascadeType.PERSIST)  
+    @OneToMany(mappedBy = "destinationPlace", cascade = CascadeType.PERSIST)
     private Set<Ride> destinationRides = new HashSet<>();
 
     //constructors
@@ -54,7 +56,7 @@ public class Place {
     }
 
     public Set<Ride> getOriginatingRides() {
-        return originatingRides;
+        return Collections.unmodifiableSet(originatingRides);
     }
 
     public void setOriginatingRides(Set<Ride> originatingRides) {
@@ -89,7 +91,6 @@ public class Place {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
         if (!(o instanceof Place)) return false;
 
         Place other = (Place) o;

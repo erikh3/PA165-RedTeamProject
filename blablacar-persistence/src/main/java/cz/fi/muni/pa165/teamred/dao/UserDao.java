@@ -7,46 +7,55 @@ import java.util.List;
 /**
  * User DAO interface to manage User class operations with database
  *
- * Created by Jozef Cibík on 25.10.2017.
+ * @author Jozef Cibík
  */
 public interface UserDao {
     /**
      * Adds a user to database
      *
      * @param user to be added to db
+     * @exception IllegalArgumentException if user argument is null
      **/
-    public void create(User user);
+    void create(User user) throws IllegalArgumentException;
 
     /**
      * Updates a user in database
      *
      * @param user to update
+     * @exception IllegalArgumentException if user argument is null
      */
-    public void update(User user);
+    void update(User user) throws IllegalArgumentException;
+
     /**
     * Finds a user with id in database
     *
     * @param id of the user to be found
     * @return User if found, null otherwise
+    * @exception IllegalArgumentException if id argument is null
     */
-    public User findById(Long id);
+    User findById(Long id) throws IllegalArgumentException;
+
     /**
     * Finds a user with nickname in database
     *
     * @param nickname of the user to be found
     * @return User if found, null otherwise
+    * @exception IllegalArgumentException if nickname argument is null
     */
-    public User findByNickname(String nickname);
+    User findByNickname(String nickname) throws IllegalArgumentException;
+
     /**
     * Finds all users in database
     *
-    * @return List<User> if found, empty list otherwise
+    * @return {@link List<User>} if found, empty list otherwise
     */
-    public List<User> findAll();
+    List<User> findAll();
+
     /**
     * Deletes a user from database
     *
     * @param user to be deleted
+    * @exception IllegalArgumentException if user argument is null
     */
-    public void delete(User user);
+    void delete(User user) throws IllegalArgumentException;
 }

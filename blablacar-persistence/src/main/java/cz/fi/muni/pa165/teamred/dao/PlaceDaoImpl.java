@@ -28,7 +28,7 @@ public class PlaceDaoImpl implements PlaceDao {
     }
 
     @Override
-    public void update(Place place) {
+    public void update(Place place) throws IllegalArgumentException {
         if (place == null) {
             throw new IllegalArgumentException("Place is null.");
         }
