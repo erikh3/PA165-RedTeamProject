@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * This class represents a User in our application.
  *
- * Created by Jozef Cibík
+ * @author Jozef Cibík
  */
 @Entity
 @Table(name = "users")
@@ -27,7 +27,7 @@ public class User implements Serializable{
     @NotNull(message = "User Name cannot be null.")
     @Column(nullable = false)
     @Size(
-            min = 2,
+            min = 1,
             max = 255,
             message = "Name must be longer than 2 characters and shorter than 255 characters."
     )
@@ -35,10 +35,12 @@ public class User implements Serializable{
 
     @NotNull(message = "User Surname cannot be null.")
     @Column(nullable = false)
+    @Size(min = 1, max = 255)
     private String surname;
 
     @NotNull(message = "User Nickname cannot be null.")
     @Column(nullable = false, unique = true)
+    @Size(min = 3, max = 255)
     private String nickname;
 
     @OneToMany(mappedBy = "driver")
