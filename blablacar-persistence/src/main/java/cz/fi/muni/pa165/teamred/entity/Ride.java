@@ -7,6 +7,7 @@ import java.util.*;
 
 /**
  * This class represents a Ride in our application.
+ *
  * @author Šimon Mačejovský
  */
 @Entity
@@ -39,13 +40,13 @@ public class Ride {
     private Place destinationPlace;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private User driver;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<User> passengers = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<Comment> comments = new HashSet<>();
 
     // setters

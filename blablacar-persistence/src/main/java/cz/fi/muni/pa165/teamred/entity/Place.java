@@ -1,7 +1,5 @@
 package cz.fi.muni.pa165.teamred.entity;
 
-import org.hibernate.mapping.Collection;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -24,10 +22,10 @@ public class Place {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "sourcePlace", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "sourcePlace")
     private Set<Ride> originatingRides = new HashSet<>();
     
-    @OneToMany(mappedBy = "destinationPlace", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "destinationPlace")
     private Set<Ride> destinationRides = new HashSet<>();
 
     //constructors
