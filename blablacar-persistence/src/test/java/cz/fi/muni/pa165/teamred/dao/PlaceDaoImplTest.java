@@ -76,8 +76,7 @@ public class PlaceDaoImplTest extends AbstractTestNGSpringContextTests {
     @Test
     public void createNotUniquePlaceNameTest() {
         Place testPlace = new Place(place1.getName());
-        assertThatThrownBy(() -> placeDao.create(testPlace))
-                 .isInstanceOf(PersistenceException.class);
+        assertThatThrownBy(() -> placeDao.create(testPlace)).isInstanceOf(JpaSystemException.class);
     }
 
     @Test

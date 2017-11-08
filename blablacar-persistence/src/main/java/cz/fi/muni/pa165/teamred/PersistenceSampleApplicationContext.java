@@ -22,16 +22,16 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories
-@ComponentScan(basePackageClasses = {UserDao.class})
+@ComponentScan(basePackages = "cz.fi.muni.pa165.teamred")
 public class PersistenceSampleApplicationContext {
 
     /**
      * Enables automatic translation of exceptions to DataAccessExceptions.
      */
-//    @Bean
-//    public PersistenceExceptionTranslationPostProcessor postProcessor() {
-//        return new PersistenceExceptionTranslationPostProcessor();
-//    }
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor postProcessor() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
 
     @Bean
     public JpaTransactionManager transactionManager() {
