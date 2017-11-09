@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
- * Created by Jozef Cibík on 25.10.2017.
+ * @author Jozef Cibík
  */
 @Repository
 public class UserDaoImpl implements UserDao{
@@ -19,7 +19,7 @@ public class UserDaoImpl implements UserDao{
     private EntityManager entityManager;
 
     @Override
-    public void create(User user) {
+    public void create(User user) throws IllegalArgumentException {
         if (user == null) {
             throw new IllegalArgumentException("User is null.");
         }
@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public void update(User user) {
+    public void update(User user) throws IllegalArgumentException {
         if (user == null) {
             throw new IllegalArgumentException("User is null.");
         }
@@ -35,7 +35,7 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(User user) throws IllegalArgumentException {
         if (user == null) {
             throw new IllegalArgumentException("User is null.");
         }
@@ -43,7 +43,7 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public User findById(Long id) {
+    public User findById(Long id) throws IllegalArgumentException {
         if (id == null) {
             throw new IllegalArgumentException("User id is null.");
         }
@@ -51,14 +51,14 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public User findByNickname(String nickname) {
+    public User findByNickname(String nickname) throws IllegalArgumentException {
         if (nickname == null) {
             throw new IllegalArgumentException("User nickname is null.");
         }
         try {
             return entityManager
                     .createQuery
-                            ("select u from User c where nickname =:nick",
+                            ("select u from User u where nickname =:nick",
                                     User.class)
                     .setParameter("nick", nickname)
                     .getSingleResult();

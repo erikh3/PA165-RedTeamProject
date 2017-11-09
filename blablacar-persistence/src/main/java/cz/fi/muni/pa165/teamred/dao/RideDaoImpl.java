@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by Šimon on 26.10.2017.
+ * @author Šimon Mačejovský
  */
 @Repository
 public class RideDaoImpl implements RideDao {
@@ -18,7 +18,7 @@ public class RideDaoImpl implements RideDao {
 
     @Override
     @Transactional
-    public void create(Ride r) {
+    public void create(Ride r) throws IllegalArgumentException {
         if (r == null) {
             throw new IllegalArgumentException("Ride is null.");
         }
@@ -26,7 +26,7 @@ public class RideDaoImpl implements RideDao {
     }
 
     @Override
-    public void update(Ride r) {
+    public void update(Ride r) throws IllegalArgumentException {
         if (r == null) {
             throw new IllegalArgumentException("Ride is null.");
         }
@@ -34,7 +34,7 @@ public class RideDaoImpl implements RideDao {
     }
 
     @Override
-    public void delete(Ride r) {
+    public void delete(Ride r) throws IllegalArgumentException {
         if (r == null) {
             throw new IllegalArgumentException("Ride is null.");
         }
@@ -47,7 +47,7 @@ public class RideDaoImpl implements RideDao {
     }
 
     @Override
-    public Ride findById(Long id) {
+    public Ride findById(Long id) throws IllegalArgumentException {
         if (id == null) {
             throw new IllegalArgumentException("Id is null.");
         }

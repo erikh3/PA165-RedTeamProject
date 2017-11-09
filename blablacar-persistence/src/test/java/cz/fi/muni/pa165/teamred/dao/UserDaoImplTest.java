@@ -1,7 +1,9 @@
 package cz.fi.muni.pa165.teamred.dao;
 
 import cz.fi.muni.pa165.teamred.entity.User;
+import cz.fi.muni.pa165.teamred.testutils.UserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -13,6 +15,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
@@ -20,7 +24,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
- * Created by Šimon on 29.10.2017.
+ * @author Šimon Mačejovský
  */
 
 @ContextConfiguration(classes=PersistenceSampleApplicationContext.class)
@@ -57,96 +61,116 @@ public class UserDaoImplTest extends AbstractTestNGSpringContextTests {
         u2.setNickname("nickname2");
         u3.setNickname("nickname3");
 
-        userDao.create(u1);
-        userDao.create(u2);
-        userDao.create(u3);
+        em.persist(u1);
+        em.persist(u2);
+        em.persist(u3);
     }
 
     @Test
-    public void create(){
-        User user = new User();
-        userDao.create(user);
-        User foundUser = em.find(User.class, user.getId());
-        assertThat(foundUser).isNotNull().isEqualTo(user);
+    public void createNullUserTest() {
+        assertThatThrownBy(() -> userDao.create(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void createNullPlaceTest() {
-        assertThatThrownBy(() -> userDao.create(null)).hasRootCauseExactlyInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    public void createNullName() {
-        User user = new User();
+    public void createNullNameTest() {
+        User user = UserFactory.createAdam();
         user.setName(null);
-        assertThatThrownBy(() -> userDao.create(null))
-                .hasRootCauseExactlyInstanceOf(ConstraintViolationException.class);
+        assertThatThrownBy(() -> userDao.create(user)).isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
-    public void createNotUniqueNickname() {
-        User user = new User(u1.getNickname());
-        assertThatThrownBy(() -> userDao.create(user))
-                .hasRootCauseExactlyInstanceOf(IllegalArgumentException.class);
+    public void createNotUniqueNicknameTest() {
+        User user = UserFactory.createAdam();
+        user.setNickname(u1.getNickname());
+        assertThatThrownBy(() -> userDao.create(user)).isInstanceOf(JpaSystemException.class);
     }
 
     @Test
-    public void createFindDelete(){
-        userDao.create(u1);
-        userDao.create(u2);
+    public void createUserTest() {
+        User user = UserFactory.createBob();
 
-        assertThat(userDao.findById(u1.getId()).getName()).isEqualTo("name1");
-        assertThat(userDao.findAll()).containsExactlyInAnyOrder(u1,u2);
+        userDao.create(user);
 
-        userDao.delete(u2);
+        List<User> result = em.createQuery("select u from User u", User.class).getResultList();
 
-        assertThat(userDao.findAll()).containsExactly(u1);
+        assertThat(result).contains(user);
     }
 
     @Test
-    public void createNull() {
+    public void findByIdTest(){
+        User user = userDao.findById(u2.getId());
+
+        assertThat(user).isNotNull().isEqualToComparingFieldByField(u2);
+    }
+
+    @Test
+    public void createNullTest() {
         assertThatThrownBy(() -> userDao.create(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
 
     @Test
-    public void delete() {
+    public void deleteTest() {
         Assert.assertNotNull(userDao.findById(u3.getId()));
         userDao.delete(u3);
         Assert.assertNull(userDao.findById(u3.getId()));
     }
 
     @Test
-    public void deleteNull() {
+    public void deleteNullTest() {
         assertThatThrownBy(() -> userDao.delete(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void findByIdNull() {
+    public void findByIdNullTest() {
         assertThatThrownBy(() -> userDao.findById(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void findByIdNonExisting() {
+    public void findByIdNonExistingTest() {
         User user = userDao.findById(-1L);
         assertThat(user).isNull();
     }
 
-
     @Test
-    public void find() {
-        User found = userDao.findById(u1.getId());
-        Assert.assertEquals(found.getName(), "name1");
-        Assert.assertEquals(found.getSurname(), "surneame1");
-        Assert.assertEquals(found.getNickname(), "nickname1");
-    }
-
-    @Test
-    public void findAll() {
+    public void findAllTest() {
         List<User> found = userDao.findAll();
-        Assert.assertEquals(found.size(), 3);
+        assertThat(found).containsExactlyInAnyOrder(u1, u2, u3);
     }
 
+    @Test
+    public void updateUserTest() {
+        u1.setNickname("newNickName");
 
+        userDao.update(u1);
 
+        User user = em.createQuery("select u from User u where u.id = :id", User.class)
+                .setParameter("id", u1.getId())
+                .getSingleResult();
+        assertThat(user).isNotNull().isEqualToComparingFieldByField(u1);
+    }
+
+    @Test
+    public void updateNullUserTest() {
+        assertThatThrownBy(() -> userDao.update(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void findByNickNameTest() {
+        User user = userDao.findByNickname(u1.getNickname());
+
+        assertThat(user).isNotNull().isEqualToComparingFieldByField(u1);
+    }
+
+    @Test
+    public void findByNonExistingNicknameTest() {
+        User user = userDao.findByNickname("_NON EXISTENT_");
+
+        assertThat(user).isNull();
+    }
+
+    @Test
+    public void findByNullNickNameTest() {
+        assertThatThrownBy(() -> userDao.findByNickname(null)).isInstanceOf(IllegalArgumentException.class);
+    }
 }

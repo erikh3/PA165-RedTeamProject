@@ -19,18 +19,8 @@ public class CommentDaoImpl implements CommentDao {
     @PersistenceContext
     private EntityManager em;
 
-    /**
-     * Sets entity manager
-     *
-     * @param entityManager entity manager
-     */
-    void setEntityManager(EntityManager entityManager) {
-        this.em = entityManager;
-    }
-
-
     @Override
-    public void create(Comment comment) {
+    public void create(Comment comment) throws IllegalArgumentException {
         if(comment == null) {
             throw new IllegalArgumentException("Comment argument is null.");
         }
@@ -38,7 +28,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void update(Comment comment) {
+    public void update(Comment comment) throws IllegalArgumentException {
         if(comment == null) {
             throw new IllegalArgumentException("Comment argument is null.");
         }
@@ -46,7 +36,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void delete(Comment comment) {
+    public void delete(Comment comment) throws IllegalArgumentException {
         if(comment == null) {
             throw new IllegalArgumentException("Comment argument is null.");
         }             
@@ -54,7 +44,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public Comment findById(Long id) {
+    public Comment findById(Long id) throws IllegalArgumentException {
         if(id == null) {
             throw new IllegalArgumentException("Comment id argument is null.");
         }
@@ -67,7 +57,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public List<Comment> getCommentsWithRideId(Long id) {
+    public List<Comment> getCommentsWithRideId(Long id) throws IllegalArgumentException {
         if(id == null) {
             throw new IllegalArgumentException("Comment id argument is null.");
         }
@@ -81,7 +71,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public List<Comment> getCommentsWithUserId(Long id) {
+    public List<Comment> getCommentsWithUserId(Long id) throws IllegalArgumentException {
         if(id == null) {
             throw new IllegalArgumentException("Comment id argument is null.");
         }
