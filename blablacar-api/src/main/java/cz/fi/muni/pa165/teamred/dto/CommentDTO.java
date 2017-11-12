@@ -13,8 +13,8 @@ public class CommentDTO {
     private Long id;
     private Date created;
     private String text;
-    private User author;
-    private Ride ride;
+    private UserDTO author;
+    private RideDTO rideDTO;
 
     public Long getId() {
         return id;
@@ -40,20 +40,20 @@ public class CommentDTO {
         this.text = text;
     }
 
-    public User getAuthor() {
+    public UserDTO getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setAuthor(UserDTO userDTO) {
+        this.author = userDTO;
     }
 
-    public Ride getRide() {
-        return ride;
+    public RideDTO getRide() {
+        return rideDTO;
     }
 
-    public void setRide(Ride ride) {
-        this.ride = ride;
+    public void setRideDTO(RideDTO rideDTO) {
+        this.rideDTO = rideDTO;
     }
 
     @Override
@@ -71,11 +71,11 @@ public class CommentDTO {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = 0;
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + (ride != null ? ride.hashCode() : 0);
+        result = 31 * result + (rideDTO != null ? rideDTO.hashCode() : 0);
         return result;
     }
 
@@ -86,7 +86,7 @@ public class CommentDTO {
                 ", created=" + created +
                 ", text='" + text + '\'' +
                 ", author=" + author +
-                ", ride=" + ride +
+                ", rideDTO=" + rideDTO +
                 '}';
     }
 }
