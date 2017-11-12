@@ -16,11 +16,11 @@ public interface RideFacade {
 
     void addPassenger(Long rideId, Long userId);
 
-    void addComment(Long rideId, Long userId);
+    void addComment(Long rideId, Long commentId);
 
     void removePassenger(Long rideId, Long userId);
 
-    void removeComment(Long rideId, Long userId);
+    void removeComment(Long rideId, Long commentId);
 
     RideDTO getRideWithId(Long rideId);
 
