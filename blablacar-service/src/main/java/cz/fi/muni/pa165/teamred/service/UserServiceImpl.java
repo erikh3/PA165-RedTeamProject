@@ -22,6 +22,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) throws IllegalArgumentException {
+        if (!isValid(user)) {
+            throw new IllegalArgumentException("");
+        }
+
         userDao.create(user);
         log.info("Service: " + UserServiceImpl.class + "created User: " + user.toString());
         return user;
@@ -29,22 +33,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUser(User user) throws IllegalArgumentException {
+        if (!isValid(user)) {
+            throw new IllegalArgumentException("");
+        }
+
         userDao.update(user);
         log.info("Service: " + UserServiceImpl.class + "updated User: " + user.toString());
     }
 
     @Override
     public void removeUser(User user) throws IllegalArgumentException {
-        userDao.delete(user);
-        log.info("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
+        if (userDao.findById(user.getId()) != null){
+            userDao.delete(user);
+            log.info("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
+        }
+        else {
+            log.info("Service: " + UserServiceImpl.class + "did not find User: " + user.toString());
+        }
+
     }
 
     @Override
-    public void addUserRideAsPassenger(User user, Ride ride)  throws IllegalArgumentException{
-        if (user.getRidesAsPassenger().contains(ride)){
+    public void addUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
+        if (user.getRidesAsPassenger().contains(ride)) {
             throw new IllegalArgumentException("User: " + user.getNickname() +
-                                                " is already a passenger in ride:"+
-                                                ride.toString());
+                    " is already a passenger in ride:" +
+                    ride.toString());
         }
         user.addRideAsPassenger(ride);
         log.info("Service: " + UserServiceImpl.class + "added Ride as Passenger: " +
@@ -53,10 +67,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUserRideAsDriver(User user, Ride ride)  throws IllegalArgumentException{
-        if (user.getRidesAsDriver().contains(ride)){
+    public void addUserRideAsDriver(User user, Ride ride) throws IllegalArgumentException {
+        if (user.getRidesAsDriver().contains(ride)) {
             throw new IllegalArgumentException("User: " + user.getNickname() +
-                    " is already a driver in ride:"+
+                    " is already a driver in ride:" +
                     ride.toString());
         }
         user.addRideAsDriver(ride);
@@ -66,10 +80,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUserComment(User user, Comment comment)  throws IllegalArgumentException{
-        if (user.getUserComments().contains(comment)){
+    public void addUserComment(User user, Comment comment) throws IllegalArgumentException {
+        if (user.getUserComments().contains(comment)) {
             throw new IllegalArgumentException("User: " + user.getNickname() +
-                    " already have this comment:"+
+                    " already have this comment:" +
                     comment.toString());
         }
         user.addComment(comment);
@@ -79,7 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void removeUserRideAsPassenger(User user, Ride ride)  throws IllegalArgumentException{
+    public void removeUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
         user.removerRideAsPassenger(ride);
         log.info("Service: " + UserServiceImpl.class + "removed Ride as Passenger: " +
                 ride.toString() +
@@ -87,7 +101,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void removeUserRideAsDriver(User user, Ride ride)  throws IllegalArgumentException{
+    public void removeUserRideAsDriver(User user, Ride ride) throws IllegalArgumentException {
         user.removerRideAsDriver(ride);
         log.info("Service: " + UserServiceImpl.class + "added Ride as Driver: " +
                 ride.toString() +
@@ -95,7 +109,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void removeUserComment(User user, Comment comment)  throws IllegalArgumentException{
+    public void removeUserComment(User user, Comment comment) throws IllegalArgumentException {
         user.removeComment(comment);
         log.info("Service: " + UserServiceImpl.class + "removed Comment: " +
                 comment.toString() +
@@ -105,7 +119,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(Long id) throws IllegalArgumentException {
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("Passed id paramenter is null");
         }
         User found = userDao.findById(id);
@@ -127,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByNickname(String name) throws IllegalArgumentException {
-        if (name == null){
+        if (name == null) {
             throw new IllegalArgumentException("Passed name paramenter is null");
         }
         User found = userDao.findByNickname(name);
@@ -136,9 +150,21 @@ public class UserServiceImpl implements UserService {
         return found;
     }
 
-    private boolean isValid(User user){
-        if (true){
-
+    private boolean isValid(User user) {
+        if (user == null) {
+            return false;
+        }
+        String nickname = user.getNickname();
+        if (nickname == null || nickname.length() == 0) {
+            return false;
+        }
+        String name = user.getName();
+        if (name == null || name.length() == 0) {
+            return false;
+        }
+        String surname = user.getSurname();
+        if (surname == null || surname.length() == 0) {
+            return false;
         }
         return true;
     }
