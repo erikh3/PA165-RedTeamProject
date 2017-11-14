@@ -6,6 +6,7 @@ import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -20,9 +21,12 @@ public class UserServiceImpl implements UserService {
     @Inject
     private UserDao userDao;
 
+    @Autowired
+    private RideService rideService;
+
     @Override
     public User createUser(User user) throws IllegalArgumentException {
-        if (!isValid(user)) {
+        if (!isValidUser(user)) {
             throw new IllegalArgumentException("");
         }
 
@@ -33,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUser(User user) throws IllegalArgumentException {
-        if (!isValid(user)) {
+        if (!isValidUser(user)) {
             throw new IllegalArgumentException("");
         }
 
@@ -150,7 +154,7 @@ public class UserServiceImpl implements UserService {
         return found;
     }
 
-    private boolean isValid(User user) {
+    private boolean isValidUser(User user) {
         if (user == null) {
             return false;
         }
@@ -166,6 +170,8 @@ public class UserServiceImpl implements UserService {
         if (surname == null || surname.length() == 0) {
             return false;
         }
+
+        /*Checking birthdate with actual time check*/
         return true;
     }
 }
