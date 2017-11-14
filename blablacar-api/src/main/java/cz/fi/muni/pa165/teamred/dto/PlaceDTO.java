@@ -1,7 +1,5 @@
 package cz.fi.muni.pa165.teamred.dto;
 
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -37,7 +35,7 @@ public class PlaceDTO {
     }
 
     public Set<RideDTO> getOriginatingRides() {
-        return Collections.unmodifiableSet(originatingRides);
+        return originatingRides;
     }
 
     public void setOriginatingRides(Set<RideDTO> originatingRides) {
@@ -45,7 +43,7 @@ public class PlaceDTO {
     }
 
     public Set<RideDTO> getDestinationRides() {
-        return Collections.unmodifiableSet(destinationRides);
+        return destinationRides;
     }
 
     public void setDestinationRides(Set<RideDTO> destinationRides) {

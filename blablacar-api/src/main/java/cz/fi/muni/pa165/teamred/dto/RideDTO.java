@@ -75,7 +75,7 @@ public class RideDTO {
     }
 
     public Set<UserDTO> getPassengers() {
-        return Collections.unmodifiableSet(this.passengers);
+        return this.passengers;
     }
 
     public void setPassengers(Set<UserDTO> passengers) {
@@ -83,7 +83,7 @@ public class RideDTO {
     }
 
     public Set<CommentDTO> getComments() {
-        return Collections.unmodifiableSet(this.comments);
+        return this.comments;
     }
 
     public void setComments(Set<CommentDTO> comments) {
