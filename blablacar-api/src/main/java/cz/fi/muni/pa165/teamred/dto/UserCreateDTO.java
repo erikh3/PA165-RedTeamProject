@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Created by Jozef Cibík on 09.11.2017.
+ * @author Jozef Cibík
  */
 @SuppressWarnings("WeakerAccess")
 public class UserCreateDTO {
