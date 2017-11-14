@@ -10,6 +10,12 @@ import java.util.List;
  */
 public interface RideFacade {
 
+
+    /**
+     *
+     * @param rideCreateDTO rideDTO
+     * @return Long - Id of created ride
+     */
     Long createRide(RideCreateDTO rideCreateDTO);
 
     void updateRide(RideDTO rideDto);
