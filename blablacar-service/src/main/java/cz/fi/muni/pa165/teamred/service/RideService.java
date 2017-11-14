@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// todo
+/**
+ * @author Šimon Mačejovský
+ */
 @Service
 public interface RideService {
 

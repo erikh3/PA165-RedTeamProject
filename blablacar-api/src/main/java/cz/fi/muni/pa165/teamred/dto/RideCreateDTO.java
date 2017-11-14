@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * Created by Šimon on 12.11.2017.
+ * @author Šimon Mačejovský
  */
 public class RideCreateDTO {
 

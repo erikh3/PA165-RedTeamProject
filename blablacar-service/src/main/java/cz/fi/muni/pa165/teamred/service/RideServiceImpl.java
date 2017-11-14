@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.List;
 
-// todo
+/**
+ * @author Šimon Mačejovský
+ */
 @Service
 public class RideServiceImpl implements RideService {
 
