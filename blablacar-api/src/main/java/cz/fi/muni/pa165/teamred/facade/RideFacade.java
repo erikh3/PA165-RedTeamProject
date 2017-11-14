@@ -5,7 +5,9 @@ import cz.fi.muni.pa165.teamred.dto.RideDTO;
 
 import java.util.List;
 
-// todo
+/**
+ * @author Šimon Mačejovský
+ */
 public interface RideFacade {
 
     Long createRide(RideCreateDTO rideCreateDTO);

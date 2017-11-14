@@ -4,7 +4,9 @@ package cz.fi.muni.pa165.teamred.dto;
 
 import java.util.*;
 
-// todo
+/**
+ * @author Šimon Mačejovský
+ */
 public class RideDTO {
     private Long id;
     private Date departure;

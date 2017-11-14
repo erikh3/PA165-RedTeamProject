@@ -18,7 +18,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.inject.Inject;
 import java.util.List;
 
-// todo
+/**
+ * @author Šimon Mačejovský
+ */
 @Service
 @Transactional
 public class RideFacadeImpl implements RideFacade {
