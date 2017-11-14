@@ -5,6 +5,7 @@ import cz.fi.muni.pa165.teamred.entity.Comment;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,8 +16,17 @@ public class CommentServiceImpl implements CommentService {
     @Inject
     private CommentDao commentDao;
 
+    @Inject
+    private TimeService timeService;
+
     @Override
     public Comment createComment(Comment comment) throws IllegalArgumentException {
+        if (comment == null) {
+            throw new IllegalArgumentException("Comment cannot be null.");
+        }
+
+        Date now = timeService.getCurrentTime();
+        comment.setCreated(now);
         commentDao.create(comment);
         return comment;
     }
