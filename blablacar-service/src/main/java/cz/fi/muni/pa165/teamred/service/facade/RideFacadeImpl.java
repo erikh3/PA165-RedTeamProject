@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,12 +48,6 @@ public class RideFacadeImpl implements RideFacade {
     }
 
     @Override
-    public void updateRide(RideDTO rideDto) {
-        throw new NotImplementedException();
-
-    }
-
-    @Override
     public void deleteRide(Long rideId) {
         Ride ride = new Ride();
         ride.setId(rideId);
@@ -64,8 +59,6 @@ public class RideFacadeImpl implements RideFacade {
     public void addPassenger(Long rideId, Long userId) {
         rideService.addPassenger(rideService.findById(rideId),
                 userService.findUserById(userId));
-
-
     }
 
     @Override
@@ -98,5 +91,26 @@ public class RideFacadeImpl implements RideFacade {
     @Override
     public List<RideDTO> getAllRides() {
         return beanMappingService.mapTo(rideService.findAll(), RideDTO.class);
+    }
+
+    @Override
+    public void changePrice(Long rideId, double newPrice) {
+        Ride ride = rideService.findById(rideId);
+        ride.setSeatPrice(newPrice);
+        rideService.updateRide(ride);
+    }
+
+    @Override
+    public void editAvailableSeats(Long rideId, int availableSeats) {
+        Ride ride = rideService.findById(rideId);
+        ride.setAvailableSeats(availableSeats);
+        rideService.updateRide(ride);
+    }
+
+    @Override
+    public void editDeparture(Long rideId, Date newDeparture) {
+        Ride ride = rideService.findById(rideId);
+        ride.setDeparture(newDeparture);
+        rideService.updateRide(ride);
     }
 }

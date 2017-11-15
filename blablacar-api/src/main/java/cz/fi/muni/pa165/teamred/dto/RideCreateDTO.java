@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
+ * DataTransferObject for creating Ride
+ *
  * @author Šimon Mačejovský
  */
 public class RideCreateDTO {
@@ -15,7 +17,18 @@ public class RideCreateDTO {
     @NotNull
     private UserDTO driver;
 
-    public RideCreateDTO() {
+    /**
+     * Constructor
+     */
+    public RideCreateDTO() {}
+
+    // getters and setters
+    public UserDTO getDriver() {
+        return driver;
+    }
+
+    public void setDriver(UserDTO driver) {
+        this.driver = driver;
     }
 
     public Date getDeparture() {
