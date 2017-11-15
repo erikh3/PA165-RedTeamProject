@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RideService rideService;
 
+    //___________________________________________________________________________________________________________Create
     @Override
     public User createUser(User user) throws IllegalArgumentException {
         if (!isValidUser(user)) {
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    //____________________________________________________________________________________________________________Update
     @Override
     public void editUser(User user) throws IllegalArgumentException {
         if (!isValidUser(user)) {
@@ -45,8 +47,9 @@ public class UserServiceImpl implements UserService {
         log.info("Service: " + UserServiceImpl.class + "updated User: " + user.toString());
     }
 
+    //____________________________________________________________________________________________________________Delete
     @Override
-    public void removeUser(User user) throws IllegalArgumentException {
+    public void deleteUser(User user) throws IllegalArgumentException {
         if (userDao.findById(user.getId()) != null){
             userDao.delete(user);
             log.info("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
@@ -57,6 +60,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    //______________________________________________________________________________________________________________Adds
     @Override
     public void addUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
         if (user.getRidesAsPassenger().contains(ride)) {
@@ -96,6 +100,7 @@ public class UserServiceImpl implements UserService {
                 " to User: " + user.toString());
     }
 
+    //___________________________________________________________________________________________________________Removes
     @Override
     public void removeUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
         user.removerRideAsPassenger(ride);
@@ -121,6 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    //_____________________________________________________________________________________________________________Finds
     @Override
     public User findUserById(Long id) throws IllegalArgumentException {
         if (id == null) {

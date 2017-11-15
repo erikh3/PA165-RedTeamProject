@@ -1,6 +1,9 @@
 package cz.fi.muni.pa165.teamred.service;
 
 import cz.fi.muni.pa165.teamred.dao.UserDao;
+import cz.fi.muni.pa165.teamred.entity.Comment;
+import cz.fi.muni.pa165.teamred.entity.Place;
+import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
@@ -14,6 +17,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +42,15 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     private User validUser;
     private User invalidUser;
 
+    private Ride validRide;
+    private Ride invalidRide;
+
+    private Comment validComment;
+    private Comment invalidComment;
+
+    private Calendar calendar = Calendar.getInstance();
+
+
     @BeforeClass
     void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -44,6 +58,9 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod
     void initMethod() {
+        calendar.set(2017, Calendar.NOVEMBER, 7);
+
+        //User Inits
         validUser = new User();
         validUser.setNickname("j_doe");
         validUser.setName("John");
@@ -55,6 +72,47 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         invalidUser.setName("Billy");
         invalidUser.setSurname("Barman");
         invalidUser.setId(2L);
+
+        //Place Inits
+        Place validPlaceSource = new Place();
+        validPlaceSource.setId(1L);
+        validPlaceSource.setName("Brno");
+
+        Place validPlaceDest = new Place();
+        validPlaceDest.setId(2L);
+        validPlaceDest.setName("Blava");
+
+        //Ride Inits
+        validRide = new Ride();
+        validRide.setSeatPrice(20.0);
+        validRide.setDestinationPlace(validPlaceDest);
+        validRide.setSourcePlace(validPlaceSource);
+        validRide.setAvailableSeats(4);
+        calendar.add(Calendar.DATE,5);
+        validRide.setDeparture((calendar.getTime()));
+        validRide.setId(1L);
+
+
+        invalidRide = new Ride();
+        invalidRide.setSeatPrice(20.0);
+        invalidRide.setDestinationPlace(validPlaceDest);
+        invalidRide.setSourcePlace(validPlaceSource);
+        invalidRide.setAvailableSeats(4);
+        invalidRide.setDeparture(calendar.getTime());
+        invalidRide.setId(1L);
+
+
+        //Comment Inits
+        validComment = new Comment();
+        validComment.setId(1L);
+        validComment.setCreated(calendar.getTime());
+        validComment.setText("Hello from Valid Comment");
+
+        invalidComment = new Comment();
+        invalidComment.setId(2L);
+        invalidComment.setCreated(calendar.getTime());
+        invalidComment.setText("Hello from Invalid Comment");
+
     }
 
     @Test
@@ -68,7 +126,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         assertThat(createdUser).isEqualToComparingFieldByField(validUser);
     }
 
-
+    //______________________________________________________________________________________________________Create Tests
     @Test
     void testCreateNullUser() {
         doThrow(new IllegalArgumentException()).when(userDao).create(null);
@@ -132,6 +190,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
     }
 
+    //______________________________________________________________________________________________________Update Tests
     @Test
     void testUpdateValidUserName(){
         doNothing().when(userDao).update(any());
@@ -192,6 +251,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         assertThatThrownBy(() -> userService.editUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
     }
 
+    //________________________________________________________________________________________________________Find Tests
     @Test
     void testFindAllUsers(){
         List<User> userList = new ArrayList<>();
@@ -212,11 +272,12 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         assertThat(foundUser).isEqualToComparingFieldByField(validUser);
     }
 
+    //______________________________________________________________________________________________________Delete Tests
     @Test
     void testDeleteUser(){
         doNothing().when(userDao).delete(validUser);
 
-        userService.removeUser(validUser);
+        userService.deleteUser(validUser);
 
         verify(userDao).delete(validUser);
     }
@@ -225,7 +286,112 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     void testDeleteNullUser(){
         doThrow(new IllegalArgumentException()).when(userDao).delete(null);
 
-        assertThatThrownBy(() -> userService.removeUser(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.deleteUser(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+
+    //________________________________________________________________________________________________________Adds Tests
+    @Test
+    void testAddUserValidRideAsPassenger() {
+        userService.addUserRideAsPassenger(validUser,validRide);
+        assertThat(validUser.getRidesAsPassenger().contains(validRide));
+    }
+
+    @Test
+    void testAddUserValidRideAsDriver() {
+        userService.addUserRideAsDriver(validUser,validRide);
+        assertThat(validUser.getRidesAsDriver().contains(validRide));
+    }
+
+    @Test
+    void testAddUserValidComment() {
+        userService.addUserComment(validUser, validComment);
+        assertThat(validUser.getUserComments().contains(validComment));
+    }
+
+    @Test
+    void testAddUserExistingRideAsPassenger() {
+
+    }
+
+    @Test
+    void testAddUserExistingRideAsDriver() {
+
+    }
+
+    @Test
+    void testAddUserExistingComment() {
+
+    }
+
+    @Test
+    void testAddUserRideAsPassenger() {
+
+    }
+
+    @Test
+    void testAddUserRideAsDriver() {
+
+    }
+
+    @Test
+    void testAddUserComment() {
+
+    }
+
+
+    @Test
+    void testAddUserNullComment() {
+
+    }
+
+
+    @Test
+    void testAddUserCommentWithAuthor() {
+
+    }
+
+
+    @Test
+    void testAddUserCommentNullText() {
+
+    }
+
+
+    @Test
+    void testAddUserCommentEmptyText() {
+
+    }
+
+    //______________________________________________________________________________________________________Remove Tests
+    @Test
+    void testRemoveUserRideAsPassenger() {
+
+    }
+
+    @Test
+    void testRemoveUserRideAsDriver() {
+
+    }
+
+    @Test
+    void testRemoveUserComment() {
+
+    }
+
+    @Test
+    void testRemoveUserNonExistingRideAsPassenger() {
+
+    }
+
+    @Test
+    void testRemoveUserNonExistingRideAsDriver() {
+
+    }
+
+    @Test
+    void testRemoveUserNonExistingComment() {
+
     }
 
 }
