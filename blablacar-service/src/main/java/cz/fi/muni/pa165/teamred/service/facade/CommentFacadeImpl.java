@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,20 +31,14 @@ public class CommentFacadeImpl implements CommentFacade {
     @Inject
     private UserService userService;
 
-    @Inject
-    private TimeService timeService;
-
     @Autowired
     private BeanMappingService beanMappingService;
 
     @Override
     public Long createComment(CommentCreateDTO commentCreateDTO) {
         Comment mappedComment = beanMappingService.mapTo(commentCreateDTO, Comment.class);
-        Date now = timeService.getCurrentTime();
-        mappedComment.setCreated(now);
-        // todo: uncomment when rideService & userService are implemented
-//        mappedComment.setRide(rideService.findById(commentCreateDTO.getRideId()));
-//        mappedComment.setAuthor(userService.findById(commentCreateDTO.getAuthorId()));
+        mappedComment.setRide(rideService.findById(commentCreateDTO.getRideId()));
+        mappedComment.setAuthor(userService.findUserById(commentCreateDTO.getAuthorId()));
         Comment comment = commentService.createComment(mappedComment);
         return comment.getId();
     }

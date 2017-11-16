@@ -32,6 +32,9 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
     @Mock
     private CommentDao commentDao;
 
+    @Mock
+    private TimeService timeService;
+
     @Autowired
     @InjectMocks
     private CommentService commentService;
@@ -93,9 +96,16 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
     void createCommentTest() {
         doNothing().when(commentDao).create(any());
 
-        commentService.createComment(sampleComment);
+        Calendar cal = Calendar.getInstance();
+        cal.set(2015, Calendar.MARCH, 8);
+        when(timeService.getCurrentTime()).thenReturn(cal.getTime());
 
+        Comment result = commentService.createComment(sampleComment);
+
+        verify(timeService).getCurrentTime();
         verify(commentDao).create(sampleComment);
+
+        assertThat(result).isEqualToComparingFieldByField(sampleComment);
     }
 
     @Test
