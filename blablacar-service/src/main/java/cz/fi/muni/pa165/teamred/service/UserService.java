@@ -14,7 +14,7 @@ import java.util.Collection;
 public interface UserService {
     User createUser(User user) throws IllegalArgumentException;
     void editUser(User user) throws IllegalArgumentException;
-    void removeUser(User user) throws IllegalArgumentException;
+    void deleteUser(User user) throws IllegalArgumentException;
 
     void addUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException;
     void addUserRideAsDriver(User user, Ride ride) throws IllegalArgumentException;

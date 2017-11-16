@@ -6,6 +6,7 @@ import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -20,9 +21,16 @@ public class UserServiceImpl implements UserService {
     @Inject
     private UserDao userDao;
 
+    @Autowired
+    private RideService rideService;
+
+    @Autowired
+    private TimeService timeService;
+
+    //___________________________________________________________________________________________________________Create
     @Override
     public User createUser(User user) throws IllegalArgumentException {
-        if (!isValid(user)) {
+        if (!isValidUser(user)) {
             throw new IllegalArgumentException("");
         }
 
@@ -31,9 +39,10 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    //____________________________________________________________________________________________________________Update
     @Override
     public void editUser(User user) throws IllegalArgumentException {
-        if (!isValid(user)) {
+        if (!isValidUser(user)) {
             throw new IllegalArgumentException("");
         }
 
@@ -41,20 +50,22 @@ public class UserServiceImpl implements UserService {
         log.info("Service: " + UserServiceImpl.class + "updated User: " + user.toString());
     }
 
+    //____________________________________________________________________________________________________________Delete
     @Override
-    public void removeUser(User user) throws IllegalArgumentException {
-        if (userDao.findById(user.getId()) != null){
+    public void deleteUser(User user) throws IllegalArgumentException {
             userDao.delete(user);
             log.info("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
-        }
-        else {
-            log.info("Service: " + UserServiceImpl.class + "did not find User: " + user.toString());
-        }
-
     }
 
+    //______________________________________________________________________________________________________________Adds
     @Override
     public void addUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
+        if (!isValidRide(ride)){
+            throw new IllegalArgumentException("Ride is not valid: " + ride.toString());
+        }
+        if (ride.getDriver() == null){
+            throw new IllegalArgumentException("Ride has no Driver: " + ride.toString());
+        }
         if (user.getRidesAsPassenger().contains(ride)) {
             throw new IllegalArgumentException("User: " + user.getNickname() +
                     " is already a passenger in ride:" +
@@ -68,6 +79,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserRideAsDriver(User user, Ride ride) throws IllegalArgumentException {
+        if (!isValidRide(ride)){
+            throw new IllegalArgumentException("Ride is not valid: " + ride.toString());
+        }
+        if (ride.getDriver() != null){
+            throw new IllegalArgumentException("Ride has already driver assigned: " + ride.toString());
+        }
         if (user.getRidesAsDriver().contains(ride)) {
             throw new IllegalArgumentException("User: " + user.getNickname() +
                     " is already a driver in ride:" +
@@ -81,6 +98,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserComment(User user, Comment comment) throws IllegalArgumentException {
+        if (!isValidComment(comment)){
+            throw new IllegalArgumentException("Comment is not valid: " + comment.toString());
+        }
         if (user.getUserComments().contains(comment)) {
             throw new IllegalArgumentException("User: " + user.getNickname() +
                     " already have this comment:" +
@@ -92,6 +112,7 @@ public class UserServiceImpl implements UserService {
                 " to User: " + user.toString());
     }
 
+    //___________________________________________________________________________________________________________Removes
     @Override
     public void removeUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
         user.removerRideAsPassenger(ride);
@@ -117,6 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    //_____________________________________________________________________________________________________________Finds
     @Override
     public User findUserById(Long id) throws IllegalArgumentException {
         if (id == null) {
@@ -150,7 +172,45 @@ public class UserServiceImpl implements UserService {
         return found;
     }
 
-    private boolean isValid(User user) {
+    private boolean isValidComment(Comment comment){
+        if (comment == null){
+            return false;
+        }
+        if (comment.getAuthor() != null){
+            return false;
+        }
+        if (comment.getText() == null){
+            return false;
+        }
+        if (comment.getText().length() == 0){
+            return false;
+        }
+        return true;
+
+    }
+
+    private boolean isValidRide(Ride ride){
+        if (ride == null){
+            return false;
+        }
+        if (ride.getDestinationPlace() == null) {
+            return false;
+        }
+        if (ride.getSourcePlace() == null){
+            return false;
+        }
+        //<0 or <= 0 ?
+        if (ride.getSeatPrice() <= 0){
+            return false;
+        }
+        if (ride.getAvailableSeats() < 0){
+            return false;
+        }
+        //Check ride departurte time if valid
+        return true;
+    }
+
+    private boolean isValidUser(User user) {
         if (user == null) {
             return false;
         }
@@ -166,6 +226,8 @@ public class UserServiceImpl implements UserService {
         if (surname == null || surname.length() == 0) {
             return false;
         }
+
+        /*Checking birthdate with actual time check*/
         return true;
     }
 }
