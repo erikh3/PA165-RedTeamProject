@@ -48,12 +48,20 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public void editUser(UserDTO userDTO) {
-        throw new NotImplementedException();
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setName(userDTO.getName());
+        user.setSurname(userDTO.getSurname());
+        user.setNickname(userDTO.getNickname());
+        userService.editUser(user);
     }
 
     @Override
     public void removeUser(Long userId) {
-        throw new NotImplementedException();
+        //redundant object creation ?
+        User userToDelete = new User();
+        userToDelete.setId(userId);
+        userService.deleteUser(userToDelete);
     }
 
     @Override
