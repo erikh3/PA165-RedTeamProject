@@ -77,36 +77,22 @@ public class RideFacadeTest {
     void prepareMethod(){
 
         adam = new User();
-        adam.setName("Adam");
         fero = new User();
-        fero.setName("Fero");
 
         adamDTO = new UserDTO();
-        adamDTO.setName("Adam");
         feroDTO = new UserDTO();
-        feroDTO.setName("Fero");
 
         brno = new Place();
         brno.setId(3L);
-        brno.setName("Brno");
 
         prague = new Place();
         prague.setId(4L);
-        prague.setName("Prague");
 
-        Calendar calendar3 = Calendar.getInstance();
         comment1 = new Comment();
         comment1.setId(2L);
-        comment1.setText("sample text");
-        calendar3.set(2017, Calendar.DECEMBER, 14);
-        comment1.setCreated(calendar3.getTime());
 
-        Calendar calendar4 = Calendar.getInstance();
         comment2 = new Comment();
         comment2.setId(2L);
-        comment2.setText("sample text");
-        calendar4.set(2015, Calendar.MARCH, 1);
-        comment2.setCreated(calendar4.getTime());
 
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(2017, Calendar.NOVEMBER, 14);
@@ -120,8 +106,6 @@ public class RideFacadeTest {
         rideDTO1.setAvailableSeats(4);
         rideDTO1.setSeatPrice(5.00);
         rideDTO1.setDeparture(calendar1.getTime());
-        //rideDTO1.setSourcePlace();
-        //rideDTO1.setDestinationPlace();
         rideDTO1.setDriver(adamDTO);
 
         ride1 = new Ride();
@@ -146,9 +130,7 @@ public class RideFacadeTest {
         rideDTO2.setAvailableSeats(3);
         rideDTO2.setSeatPrice(7.00);
         rideDTO2.setDeparture(calendar2.getTime());
-        //rideDTO2.setSourcePlace();
-        //rideDTO2.setDestinationPlace();
-        rideDTO1.setDriver(feroDTO);
+        rideDTO2.setDriver(feroDTO);
 
         ride2 = new Ride();
         ride2.setId(1L);
@@ -157,18 +139,8 @@ public class RideFacadeTest {
         ride2.setDeparture(calendar2.getTime());
         ride2.setSourcePlace(prague);
         ride2.setDestinationPlace(brno);
-        ride1.setDriver(fero);
-        ride1.addComment(comment2);
-
-        adam.addRideAsDriver(ride1);
-        fero.addRideAsDriver(ride2);
-        brno.addOriginatingRide(ride1);
-        prague.addOriginatingRide(ride2);
-
-        brno.addDestinationRide(ride2);
-        adam.addRideAsPassenger(ride2);
-        prague.addDestinationRide(ride1);
-        fero.addRideAsPassenger(ride1);
+        ride2.setDriver(fero);
+        ride2.addComment(comment2);
 
         Mockito.reset(rideService);
     }
@@ -267,7 +239,5 @@ public class RideFacadeTest {
         verify(rideService).findAll();
         assertThat(testRideList).containsExactlyInAnyOrder(rideDTO1, rideDTO2);
     }
-
-
-
+    
 }
