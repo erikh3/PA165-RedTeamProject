@@ -40,6 +40,9 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public void addPassenger(Ride ride, User passenger) throws IllegalArgumentException{
+        if (passenger == null){
+            throw new NullPointerException();
+        }
         if (ride.getPassengers().contains(passenger)) {
             throw new IllegalArgumentException();
         }
@@ -49,6 +52,12 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public void addComment(Ride ride, Comment comment) {
+        if (comment == null){
+            throw new NullPointerException();
+        }
+        if (ride.getComments().contains(comment)) {
+            throw new IllegalArgumentException();
+        }
         ride.addComment(comment);
 
     }
