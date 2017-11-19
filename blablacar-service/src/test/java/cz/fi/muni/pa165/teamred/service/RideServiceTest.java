@@ -75,6 +75,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
         ride1.setSeatPrice(5.00);
         //ride1.addComment(comment1);
 
+
         brno = new Place();
         brno.setId(1L);
         brno.setName("Brno");
@@ -83,7 +84,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
         adam = new User();
         adam.setId(8L);
         adam.setName("Adam");
-        adam.addRideAsDriver(ride1);
+        //adam.addRideAsDriver(ride1);
 
         Calendar departure2 = Calendar.getInstance();
         departure1.set(2016, Calendar.OCTOBER, 10, 20, 0);
@@ -110,12 +111,12 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
         fero = new User();
         fero.setId(8L);
         fero.setName("Fero");
-        fero.addRideAsDriver(ride2);
+        //fero.addRideAsDriver(ride2);
 
-        brno.addDestinationRide(ride2);
-        adam.addRideAsPassenger(ride2);
-        prague.addDestinationRide(ride1);
-        fero.addRideAsPassenger(ride1);
+        //brno.addDestinationRide(ride2);
+        //adam.addRideAsPassenger(ride2);
+        //prague.addDestinationRide(ride1);
+        //fero.addRideAsPassenger(ride1);
 
         ride1.setSourcePlace(brno);
         ride1.setDestinationPlace(prague);
@@ -227,8 +228,61 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
         assertThat(ride1.getComments().contains(comment1));
     }
 
+    @Test
+    void addExistingPassenger() {
+        rideService.addPassenger(ride1, fero);
+        assertThat(ride1.getPassengers().contains(fero));
 
-    //TODO add/remove tests
+        assertThatThrownBy(() -> rideService.addPassenger(ride1, fero)).isInstanceOf(IllegalArgumentException.class);
+    }
 
+    @Test
+    void addExistingComment() {
+        rideService.addComment(ride1, comment1);
+        assertThat(ride1.getComments().contains(comment1));
 
+        assertThatThrownBy(() -> rideService.addComment(ride1, comment1)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void addNullPassenger() {
+        assertThatThrownBy(()-> rideService.addPassenger(ride1,null)).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void addNullComment() {
+        assertThatThrownBy(()-> rideService.addComment(ride1,null)).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void removePassenger() {
+        rideService.addPassenger(ride1, fero);
+        assertThat(ride1.getPassengers().contains(fero));
+
+        rideService.removePassenger(ride1, fero);
+        assertThat(!ride1.getPassengers().contains(fero));
+    }
+
+    @Test
+    void removeComment() {
+        rideService.addComment(ride1, comment2);
+        assertThat(ride1.getComments().contains(comment2));
+
+        rideService.removeComment(ride1, comment2);
+        assertThat(!ride1.getComments().contains(comment2));
+    }
+
+    @Test
+    void removeNonExistingPassenger() {
+        int numbOfPassengers = ride1.getPassengers().size();
+        rideService.removePassenger(ride1, adam);
+        assertThat(ride1.getPassengers().size()).isEqualTo(numbOfPassengers);
+    }
+
+    @Test
+    void removeNonExistingComment() {
+        int numbOfComments = ride1.getComments().size();
+        rideService.removeComment(ride1, comment2);
+        assertThat(ride1.getComments().size()).isEqualTo(numbOfComments);
+    }
 }

@@ -239,5 +239,5 @@ public class RideFacadeTest {
         verify(rideService).findAll();
         assertThat(testRideList).containsExactlyInAnyOrder(rideDTO1, rideDTO2);
     }
-    
+
 }
