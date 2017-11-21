@@ -2,6 +2,8 @@ package cz.fi.muni.pa165.teamred.service.facade;
 
 import cz.fi.muni.pa165.teamred.dto.UserCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.UserDTO;
+import cz.fi.muni.pa165.teamred.entity.Comment;
+import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.facade.UserFacade;
 import cz.fi.muni.pa165.teamred.service.BeanMappingService;
@@ -13,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -64,40 +65,89 @@ public class UserFacadeImpl implements UserFacade {
         userService.deleteUser(userToDelete);
     }
 
-    @Override
-    public void addComment(Long userId, Long commentId) {
-        userService.addUserComment(userService.findUserById(userId),
-                commentService.findById(commentId));
-        log.info("Added Comment: " + commentService.findById(commentId).toString() +
-                "to User: " + userService.findUserById(userId).toString());
-    }
-
-    @Override
-    public void addRideAsDriver(Long userId, Long rideId) {
-        throw new NotImplementedException();
-    }
 
     @Override
     public void addRideAsPassenger(Long userId, Long rideId) {
-        throw new NotImplementedException();
+        User user = userService.findUserById(userId);
+        if (user == null){
+            log.info("No user found with id: " + userId);
+            return;
+        }
+        Ride ride = rideService.findById(rideId);
+        if (ride == null){
+            log.info("No ride found with id: " + rideId);
+            return;
+        }
+
+        userService.addUserRideAsPassenger(user, ride);
+        rideService.addPassenger(ride,user);
+        log.info("Added user: " + user +
+        " as a passenger in ride: " + ride);
     }
 
     @Override
     public void removeComment(Long userId, Long commentId) {
-        userService.removeUserComment(userService.findUserById(userId),
-                commentService.findById(commentId));
-        log.info("Removed Comment: " + commentService.findById(commentId).toString() +
-        "from User: " + userService.findUserById(userId).toString());
+        User user = userService.findUserById(userId);
+        if (user == null){
+            log.info("No user found with id: " + userId);
+            return;
+        }
+        Comment comment = commentService.findById(commentId);
+        if (comment == null){
+            log.info("No comment found with id: " + commentId);
+            return;
+        }
+
+        //deleting both sides of references
+        userService.removeUserComment(user,comment);
+        log.info("Removed Comment: " + comment.toString() +
+        " and comment reference from User: " + user.toString());
+
+        commentService.deleteComment(comment);
     }
 
     @Override
     public void removeRideAsDriver(Long userId, Long rideId) {
-        throw new NotImplementedException();
+        User user = userService.findUserById(userId);
+        if (user == null){
+            log.info("No user found with id: " + userId);
+            return;
+        }
+        Ride ride = rideService.findById(rideId);
+        if (ride == null){
+            log.info("No ride found with id: " + rideId);
+            return;
+        }
+        //deleting both sides of references
+
+        userService.removeUserRideAsDriver(user, ride);
+        log.info("Removed ride:" + ride.toString() +
+        " and ride reference from user( as a Driver ):" + user.toString());
+
+        //method should remove passengers reference to this ride
+        rideService.deleteRide(ride);
     }
 
     @Override
     public void removeRideAsPassenger(Long userId, Long rideId) {
-        throw new NotImplementedException();
+        User user = userService.findUserById(userId);
+        if (user == null){
+            log.info("No user found with id: " + userId);
+            return;
+        }
+        Ride ride = rideService.findById(rideId);
+        if (ride == null){
+            log.info("No ride found with id: " + rideId);
+            return;
+        }
+
+        //deleting both sides of references
+
+        userService.removeUserRideAsPassenger(user, ride);
+        log.info("Removed ride reference:" + ride.toString() +
+                " from user( as a Passenger ):" + user.toString());
+
+        rideService.removePassenger(ride, user);
     }
 
     @Override
