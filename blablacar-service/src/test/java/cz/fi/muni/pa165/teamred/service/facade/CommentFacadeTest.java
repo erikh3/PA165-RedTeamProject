@@ -5,9 +5,7 @@ import cz.fi.muni.pa165.teamred.dto.CommentDTO;
 import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
-import cz.fi.muni.pa165.teamred.service.BeanMappingService;
-import cz.fi.muni.pa165.teamred.service.CommentService;
-import cz.fi.muni.pa165.teamred.service.TimeService;
+import cz.fi.muni.pa165.teamred.service.*;
 import cz.fi.muni.pa165.teamred.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,6 +36,12 @@ public class CommentFacadeTest {
 
     @Mock
     private CommentService commentService;
+
+    @Mock
+    private RideService rideService;
+
+    @Mock
+    private UserService userService;
 
     @Autowired
     @InjectMocks
@@ -87,6 +91,8 @@ public class CommentFacadeTest {
         createdComment.setId(42L);
 
         when(commentService.createComment(commentCreate)).thenReturn(createdComment);
+        when(rideService.findById(any())).thenReturn(new Ride());
+        when(userService.findUserById(any())).thenReturn(new User());
 
         Long id = commentFacadeImpl.createComment(commentCreateDTO);
 
