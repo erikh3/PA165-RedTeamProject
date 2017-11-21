@@ -3,6 +3,8 @@ package cz.fi.muni.pa165.teamred.service.facade;
 import cz.fi.muni.pa165.teamred.dto.CommentCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.CommentDTO;
 import cz.fi.muni.pa165.teamred.entity.Comment;
+import cz.fi.muni.pa165.teamred.entity.Ride;
+import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.facade.CommentFacade;
 import cz.fi.muni.pa165.teamred.service.*;
 import org.slf4j.Logger;
@@ -37,8 +39,14 @@ public class CommentFacadeImpl implements CommentFacade {
     @Override
     public Long createComment(CommentCreateDTO commentCreateDTO) {
         Comment mappedComment = beanMappingService.mapTo(commentCreateDTO, Comment.class);
-        mappedComment.setRide(rideService.findById(commentCreateDTO.getRideId()));
-        mappedComment.setAuthor(userService.findUserById(commentCreateDTO.getAuthorId()));
+        Ride ride = rideService.findById(commentCreateDTO.getRideId());
+        mappedComment.setRide(ride);
+        ride.addComment(mappedComment);
+
+        User user = userService.findUserById(commentCreateDTO.getAuthorId());
+        mappedComment.setAuthor(user);
+        user.addComment(mappedComment);
+
         Comment comment = commentService.createComment(mappedComment);
         return comment.getId();
     }
