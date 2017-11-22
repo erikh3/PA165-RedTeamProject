@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+	   <groupId>cz.fi.muni.pa165.teamred</groupId>
+	    <artifactId>blablacar-parent</artifactId>
+	    <version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>blablacar-api</artifactId>
+	<packaging>jar</packaging>
+    <name>API</name>
+
+	<dependencies>
+		<!-- validation annotations for bean properties -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cz.fi.muni.pa165.teamred</groupId>
+            <artifactId>blablacar-persistence</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+</project>

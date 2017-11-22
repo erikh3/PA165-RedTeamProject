@@ -1,192 +1,285 @@
 package cz.fi.muni.pa165.teamred.dao;
 
+import cz.fi.muni.pa165.teamred.PersistenceSampleApplicationContext;
 import cz.fi.muni.pa165.teamred.entity.Comment;
+import cz.fi.muni.pa165.teamred.entity.Place;
+import cz.fi.muni.pa165.teamred.entity.Ride;
+import cz.fi.muni.pa165.teamred.entity.User;
+import cz.fi.muni.pa165.teamred.testutils.CommentFactory;
+import cz.fi.muni.pa165.teamred.testutils.PlaceFactory;
+import cz.fi.muni.pa165.teamred.testutils.RideFactory;
+import cz.fi.muni.pa165.teamred.testutils.UserFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import javax.persistence.*;
+import javax.validation.ConstraintViolationException;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
 
 /**
- * Unit test with mocked EntityManager
  * @author Erik Horváth
- *
- * This pattern can be seen in multiple open source projects
- * @see <a href="https://github.com/jeffxor/jaymen-code-examples">https://github.com/jeffxor/jaymen-code-examples</a>
  */
-public class CommentDaoImplTest {
+@Transactional
+@ContextConfiguration(classes = PersistenceSampleApplicationContext.class)
+@TestExecutionListeners(TransactionalTestExecutionListener.class)
+public class CommentDaoImplTest extends AbstractTestNGSpringContextTests {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private CommentDao commentDao;
+
+    private User adam, bob;
+    private Ride brnoToPraha, prahaToBrno;
     private Comment positiveComment, negativeComment;
 
-    private EntityManager entityManager;
-    private TypedQuery typedQuery;
-
-    private CommentDaoImpl commentDaoImpl;
-
     @BeforeMethod
-    void before() {
-        positiveComment = new Comment();
-        positiveComment.setId(2L);
-        positiveComment.setText("Very good ride, enjoyed every single bit.");
+    void setUp() {
+        Place brno = PlaceFactory.createBrno();
+        Place praha = PlaceFactory.createPraha();
 
-        negativeComment = new Comment();
-        negativeComment.setText("Never again.");
+        adam = UserFactory.createAdam();
+        bob = UserFactory.createBob();
 
-        entityManager = mock(EntityManager.class);
-        EntityTransaction transaction = mock(EntityTransaction.class);
-        typedQuery = mock(TypedQuery.class);
+        Calendar calendar = Calendar.getInstance();
 
-        when(entityManager.getTransaction()).thenReturn(transaction);
-        commentDaoImpl = new CommentDaoImpl();
-        commentDaoImpl.setEntityManager(entityManager);
+        calendar.set(2017, Calendar.MARCH, 21);
+        brnoToPraha = RideFactory.createRide(brno,
+                praha,
+                adam,
+                calendar.getTime(),
+                4,
+                250.5,
+                new HashSet<>(Collections.singletonList(bob)));
+
+        calendar.set(2015, Calendar.DECEMBER, 2);
+        prahaToBrno = RideFactory.createRide(praha,
+                brno,
+                bob,
+                calendar.getTime(),
+                2,
+                308.45,
+                new HashSet<>(Collections.singletonList(adam)));
+
+        positiveComment = CommentFactory.createPositiveComment();
+        positiveComment.setAuthor(bob);
+        positiveComment.setRide(brnoToPraha);
+
+        negativeComment = CommentFactory.createNegativeComment();
+        negativeComment.setAuthor(adam);
+        negativeComment.setRide(prahaToBrno);
+
+        entityManager.persist(adam);
+        entityManager.persist(bob);
+
+        entityManager.persist(brno);
+        entityManager.persist(praha);
+
+        entityManager.persist(brnoToPraha);
+        entityManager.persist(prahaToBrno);
     }
 
     @Test
-    void createCommentTest() {
-        doNothing().when(entityManager).persist(positiveComment);   // tells entityManager what to do
+    void createComment() {
+        commentDao.create(positiveComment);
 
-        commentDaoImpl.create(positiveComment);         // execute tested action
-
-        verify(entityManager).persist(positiveComment); // verifies that persist() was called with positiveComment as argument
+        List<Comment> resultList = entityManager.createQuery("select c from Comment c", Comment.class).getResultList();
+        assertThat(resultList).containsExactlyInAnyOrder(positiveComment);
     }
 
     @Test
-    void createCommentNullTest() {
-        assertThatThrownBy(() -> commentDaoImpl.create(null)).isInstanceOf(IllegalArgumentException.class);
+    void createMultipleComments() {
+        commentDao.create(positiveComment);
+        commentDao.create(negativeComment);
+
+        List<Comment> resultList = entityManager.createQuery("select c from Comment c", Comment.class).getResultList();
+        assertThat(resultList).containsExactlyInAnyOrder(positiveComment, negativeComment);
+    }
+
+    @Test
+    void createCommentNull() {
+        assertThatThrownBy(() -> commentDao.create(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void createCommentNullText() {
+        positiveComment.setText(null);
+
+        assertThatThrownBy(() -> commentDao.create(positiveComment)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    void createCommentNullCreationDate() {
+        positiveComment.setCreated(null);
+
+        assertThatThrownBy(() -> commentDao.create(positiveComment)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    void createCommentNullAuthor() {
+        positiveComment.setAuthor(null);
+
+        assertThatThrownBy(() -> commentDao.create(positiveComment)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    void createCommentNullRide() {
+        positiveComment.setRide(null);
+
+        assertThatThrownBy(() -> commentDao.create(positiveComment)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    void updateComment() {
+        entityManager.persist(positiveComment);
+
+        String updatedText = positiveComment.getText() + " and something else here.";
+        positiveComment.setText(updatedText);
+
+        commentDao.update(positiveComment);
+
+        Comment comment = entityManager.find(Comment.class, positiveComment.getId());
+
+        assertThat(comment).isNotNull().isEqualToComparingFieldByField(positiveComment);
+    }
+
+    @Test
+    void updateNonExistingComment() {
+        Comment comment = CommentFactory.createNegativeComment();
+        comment.setAuthor(adam);
+        comment.setRide(prahaToBrno);
+
+        commentDao.update(comment);
+
+        List<Comment> resultList = entityManager.createQuery("select c from Comment c", Comment.class).getResultList();
+
+        assertThat(resultList).containsExactlyInAnyOrder(comment);
+    }
+
+    @Test
+    void updateCommentNull() {
+        assertThatThrownBy(() -> commentDao.update(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void findAll() {
-        final List<Comment> expectedResult = Arrays.asList(positiveComment, negativeComment);
-        when(typedQuery.getResultList()).thenReturn(expectedResult);
-        when(entityManager.createQuery(eq("SELECT c FROM Comment c"), eq(Comment.class))).thenReturn(typedQuery);
+        entityManager.persist(positiveComment);
+        entityManager.persist(negativeComment);
 
-        List<Comment> result = commentDaoImpl.findAll();
-
-        assertThat(result).containsExactlyInAnyOrder(positiveComment, negativeComment);
+        List<Comment> resultList = commentDao.findAll();
+        assertThat(resultList).containsExactlyInAnyOrder(positiveComment, negativeComment);
     }
 
     @Test
     void deleteExistingComment() {
-        when(entityManager.contains(positiveComment)).thenReturn(true);
-        doNothing().when(entityManager).remove(positiveComment);
+        entityManager.persist(positiveComment);
+        entityManager.persist(negativeComment);
 
-        commentDaoImpl.delete(positiveComment);
+        commentDao.delete(negativeComment);
 
-        verify(entityManager).remove(positiveComment);
+        List<Comment> resultList = entityManager.createQuery("select c from Comment c", Comment.class).getResultList();
+        assertThat(resultList).containsExactlyInAnyOrder(positiveComment);
     }
 
     @Test
     void deleteNonExistentComment() {
-        when(entityManager.contains(positiveComment)).thenReturn(false);
-        when(entityManager.merge(positiveComment)).thenReturn(positiveComment);
-        doNothing().when(entityManager).remove(positiveComment);
+        entityManager.persist(positiveComment);
 
-        commentDaoImpl.delete(positiveComment);
+        commentDao.delete(negativeComment);
 
-        verify(entityManager).remove(positiveComment);
+        List<Comment> resultList = entityManager.createQuery("select c from Comment c", Comment.class).getResultList();
+        assertThat(resultList).containsExactlyInAnyOrder(positiveComment);
     }
 
     @Test
     void deleteNull() {
-        assertThatThrownBy(() -> commentDaoImpl.delete(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentDao.delete(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void findById() {
-        when(entityManager.find(eq(Comment.class), eq(positiveComment.getId()))).thenReturn(positiveComment);
+        entityManager.persist(negativeComment);
 
-        Comment result = commentDaoImpl.findById(positiveComment.getId());
+        Comment result = commentDao.findById(negativeComment.getId());
 
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(positiveComment);
+        assertThat(result).isEqualToComparingFieldByField(negativeComment);
     }
 
     @Test
     void findByNonExistentId() {
-        final Long nonExistentId = 5L;
-        when(entityManager.find(eq(Comment.class), eq(nonExistentId))).thenReturn(null);
-
-        Comment result = commentDaoImpl.findById(nonExistentId);
+        Comment result = commentDao.findById(-5L);
 
         assertThat(result).isNull();
     }
 
     @Test
     void findByIdNull() {
-        assertThatThrownBy(() -> commentDaoImpl.findById(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentDao.findById(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void getCommentsWithRideId() {
-        final Long rideId = 4L;
-        final String queryString = "SELECT c FROM Comment c WHERE c.ride.id = :id";
-        final List<Comment> expectedResult = Collections.singletonList(positiveComment);
-        TypedQuery intermediateQuery = mock(TypedQuery.class);
-        when(entityManager.createQuery(eq(queryString), eq(Comment.class))).thenReturn(intermediateQuery);
-        when(intermediateQuery.setParameter(matches("id"), eq(rideId))).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(expectedResult);
+        entityManager.persist(positiveComment);
 
-        List<Comment> comments = commentDaoImpl.getCommentsWithRideId(rideId);
+        // update ride side too
+        positiveComment.getRide().addComment(positiveComment);
+        entityManager.merge(positiveComment.getRide());
 
-        assertThat(comments).containsExactlyInAnyOrder(positiveComment);
+        List<Comment> resultList = commentDao.getCommentsWithRideId(positiveComment.getRide().getId());
+
+        assertThat(resultList).containsExactlyInAnyOrder(positiveComment);
+    }
+
+    @Test
+    void getCommentsWithRideIdNoComments() {
+        List<Comment> resultList = commentDao.getCommentsWithRideId(brnoToPraha.getId());
+
+        assertThat(resultList).isEmpty();
     }
 
     @Test
     void getCommentsWithNonExistentRideId() {
-        final Long nonExistentId = 6L;
-        final String queryString = "SELECT c FROM Comment c WHERE c.ride.id = :id";
-        TypedQuery intermediateQuery = mock(TypedQuery.class);
-        when(entityManager.createQuery(eq(queryString), eq(Comment.class))).thenReturn(intermediateQuery);
-        when(intermediateQuery.setParameter(matches("id"), eq(nonExistentId))).thenThrow(new NoResultException());
+        List<Comment> resultList = commentDao.getCommentsWithRideId(-44L);
 
-        List<Comment> result = commentDaoImpl.getCommentsWithRideId(nonExistentId);
-
-        assertThat(result).isNull();
+        assertThat(resultList).isEmpty();
     }
 
     @Test
     void getCommentsWithRideIdNull() {
-        assertThatThrownBy(() -> commentDaoImpl.getCommentsWithRideId(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentDao.getCommentsWithRideId(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void getCommentsWithUserId() {
-        final Long userId = 6848L;
-        final String queryString = "SELECT c FROM Comment c WHERE c.author.id = :id";
-        final List<Comment> expectedResult = Collections.singletonList(negativeComment);
-        TypedQuery intermediateQuery = mock(TypedQuery.class);
-        when(entityManager.createQuery(eq(queryString), eq(Comment.class))).thenReturn(intermediateQuery);
-        when(intermediateQuery.setParameter(matches("id"), eq(userId))).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(expectedResult);
+        entityManager.persist(negativeComment);
 
-        List<Comment> result = commentDaoImpl.getCommentsWithUserId(userId);
+        // update author side too
+        negativeComment.getAuthor().addComment(negativeComment);
+        entityManager.merge(negativeComment.getAuthor());
 
-        assertThat(result).containsExactlyInAnyOrder(negativeComment);
+        List<Comment> resultList = commentDao.getCommentsWithUserId(negativeComment.getAuthor().getId());
+
+        assertThat(resultList).containsExactlyInAnyOrder(negativeComment);
     }
 
     @Test
     void getCommentsWithNonExistentUserId() {
-        final Long nonExistentId = 66L;
-        final String queryString = "SELECT c FROM Comment c WHERE c.author.id = :id";
-        TypedQuery intermediateQuery = mock(TypedQuery.class);
-        when(entityManager.createQuery(eq(queryString), eq(Comment.class))).thenReturn(intermediateQuery);
-        when(intermediateQuery.setParameter(matches("id"), eq(nonExistentId))).thenThrow(new NoResultException());
+        List<Comment> resultList = commentDao.getCommentsWithUserId(-89L);
 
-        List<Comment> comments = commentDaoImpl.getCommentsWithUserId(nonExistentId);
-
-        assertThat(comments).isNull();
+        assertThat(resultList).isEmpty();
     }
 
     @Test
     void getCommentsWithNullUserId() {
-        assertThatThrownBy(() -> commentDaoImpl.getCommentsWithUserId(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentDao.getCommentsWithUserId(null)).isInstanceOf(IllegalArgumentException.class);
     }
 }
