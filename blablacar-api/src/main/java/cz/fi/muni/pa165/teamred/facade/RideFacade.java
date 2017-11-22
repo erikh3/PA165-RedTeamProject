@@ -38,14 +38,6 @@ public interface RideFacade {
     void addPassenger(Long rideId, Long userId);
 
     /**
-     * Adds comment to ride.
-     *
-     * @param rideId id of ride
-     * @param commentId id of comment which will be added to ride
-     */
-    void addComment(Long rideId, Long commentId);
-
-    /**
      * Removes passenger from ride.
      *
      * @param rideId id of ride

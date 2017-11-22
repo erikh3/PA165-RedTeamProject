@@ -2,7 +2,9 @@ package cz.fi.muni.pa165.teamred.service.facade;
 
 import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.RideDTO;
+import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Ride;
+import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.facade.RideFacade;
 import cz.fi.muni.pa165.teamred.service.BeanMappingService;
 import cz.fi.muni.pa165.teamred.service.CommentService;
@@ -43,6 +45,11 @@ public class RideFacadeImpl implements RideFacade {
     @Override
     public Long createRide(RideCreateDTO rideCreateDTO) {
         Ride mappedRide = beanMappingService.mapTo(rideCreateDTO, Ride.class);
+
+        User user = userService.findUserById(rideCreateDTO.getDriver().getId());
+        mappedRide.setDriver(user);
+        user.addRideAsDriver(mappedRide);
+
         Ride ride = rideService.createRide(mappedRide);
         return  ride.getId();
     }
@@ -57,28 +64,69 @@ public class RideFacadeImpl implements RideFacade {
 
     @Override
     public void addPassenger(Long rideId, Long userId) {
-        rideService.addPassenger(rideService.findById(rideId),
-                userService.findUserById(userId));
-    }
+        Ride ride = rideService.findById(rideId);
+        if (ride == null){
+            log.info("No ride found with id: " + rideId);
+            return;
+        }
 
-    @Override
-    public void addComment(Long rideId, Long commentId) {
-        rideService.addComment(rideService.findById(rideId),
-                commentService.findById(commentId));
+        User user = userService.findUserById(userId);
+        if (user == null){
+            log.info("No user found with id: " + userId);
+            return;
+        }
 
+        int seats = ride.getAvailableSeats();
+        if (seats == 0){
+            log.info("No available seats in ride" + rideId);
+            return;
+        } else{
+            rideService.addPassenger(ride, user);
+            userService.addUserRideAsPassenger(user, ride);
+            this.editAvailableSeats(rideId, seats-1);
+        }
     }
 
     @Override
     public void removePassenger(Long rideId, Long userId) {
-        rideService.removePassenger(rideService.findById(rideId),
-                userService.findUserById(userId));
+        Ride ride = rideService.findById(rideId);
+        if (ride == null){
+            log.info("No ride found with id: " + rideId);
+            return;
+        }
+
+        User user = userService.findUserById(userId);
+        if (user == null){
+            log.info("No user found with id: " + userId);
+            return;
+        }
+
+        int seats = ride.getAvailableSeats();
+
+        rideService.removePassenger(ride, user);
+        userService.removeUserRideAsPassenger(user, ride);
+        this.editAvailableSeats(rideId, seats+1);
 
     }
 
     @Override
     public void removeComment(Long rideId, Long commentId) {
-        rideService.removeComment(rideService.findById(rideId),
-                commentService.findById(commentId));
+        Ride ride = rideService.findById(rideId);
+        if (ride == null){
+            log.info("No ride found with id: " + rideId);
+            return;
+        }
+
+        Comment comment = commentService.findById(commentId);
+        if (comment == null){
+            log.info("No comment found with id: " + commentId);
+            return;
+        }
+
+        User user = comment.getAuthor();
+        rideService.removeComment(ride,comment);
+        userService.removeUserComment(user, comment);
+        commentService.deleteComment(comment);
 
     }
 
