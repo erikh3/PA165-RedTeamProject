@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.teamred.facade;
 
 import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.RideDTO;
+import cz.fi.muni.pa165.teamred.dto.UserDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -28,30 +29,6 @@ public interface RideFacade {
      * @param rideId id of ride which will be deleted
      */
     void deleteRide(Long rideId);
-
-    /**
-     * Adds passanger to ride.
-     *
-     * @param rideId id of ride
-     * @param userId id of user which will be added to ride as passanger
-     */
-    void addPassenger(Long rideId, Long userId);
-
-    /**
-     * Removes passenger from ride.
-     *
-     * @param rideId id of ride
-     * @param userId id passenger which will be removed from ride
-     */
-    void removePassenger(Long rideId, Long userId);
-
-    /**
-     * Removes comment from ride.
-     *
-     * @param rideId id of ride
-     * @param commentId id of comment which will be removed from ride
-     */
-    void removeComment(Long rideId, Long commentId);
 
 
     /**

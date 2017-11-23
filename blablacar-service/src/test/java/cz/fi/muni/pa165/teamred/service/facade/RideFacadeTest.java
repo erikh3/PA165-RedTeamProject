@@ -8,9 +8,7 @@ import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
-import cz.fi.muni.pa165.teamred.service.BeanMappingService;
-import cz.fi.muni.pa165.teamred.service.PlaceService;
-import cz.fi.muni.pa165.teamred.service.RideService;
+import cz.fi.muni.pa165.teamred.service.*;
 import cz.fi.muni.pa165.teamred.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -43,6 +41,12 @@ public class RideFacadeTest {
     @Mock
     RideService rideService;
 
+    @Mock
+    UserService userService;
+
+    @Mock
+    CommentService commentService;
+
     @Autowired
     @InjectMocks
     RideFacadeImpl rideFacade;
@@ -72,15 +76,38 @@ public class RideFacadeTest {
     void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
-
+/*
     @BeforeMethod
-    void prepareMethod(){
+    void initDTO(){
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(2017, Calendar.NOVEMBER, 14);
 
-        adam = new User();
-        fero = new User();
+        rideDTO1 = new RideDTO();
+        rideDTO1.setId(8L);
+        rideDTO1.setAvailableSeats(4);
+        rideDTO1.setSeatPrice(5.00);
+        rideDTO1.setDeparture(calendar1.getTime());
+        rideDTO1.setDriver(adamDTO);
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(2016, Calendar.APRIL, 4);
+
+        rideDTO2 = new RideDTO();
+        rideDTO2.setId(1L);
+        rideDTO2.setAvailableSeats(3);
+        rideDTO2.setSeatPrice(7.00);
+        rideDTO2.setDeparture(calendar2.getTime());
+        rideDTO2.setDriver(feroDTO);
 
         adamDTO = new UserDTO();
         feroDTO = new UserDTO();
+    }
+*/
+    @BeforeMethod
+    void initMethod(){
+
+        adam = new User();
+        fero = new User();
 
         brno = new Place();
         brno.setId(3L);
@@ -94,12 +121,11 @@ public class RideFacadeTest {
         comment2 = new Comment();
         comment2.setId(2L);
 
+        adamDTO = new UserDTO();
+        feroDTO = new UserDTO();
+
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(2017, Calendar.NOVEMBER, 14);
-
-        rideCreate1 = new RideCreateDTO();
-        rideCreate1.setDeparture(calendar1.getTime());
-        rideCreate1.setDriver(adamDTO);
 
         rideDTO1 = new RideDTO();
         rideDTO1.setId(8L);
@@ -107,6 +133,10 @@ public class RideFacadeTest {
         rideDTO1.setSeatPrice(5.00);
         rideDTO1.setDeparture(calendar1.getTime());
         rideDTO1.setDriver(adamDTO);
+
+        rideCreate1 = new RideCreateDTO();
+        rideCreate1.setDeparture(calendar1.getTime());
+        rideCreate1.setDriverId(adamDTO.getId());
 
         ride1 = new Ride();
         ride1.setId(8L);
@@ -116,14 +146,9 @@ public class RideFacadeTest {
         ride1.setSourcePlace(brno);
         ride1.setDestinationPlace(prague);
         ride1.setDriver(adam);
-        ride1.addComment(comment1);
 
         Calendar calendar2 = Calendar.getInstance();
         calendar2.set(2016, Calendar.APRIL, 4);
-
-        rideCreate2 = new RideCreateDTO();
-        rideCreate2.setDeparture(calendar2.getTime());
-        rideCreate1.setDriver(feroDTO);
 
         rideDTO2 = new RideDTO();
         rideDTO2.setId(1L);
@@ -131,6 +156,10 @@ public class RideFacadeTest {
         rideDTO2.setSeatPrice(7.00);
         rideDTO2.setDeparture(calendar2.getTime());
         rideDTO2.setDriver(feroDTO);
+
+        rideCreate2 = new RideCreateDTO();
+        rideCreate2.setDeparture(calendar2.getTime());
+        rideCreate2.setDriverId(feroDTO.getId());
 
         ride2 = new Ride();
         ride2.setId(1L);
@@ -146,16 +175,23 @@ public class RideFacadeTest {
     }
 
 
+
+
     // Create tests
     @Test
     void rideCreate(){
         when(beanMappingService.mapTo(rideCreate1, Ride.class)).thenReturn(ride1);
-        when(rideService.createRide(ride1)).thenReturn(ride1);
+        Ride createdRide = new Ride();
+        createdRide.setId(3L);
+
+        when(rideService.createRide(ride1)).thenReturn(createdRide);
+        when(userService.findUserById(any())).thenReturn(new User());
+        when(commentService.findById(any())).thenReturn(new Comment());
 
         Long verifyId = rideFacade.createRide(rideCreate1);
 
         verify(rideService).createRide(ride1);
-        assertThat(verifyId).isEqualTo(ride1.getId());
+        assertThat(verifyId).isEqualTo(createdRide.getId());
     }
 
     // Update tests
@@ -240,4 +276,10 @@ public class RideFacadeTest {
         assertThat(testRideList).containsExactlyInAnyOrder(rideDTO1, rideDTO2);
     }
 
+
+
 }
+
+
+
+

@@ -64,6 +64,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
         Calendar calendar1 = Calendar.getInstance();
         comment1 = new Comment();
         comment1.setId(8L);
+        comment1.setAuthor(fero);
         comment1.setText("sample text");
         calendar1.set(2017, Calendar.NOVEMBER, 14);
         comment1.setCreated(calendar1.getTime());
@@ -92,6 +93,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
         Calendar calendar2 = Calendar.getInstance();
         comment2 = new Comment();
         comment2.setId(8L);
+        comment2.setAuthor(adam);
         comment2.setText("another sample text");
         calendar2.set(2016, Calendar.NOVEMBER, 4);
         comment2.setCreated(calendar2.getTime());
@@ -129,8 +131,9 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     void createRide(){
         doNothing().when(rideDao).create(any());
-        rideService.createRide(ride1);
+        Ride createdRide = rideService.createRide(ride1);
         verify(rideDao).create(ride1);
+        assertThat(createdRide).isEqualToComparingFieldByField(ride1);
     }
 
     @Test
@@ -206,6 +209,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
         assertThat(shouldBeSecond).isEqualToComparingFieldByFieldRecursively(ride2);
     }
 
+    /*
     @Test
     void findByIdNotFoundTest() {
         when(rideDao.findById(any())).thenReturn(null);
@@ -214,7 +218,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
         assertThat(result).isNull();
     }
-
+    */
     // Add and remove tests
     @Test
     void addPassenger() {
@@ -246,12 +250,12 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void addNullPassenger() {
-        assertThatThrownBy(()-> rideService.addPassenger(ride1,null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(()-> rideService.addPassenger(ride1,null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void addNullComment() {
-        assertThatThrownBy(()-> rideService.addComment(ride1,null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(()-> rideService.addComment(ride1,null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
