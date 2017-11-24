@@ -1,15 +1,14 @@
 package cz.fi.muni.pa165.teamred.service.facade;
 
+import cz.fi.muni.pa165.teamred.dto.RideDTO;
 import cz.fi.muni.pa165.teamred.dto.UserCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.UserDTO;
 import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.facade.UserFacade;
-import cz.fi.muni.pa165.teamred.service.BeanMappingService;
-import cz.fi.muni.pa165.teamred.service.CommentService;
-import cz.fi.muni.pa165.teamred.service.RideService;
-import cz.fi.muni.pa165.teamred.service.UserService;
+import cz.fi.muni.pa165.teamred.service.*;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +25,14 @@ import java.util.Collection;
 @Service
 @Transactional
 public class UserFacadeImpl implements UserFacade {
-    final static Logger log = LoggerFactory.getLogger(UserFacadeImpl.class);
+
+    private final static Logger log = LoggerFactory.getLogger(UserFacadeImpl.class);
 
     @Inject
     private UserService userService;
 
     @Inject
-    private CommentService commentService;
-
-    @Inject
-    private RideService rideService;
+    private PassengerService passengerService;
 
     @Autowired
     private BeanMappingService beanMappingService;
@@ -43,7 +40,9 @@ public class UserFacadeImpl implements UserFacade {
     public Long createUser(UserCreateDTO user){
         User mappedUser = beanMappingService.mapTo(user, User.class);
         User newUser = userService.createUser(mappedUser);
+
         log.debug("Created new User: " + newUser.toString());
+
         return newUser.getId();
     }
 
@@ -54,78 +53,76 @@ public class UserFacadeImpl implements UserFacade {
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
         user.setNickname(userDTO.getNickname());
+
+        log.debug("Edited user: " + user.toString());
+
         userService.editUser(user);
     }
 
     @Override
     public void removeUser(Long userId) {
-        //redundant object creation ?
         User userToDelete = new User();
         userToDelete.setId(userId);
         userService.deleteUser(userToDelete);
     }
 
-
     @Override
     public void addRideAsPassenger(Long userId, Long rideId) {
-        User user = userService.findUserById(userId);
-        if (user == null){
-            log.debug("No user found with id: " + userId);
-            return;
-        }
-        Ride ride = rideService.findById(rideId);
-        if (ride == null){
-            log.debug("No ride found with id: " + rideId);
-            return;
-        }
-
-        userService.addUserRideAsPassenger(user, ride);
-        rideService.addPassenger(ride,user);
-        log.debug("Added user: " + user +
-        " as a passenger in ride: " + ride);
+        passengerService.addPassengerToRide(userId, rideId);
     }
 
     @Override
-    public void removeRideAsPassenger(Long userId, Long rideId) {
-        User user = userService.findUserById(userId);
-        if (user == null){
-            log.debug("No user found with id: " + userId);
-            return;
-        }
-        Ride ride = rideService.findById(rideId);
-        if (ride == null){
-            log.debug("No ride found with id: " + rideId);
-            return;
-        }
-
-        //deleting both sides of references
-
-        userService.removeUserRideAsPassenger(user, ride);
-        log.debug("Removed ride reference:" + ride.toString() +
-                " from user( as a Passenger ):" + user.toString());
-
-        rideService.removePassenger(ride, user);
+    public void removeRideFromPassenger(Long userId, Long rideId) {
+        passengerService.removePassengerFromRide(userId, rideId);
     }
 
     @Override
     public UserDTO findUserById(Long userId) {
         User user = userService.findUserById(userId);
+
+        if (user == null){
+            log.debug("User not found with id: " + userId);
+            return null;
+        }
+
         log.debug("Found User in " + UserFacadeImpl.class + "with paramenters" + user.toString());
+
         return (user == null) ? null : beanMappingService.mapTo(user, UserDTO.class);
     }
 
     @Override
     public UserDTO findUserByNickname(String nick) {
         User user = userService.findUserByNickname(nick);
+
+        if (user == null){
+            log.debug("User not found with nickname: " + nick);
+            return null;
+        }
+
         log.debug("Found User in " + UserFacadeImpl.class + "with paramenters" + user.toString());
-        return (user == null) ? null : beanMappingService.mapTo(user, UserDTO.class);
+
+        return beanMappingService.mapTo(user, UserDTO.class);
     }
 
     @Override
     public Collection<UserDTO> getAllUsers() {
         ArrayList<User> users = (ArrayList<User>) userService.findAllUsers();
+
         log.debug("Found " + users.size() + " Users in " + UserFacadeImpl.class);
-        return (users.size() == 0) ? new ArrayList<>() : beanMappingService.mapTo(users, UserDTO.class);
+
+        return beanMappingService.mapTo(users, UserDTO.class);
+    }
+
+    @Override
+    public Collection<RideDTO> getUserRidesAsDriver(Long userId) {
+        Collection<Ride> rides = userService.getUserRidesAsDriver(userId);
+        return beanMappingService.mapTo(rides, RideDTO.class);
+    }
+
+    @Override
+    public Collection<RideDTO> getUserRidesAsPassenger(Long userId) {
+        Collection<Ride> rides = userService.getUserRidesAsPassenger(userId);
+        return beanMappingService.mapTo(rides, RideDTO.class);
     }
 
 }

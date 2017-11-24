@@ -29,12 +29,11 @@ import static org.mockito.Mockito.*;
  * @author Jozef Cibík
  */
 
-//todo illegal argument exeption
 @ContextConfiguration(classes = ServiceConfiguration.class)
 public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    UserDao userDao;
+    private UserDao userDao;
 
     @Autowired
     @InjectMocks
@@ -117,10 +116,10 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     }
 
+    //______________________________________________________________________________________________________Create Tests
     @Test
     void testCreateUserValid() {
         doNothing().when(userDao).create(any());
-
         User createdUser = userService.createUser(validUser);
 
         verify(userDao).create(validUser);
@@ -128,17 +127,13 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         assertThat(createdUser).isEqualToComparingFieldByField(validUser);
     }
 
-    //______________________________________________________________________________________________________Create Tests
     @Test
     void testCreateNullUser() {
-        doThrow(new IllegalArgumentException()).when(userDao).create(null);
         assertThatThrownBy(() -> userService.createUser(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testCreateUserNullName() {
-        doThrow(new IllegalArgumentException()).when(userDao).create(any());
-
         invalidUser.setName(null);
 
         assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
@@ -146,8 +141,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void testCreateUserNullNickname() {
-        doThrow(new IllegalArgumentException()).when(userDao).create(any());
-
         invalidUser.setNickname(null);
 
         assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
@@ -156,8 +149,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void testCreateUserNullSurname() {
-        doThrow(new IllegalArgumentException()).when(userDao).create(any());
-
         invalidUser.setSurname(null);
 
         assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
@@ -166,8 +157,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void testCreateUserEmptyName() {
-        doThrow(new IllegalArgumentException()).when(userDao).create(any());
-
         invalidUser.setName("");
 
         assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
@@ -175,8 +164,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void testCreateUserEmptyNickname() {
-        doThrow(new IllegalArgumentException()).when(userDao).create(any());
-
         invalidUser.setNickname("");
 
         assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
@@ -185,8 +172,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void testCreateUserEmptySurname() {
-        doThrow(new IllegalArgumentException()).when(userDao).create(any());
-
         invalidUser.setSurname("");
 
         assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
@@ -195,60 +180,69 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     //______________________________________________________________________________________________________Update Tests
     @Test
     void testUpdateValidUserName(){
-        doNothing().when(userDao).update(any());
+        String newName = "JohnnyD";
 
-        validUser.setName("Ivan");
+        doAnswer( invocation -> {
+            validUser.setName(newName);
+            return null;
+        }).when(userDao).update(any());
+
         userService.editUser(validUser);
-
-        verify(userDao).update(validUser);
+        assertThat(validUser.getName()).isEqualTo(newName);
     }
 
 
     @Test
     void testUpdateValidUserSurname(){
-        doNothing().when(userDao).update(any());
+        String newSurname = "Smitty";
 
-        validUser.setSurname("Clemetine");
+        doAnswer( invocation -> {
+            validUser.setSurname(newSurname);
+            return null;
+        }).when(userDao).update(any());
 
-        verify(userDao).update(validUser);
+        userService.editUser(validUser);
+        assertThat(validUser.getSurname()).isEqualTo(newSurname);
     }
 
 
     @Test
     void testUpdateValidUserNickname(){
-        doNothing().when(userDao).update(any());
+        String newNickname = "predatorX";
 
-        validUser.setNickname("jdo_e");
+        doAnswer( invocation -> {
+            validUser.setNickname(newNickname);
+            return null;
+        }).when(userDao).update(any());
+
         userService.editUser(validUser);
-
-        verify(userDao).update(validUser);
+        assertThat(validUser.getNickname()).isEqualTo(newNickname);
     }
 
 
     @Test
     void testUpdateNullUser(){
-        doThrow(new IllegalArgumentException()).when(userDao).update(null);
         assertThatThrownBy(() -> userService.editUser(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testUpdateNullUserName(){
-        doThrow(new IllegalArgumentException()).when(userDao).update(any());
         invalidUser.setName(null);
+
         assertThatThrownBy(() -> userService.editUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testUpdateNullUserSurname(){
-        doThrow(new IllegalArgumentException()).when(userDao).update(any());
         invalidUser.setSurname(null);
+
         assertThatThrownBy(() -> userService.editUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testUpdateNullUserNickname(){
-        doThrow(new IllegalArgumentException()).when(userDao).update(any());
         invalidUser.setNickname(null);
+
         assertThatThrownBy(() -> userService.editUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -267,223 +261,48 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void testFindUserById(){
-        when(userDao.findById(anyLong())).thenReturn(validUser);
+        when(userDao.findById(validUser.getId())).thenReturn(validUser);
 
-        User foundUser = userService.findUserById(1L);
+        User foundUser = userService.findUserById(validUser.getId());
         assertThat(foundUser).isEqualToComparingFieldByField(validUser);
+    }
+
+    @Test
+    void testFindAllUserRidesAsDriver(){
+        when(userDao.findById(validUser.getId())).thenReturn(validUser);
+
+        validUser.addRideAsDriver(validRide);
+
+        assertThat(userService.getUserRidesAsDriver(validUser.getId())).containsExactly(validRide);
+    }
+
+    @Test
+    void testFindAllUserRidesAsPassenger(){
+        when(userDao.findById(validUser.getId())).thenReturn(validUser);
+
+        validUser.addRideAsPassenger(validRide);
+
+        assertThat(userService.getUserRidesAsPassenger(validUser.getId())).containsExactly(validRide);
     }
 
     //______________________________________________________________________________________________________Delete Tests
     @Test
     void testDeleteUser(){
-        doNothing().when(userDao).delete(validUser);
+        when(userDao.findById(validUser.getId())).thenReturn(validUser);
+
+        doAnswer( invocation -> {
+            validUser.setId(null);
+            return null;
+        }).when(userDao).delete(validUser);
 
         userService.deleteUser(validUser);
 
         verify(userDao).delete(validUser);
+        assertThat(validUser.getId()).isNull();
     }
 
     @Test
     void testDeleteNullUser(){
-        doThrow(new IllegalArgumentException()).when(userDao).delete(null);
-
         assertThatThrownBy(() -> userService.deleteUser(null)).isInstanceOf(IllegalArgumentException.class);
     }
-
-
-    //________________________________________________________________________________________________________Adds Tests
-    @Test
-    void testAddUserValidRideAsPassenger() {
-        userService.addUserRideAsPassenger(validUser,validRide);
-        assertThat(validUser.getRidesAsPassenger().contains(validRide));
-    }
-
-    @Test
-    void testAddUserValidRideAsDriver() {
-        validRide.setDriver(null);
-        userService.addUserRideAsDriver(validUser,validRide);
-        assertThat(validUser.getRidesAsDriver().contains(validRide));
-    }
-
-    @Test
-    void testAddUserValidComment() {
-        userService.addUserComment(validUser, validComment);
-        assertThat(validUser.getUserComments().contains(validComment));
-    }
-
-    @Test
-    void testAddUserExistingRideAsPassenger() {
-        userService.addUserRideAsPassenger(validUser,validRide);
-        assertThat(validUser.getRidesAsPassenger().contains(validRide));
-
-        assertThatThrownBy(() -> userService.addUserRideAsPassenger(validUser,validRide)).isInstanceOf(IllegalArgumentException.class);
-
-    }
-
-    @Test
-    void testAddUserExistingRideAsDriver() {
-        validRide.setDriver(null);
-        userService.addUserRideAsDriver(validUser,validRide);
-        assertThat(validUser.getRidesAsDriver().contains(validRide));
-
-        assertThatThrownBy(() -> userService.addUserRideAsDriver(validUser,validRide)).isInstanceOf(IllegalArgumentException.class);
-
-    }
-
-    @Test
-    void testAddUserExistingComment() {
-        userService.addUserComment(validUser, validComment);
-        assertThat(validUser.getUserComments().contains(validComment));
-
-        assertThatThrownBy(() -> userService.addUserComment(validUser, validComment)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void testAddUserNullRideAsPassenger() {
-        assertThatThrownBy(()->userService.addUserRideAsPassenger(validUser, null)).isInstanceOf(NullPointerException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideNullSourceAsPassenger() {
-        invalidRide.setSourcePlace(null);
-        assertThatThrownBy(()->userService.addUserRideAsPassenger(validUser,invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideNullDestinationAsPassenger() {
-        invalidRide.setDestinationPlace(null);
-        assertThatThrownBy(()-> userService.addUserRideAsPassenger(validUser,invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideSeatsAsPassenger() {
-        invalidRide.setAvailableSeats(-1);
-        assertThatThrownBy(()->userService.addUserRideAsPassenger(validUser,invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideSeatsPrizeAsPassenger() {
-        invalidRide.setSeatPrice(-10);
-        assertThatThrownBy(()->userService.addUserRideAsPassenger(validUser, invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void testAddUserNullRideAsDriver() {
-        assertThatThrownBy(()->userService.addUserRideAsDriver(validUser, null)).isInstanceOf(NullPointerException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideNullSourceAsDriver() {
-        invalidRide.setSourcePlace(null);
-        assertThatThrownBy(()->userService.addUserRideAsDriver(validUser,invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideNullDestinationAsDriver() {
-        invalidRide.setDestinationPlace(null);
-        assertThatThrownBy(()-> userService.addUserRideAsDriver(validUser,invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideSeatsAsDriver() {
-        invalidRide.setAvailableSeats(-1);
-        assertThatThrownBy(()->userService.addUserRideAsDriver(validUser,invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserIvalidRideSeatsPrizeAsDriver() {
-        invalidRide.setSeatPrice(-10);
-        assertThatThrownBy(()->userService.addUserRideAsDriver(validUser, invalidRide)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserNullComment() {
-        assertThatThrownBy(()-> userService.addUserComment(validUser,null)).isInstanceOf(NullPointerException.class);
-    }
-
-
-    @Test
-    void testAddUserCommentWithAuthor() {
-        invalidComment.setAuthor(validUser);
-
-        assertThatThrownBy(()-> userService.addUserComment(validUser,invalidComment)).isInstanceOf(IllegalArgumentException.class);
-
-    }
-
-
-    @Test
-    void testAddUserCommentNullText() {
-        invalidComment.setText(null);
-
-        assertThatThrownBy(()->userService.addUserComment(validUser,invalidComment)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-
-    @Test
-    void testAddUserCommentEmptyText() {
-        invalidComment.setText("");
-
-        assertThatThrownBy(()-> userService.addUserComment(validUser,invalidComment)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    //______________________________________________________________________________________________________Remove Tests
-    @Test
-    void testRemoveUserRideAsPassenger() {
-        userService.addUserRideAsPassenger(validUser,validRide);
-        assertThat(validUser.getRidesAsPassenger().contains(validRide));
-
-        userService.removeUserRideAsPassenger(validUser,validRide);
-        assertThat(!validUser.getRidesAsPassenger().contains(validRide));
-    }
-
-    @Test
-    void testRemoveUserRideAsDriver() {
-        validRide.setDriver(null);
-        userService.addUserRideAsDriver(validUser,validRide);
-        assertThat(validUser.getRidesAsDriver().contains(validRide));
-
-        userService.removeUserRideAsDriver(validUser,validRide);
-        assertThat(!validUser.getRidesAsDriver().contains(validRide));
-
-    }
-
-    @Test
-    void testRemoveUserComment() {
-        userService.addUserComment(validUser,validComment);
-        assertThat(validUser.getUserComments().contains(validComment));
-
-        userService.removeUserComment(validUser,validComment);
-        assertThat(!validUser.getUserComments().contains(validComment));
-    }
-
-    @Test
-    void testRemoveUserNonExistingRideAsPassenger() {
-        int numberOfRidesAsPassenger = validUser.getRidesAsPassenger().size();
-        userService.removeUserRideAsPassenger(validUser,invalidRide);
-        assertThat(validUser.getRidesAsPassenger().size()).isEqualTo(numberOfRidesAsPassenger);
-    }
-
-    @Test
-    void testRemoveUserNonExistingRideAsDriver() {
-        int numberOfRidesAsDriver = validUser.getRidesAsDriver().size();
-        userService.removeUserRideAsDriver(validUser,invalidRide);
-        assertThat(validUser.getRidesAsDriver().size()).isEqualTo(numberOfRidesAsDriver);
-    }
-
-    @Test
-    void testRemoveUserNonExistingComment() {
-        int numberOfComments = validUser.getUserComments().size();
-        userService.removeUserComment(validUser,invalidComment);
-        assertThat(validUser.getUserComments().size()).isEqualTo(numberOfComments);
-    }
-
 }

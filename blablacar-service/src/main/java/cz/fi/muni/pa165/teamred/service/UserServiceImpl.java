@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 
-// todo instead of illegal argument ex user service ex
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -21,17 +21,11 @@ public class UserServiceImpl implements UserService {
     @Inject
     private UserDao userDao;
 
-    @Autowired
-    private RideService rideService;
-
-    @Autowired
-    private TimeService timeService;
-
     //___________________________________________________________________________________________________________Create
     @Override
     public User createUser(User user) throws IllegalArgumentException {
         if (!isValidUser(user)) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("User argument is not valid.");
         }
 
         userDao.create(user);
@@ -43,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editUser(User user) throws IllegalArgumentException {
         if (!isValidUser(user)) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("User argument is not valid.");
         }
 
         userDao.update(user);
@@ -53,90 +47,12 @@ public class UserServiceImpl implements UserService {
     //____________________________________________________________________________________________________________Delete
     @Override
     public void deleteUser(User user) throws IllegalArgumentException {
+            if (user == null || userDao.findById(user.getId()) == null){
+                throw new IllegalArgumentException("User null or not found, User: " + user);
+            }
             userDao.delete(user);
             log.debug("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
     }
-
-    //______________________________________________________________________________________________________________Adds
-    @Override
-    public void addUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
-        if (!isValidRide(ride)){
-            throw new IllegalArgumentException("Ride is not valid: " + ride.toString());
-        }
-        if (ride.getDriver() == null){
-            throw new IllegalArgumentException("Ride has no Driver: " + ride.toString());
-        }
-        if (user.getRidesAsPassenger().contains(ride)) {
-            throw new IllegalArgumentException("User: " + user.getNickname() +
-                    " is already a passenger in ride:" +
-                    ride.toString());
-        }
-        user.addRideAsPassenger(ride);
-        log.debug("Service: " + UserServiceImpl.class + "added Ride as Passenger: " +
-                ride.toString() +
-                " to User: " + user.toString());
-    }
-
-    @Override
-    public void addUserRideAsDriver(User user, Ride ride) throws IllegalArgumentException {
-        if (!isValidRide(ride)){
-            throw new IllegalArgumentException("Ride is not valid: " + ride.toString());
-        }
-        if (ride.getDriver() != null){
-            throw new IllegalArgumentException("Ride has already driver assigned: " + ride.toString());
-        }
-        if (user.getRidesAsDriver().contains(ride)) {
-            throw new IllegalArgumentException("User: " + user.getNickname() +
-                    " is already a driver in ride:" +
-                    ride.toString());
-        }
-        user.addRideAsDriver(ride);
-        log.debug("Service: " + UserServiceImpl.class + "added Ride as Driver: " +
-                ride.toString() +
-                " to User: " + user.toString());
-    }
-
-    @Override
-    public void addUserComment(User user, Comment comment) throws IllegalArgumentException {
-        if (!isValidComment(comment)){
-            throw new IllegalArgumentException("Comment is not valid: " + comment.toString());
-        }
-        if (user.getUserComments().contains(comment)) {
-            throw new IllegalArgumentException("User: " + user.getNickname() +
-                    " already have this comment:" +
-                    comment.toString());
-        }
-        user.addComment(comment);
-        log.debug("Service: " + UserServiceImpl.class + "added Comment: " +
-                comment.toString() +
-                " to User: " + user.toString());
-    }
-
-    //___________________________________________________________________________________________________________Removes
-    @Override
-    public void removeUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
-        user.removerRideAsPassenger(ride);
-        log.debug("Service: " + UserServiceImpl.class + "removed Ride as Passenger: " +
-                ride.toString() +
-                " from User: " + user.toString());
-    }
-
-    @Override
-    public void removeUserRideAsDriver(User user, Ride ride) throws IllegalArgumentException {
-        user.removerRideAsDriver(ride);
-        log.debug("Service: " + UserServiceImpl.class + "added Ride as Driver: " +
-                ride.toString() +
-                " from User: " + user.toString());
-    }
-
-    @Override
-    public void removeUserComment(User user, Comment comment) throws IllegalArgumentException {
-        user.removeComment(comment);
-        log.debug("Service: " + UserServiceImpl.class + "removed Comment: " +
-                comment.toString() +
-                " from User: " + user.toString());
-    }
-
 
     //_____________________________________________________________________________________________________________Finds
     @Override
@@ -172,42 +88,14 @@ public class UserServiceImpl implements UserService {
         return found;
     }
 
-    private boolean isValidComment(Comment comment){
-        if (comment == null){
-            return false;
-        }
-        if (comment.getAuthor() != null){
-            return false;
-        }
-        if (comment.getText() == null){
-            return false;
-        }
-        if (comment.getText().length() == 0){
-            return false;
-        }
-        return true;
-
+    @Override
+    public Collection<Ride> getUserRidesAsDriver(Long userId) {
+        return this.findUserById(userId).getRidesAsDriver();
     }
 
-    private boolean isValidRide(Ride ride){
-        if (ride == null){
-            return false;
-        }
-        if (ride.getDestinationPlace() == null) {
-            return false;
-        }
-        if (ride.getSourcePlace() == null){
-            return false;
-        }
-        //<0 or <= 0 ?
-        if (ride.getSeatPrice() <= 0){
-            return false;
-        }
-        if (ride.getAvailableSeats() < 0){
-            return false;
-        }
-        //Check ride departurte time if valid
-        return true;
+    @Override
+    public Collection<Ride> getUserRidesAsPassenger(Long userId) {
+        return this.findUserById(userId).getRidesAsPassenger();
     }
 
     private boolean isValidUser(User user) {
@@ -227,7 +115,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        /*Checking birthdate with actual time check*/
+        /*Checking birthdate with actual time check maybe?*/
         return true;
     }
 }

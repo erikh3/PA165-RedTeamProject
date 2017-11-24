@@ -47,6 +47,9 @@ public class RideFacadeTest {
     @Mock
     CommentService commentService;
 
+    @Mock
+    PlaceService placeService;
+
     @Autowired
     @InjectMocks
     RideFacadeImpl rideFacade;
@@ -137,6 +140,8 @@ public class RideFacadeTest {
         rideCreate1 = new RideCreateDTO();
         rideCreate1.setDeparture(calendar1.getTime());
         rideCreate1.setDriverId(adamDTO.getId());
+        rideCreate1.setDestinationPlaceId(prague.getId());
+        rideCreate1.setSourcePlaceId(brno.getId());
 
         ride1 = new Ride();
         ride1.setId(8L);
@@ -199,6 +204,8 @@ public class RideFacadeTest {
     void changePrice() {
         doNothing().when(rideService).updateRide(any());
         when(rideService.findById(ride1.getId())).thenReturn(ride1);
+        when(placeService.findById(brno.getId())).thenReturn(brno);
+        when(placeService.findById(prague.getId())).thenReturn(prague);
 
         rideFacade.changePrice(ride1.getId(), 4);
 
@@ -274,6 +281,17 @@ public class RideFacadeTest {
 
         verify(rideService).findAll();
         assertThat(testRideList).containsExactlyInAnyOrder(rideDTO1, rideDTO2);
+    }
+
+
+    @Test
+    void changeSourcePlace(){
+
+    }
+
+    @Test
+    void changeDestPlace(){
+
     }
 
 

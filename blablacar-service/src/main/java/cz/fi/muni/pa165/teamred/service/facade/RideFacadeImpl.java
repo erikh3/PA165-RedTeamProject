@@ -36,9 +36,6 @@ public class RideFacadeImpl implements RideFacade {
     private UserService userService;
 
     @Inject
-    private CommentService commentService;
-
-    @Inject
     private PlaceService placeService;
 
     @Autowired
@@ -63,8 +60,6 @@ public class RideFacadeImpl implements RideFacade {
         mappedRide.setDestinationPlace(destinationPlace);
         destinationPlace.addDestinationRide(mappedRide);
 
-
-
         Ride ride = rideService.createRide(mappedRide);
         log.debug("Created new Ride: " + ride.toString());
         return  ride.getId();
@@ -75,9 +70,7 @@ public class RideFacadeImpl implements RideFacade {
         Ride ride = new Ride();
         ride.setId(rideId);
         rideService.deleteRide(ride);
-
     }
-
 
     @Override
     public RideDTO getRideWithId(Long rideId) {
