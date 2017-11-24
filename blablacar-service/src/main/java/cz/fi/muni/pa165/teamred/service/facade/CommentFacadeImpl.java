@@ -65,9 +65,15 @@ public class CommentFacadeImpl implements CommentFacade {
 
     @Override
     public void deleteComment(Long commentId) {
-        Comment comment = new Comment();
-        comment.setId(commentId);
+        Comment comment = commentService.findById(commentId);
+
         commentService.deleteComment(comment);
+
+        User author = comment.getAuthor();
+        author.removeComment(comment);
+
+        Ride ride = comment.getRide();
+        ride.removeComment(comment);
 
         log.debug("Comment with id(" + comment.getId() + ") has been deleted");
     }
