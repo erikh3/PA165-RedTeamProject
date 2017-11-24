@@ -2,12 +2,13 @@ package cz.fi.muni.pa165.teamred.service.facade;
 
 import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.RideDTO;
+import cz.fi.muni.pa165.teamred.dto.UserDTO;
+import cz.fi.muni.pa165.teamred.entity.Comment;
+import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
+import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.facade.RideFacade;
-import cz.fi.muni.pa165.teamred.service.BeanMappingService;
-import cz.fi.muni.pa165.teamred.service.CommentService;
-import cz.fi.muni.pa165.teamred.service.RideService;
-import cz.fi.muni.pa165.teamred.service.UserService;
+import cz.fi.muni.pa165.teamred.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +38,9 @@ public class RideFacadeImpl implements RideFacade {
     @Inject
     private CommentService commentService;
 
+    @Inject
+    private PlaceService placeService;
+
     @Autowired
     private BeanMappingService beanMappingService;
 
@@ -42,14 +48,26 @@ public class RideFacadeImpl implements RideFacade {
     @Override
     public Long createRide(RideCreateDTO rideCreateDTO) {
         Ride mappedRide = beanMappingService.mapTo(rideCreateDTO, Ride.class);
+
+//        User mappedUser = beanMappingService.mapTo(userDTO, User.class);
+
+        User user = userService.findUserById(rideCreateDTO.getDriverId());
+        mappedRide.setDriver(user);
+        user.addRideAsDriver(mappedRide);
+
+        Place sourcePlace = placeService.findById(rideCreateDTO.getSourcePlaceId());
+        mappedRide.setSourcePlace(sourcePlace);
+        sourcePlace.addOriginatingRide(mappedRide);
+
+        Place destinationPlace = placeService.findById(rideCreateDTO.getDestinationPlaceId());
+        mappedRide.setDestinationPlace(destinationPlace);
+        destinationPlace.addDestinationRide(mappedRide);
+
+
+
         Ride ride = rideService.createRide(mappedRide);
+        log.debug("Created new Ride: " + ride.toString());
         return  ride.getId();
-    }
-
-    @Override
-    public void updateRide(RideDTO rideDto) {
-        throw new NotImplementedException();
-
     }
 
     @Override
@@ -60,43 +78,42 @@ public class RideFacadeImpl implements RideFacade {
 
     }
 
-    @Override
-    public void addPassenger(Long rideId, Long userId) {
-        rideService.addPassenger(rideService.findById(rideId),
-                userService.findUserById(userId));
-
-
-    }
-
-    @Override
-    public void addComment(Long rideId, Long commentId) {
-        rideService.addComment(rideService.findById(rideId),
-                commentService.findById(commentId));
-
-    }
-
-    @Override
-    public void removePassenger(Long rideId, Long userId) {
-        rideService.removePassenger(rideService.findById(rideId),
-                userService.findUserById(userId));
-
-    }
-
-    @Override
-    public void removeComment(Long rideId, Long commentId) {
-        rideService.removeComment(rideService.findById(rideId),
-                commentService.findById(commentId));
-
-    }
 
     @Override
     public RideDTO getRideWithId(Long rideId) {
         Ride ride = rideService.findById(rideId);
+        log.debug("Found Ride in " + RideFacadeImpl.class + "with paramenters" + ride.toString());
         return (ride == null) ? null : beanMappingService.mapTo(ride, RideDTO.class);
     }
 
     @Override
     public List<RideDTO> getAllRides() {
-        return beanMappingService.mapTo(rideService.findAll(), RideDTO.class);
+        ArrayList<Ride> rides = (ArrayList<Ride>) rideService.findAll();
+        log.debug("Found " + rides.size() + " Rides in " + RideFacadeImpl.class);
+        return (rides.size() == 0) ? new ArrayList<>() : beanMappingService.mapTo(rides, RideDTO.class);
+    }
+
+    @Override
+    public void changePrice(Long rideId, double newPrice) {
+        Ride ride = rideService.findById(rideId);
+        ride.setSeatPrice(newPrice);
+        rideService.updateRide(ride);
+        log.debug("Updated price in Ride: " + ride.toString());
+    }
+
+    @Override
+    public void editAvailableSeats(Long rideId, int availableSeats) {
+        Ride ride = rideService.findById(rideId);
+        ride.setAvailableSeats(availableSeats);
+        rideService.updateRide(ride);
+        log.debug("Updated available seats in Ride: " + ride.toString());
+    }
+
+    @Override
+    public void editDeparture(Long rideId, Date newDeparture) {
+        Ride ride = rideService.findById(rideId);
+        ride.setDeparture(newDeparture);
+        rideService.updateRide(ride);
+        log.debug("Updated departure in Ride: " + ride.toString());
     }
 }
