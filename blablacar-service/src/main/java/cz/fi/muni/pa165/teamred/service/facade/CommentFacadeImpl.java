@@ -48,6 +48,9 @@ public class CommentFacadeImpl implements CommentFacade {
         user.addComment(mappedComment);
 
         Comment comment = commentService.createComment(mappedComment);
+
+        log.debug("Comment with id(" + comment.getId() + ") has been created");
+
         return comment.getId();
     }
 
@@ -56,6 +59,8 @@ public class CommentFacadeImpl implements CommentFacade {
         Comment comment = commentService.findById(commentId);
         comment.setText(newText);
         commentService.updateComment(comment);
+
+        log.debug("Comment text has been updated for comment id(" + comment.getId() + ")");
     }
 
     @Override
@@ -63,26 +68,41 @@ public class CommentFacadeImpl implements CommentFacade {
         Comment comment = new Comment();
         comment.setId(commentId);
         commentService.deleteComment(comment);
+
+        log.debug("Comment with id(" + comment.getId() + ") has been deleted");
     }
 
     @Override
     public CommentDTO getCommentWithId(Long commentId) {
         Comment comment = commentService.findById(commentId);
-        return (comment == null) ? null : beanMappingService.mapTo(comment, CommentDTO.class);
+
+        if (comment == null) {
+            log.debug("Comment with id(" + commentId + ") has not been found");
+            return null;
+        }
+
+        log.debug("Comment with id(" + commentId + ") has been retrieved");
+        return beanMappingService.mapTo(comment, CommentDTO.class);
     }
 
     @Override
     public List<CommentDTO> getAllComments() {
-        return beanMappingService.mapTo(commentService.findAll(), CommentDTO.class);
+        List<Comment> comments = commentService.findAll();
+        log.debug("All comment have been retrieved, amount of comments: " + comments.size());
+        return beanMappingService.mapTo(comments, CommentDTO.class);
     }
 
     @Override
     public List<CommentDTO> getCommentsWithRide(Long rideId) {
-        return beanMappingService.mapTo(commentService.findAllWithRideId(rideId), CommentDTO.class);
+        List<Comment> comments = commentService.findAllWithRideId(rideId);
+        log.debug("Comments with ride id(" + rideId + ") has been retrieved, amount of comments: " + comments.size());
+        return beanMappingService.mapTo(comments, CommentDTO.class);
     }
 
     @Override
     public List<CommentDTO> getCommentsWithAuthor(Long userId) {
-        return beanMappingService.mapTo(commentService.findAllWithAuthorId(userId), CommentDTO.class);
+        List<Comment> comments = commentService.findAllWithAuthorId(userId);
+        log.debug("Comments with author id(" + userId + ") has been retrieved, amount of comments: " + comments.size());
+        return beanMappingService.mapTo(comments, CommentDTO.class);
     }
 }
