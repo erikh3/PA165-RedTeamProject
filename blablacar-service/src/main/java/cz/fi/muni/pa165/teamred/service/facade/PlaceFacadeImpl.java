@@ -53,7 +53,7 @@ public class PlaceFacadeImpl implements PlaceFacade {
             return null;
         }
 
-        log.debug("Place with id(" + (createdPlace == null ? null : createdPlace.getId()) + ") has been created");
+        log.debug("Place with id(" + createdPlace.getId() + ") has been created");
         return createdPlace.getId();
 
     }
