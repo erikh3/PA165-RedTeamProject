@@ -28,7 +28,8 @@ import java.util.List;
 @Service
 @Transactional
 public class PlaceFacadeImpl implements PlaceFacade {
-    final static Logger log = LoggerFactory.getLogger(PlaceFacadeImpl.class);
+
+    private final static Logger log = LoggerFactory.getLogger(PlaceFacadeImpl.class);
 
     @Inject
     private PlaceService placeService;
@@ -38,90 +39,168 @@ public class PlaceFacadeImpl implements PlaceFacade {
 
     @Override
     public Long createPlace(PlaceCreateDTO placeCreateDTO) {
-        if(placeCreateDTO == null || placeCreateDTO.getName() == null || placeCreateDTO.getName().isEmpty()) {
-            //TODO: Exception handling
-            return null;
+
+        if(placeCreateDTO == null) {
+            throw new IllegalArgumentException();
         }
+
+        log.debug("facade createPlace()", placeCreateDTO.toString());
+
         Place mappedPlace = beanMappingService.mapTo(placeCreateDTO, Place.class);
         Place createdPlace = placeService.createPlace(mappedPlace);
+
+        log.debug("Place with id(" + createdPlace.toString() + ") has been created");
+
         return createdPlace.getId();
     }
 
     @Override
     public void changePlaceName(Long placeId, String newName) {
-        if(placeId == null || newName == null || newName.isEmpty()) {
-            //TODO: Exception handling
-            return;
+
+        if(placeId == null || newName == null) {
+            throw new IllegalArgumentException();
         }
+
+        log.debug("facade changePlaceName({})", placeId, newName);
+
         Place place = placeService.findById(placeId);
         place.setName(newName);
         placeService.updatePlace(place);
+
+        log.debug("Place name has been updated for place id(" + place.toString() + ") to " + place.getName());
     }
 
     @Override
     public void deletePlace(Long placeId) {
+
         if(placeId == null) {
-            //TODO: Exception handling
-            return;
+            throw new IllegalArgumentException();
         }
+
+        log.debug("facade deletePlace({})", placeId);
+
         Place place = new Place();
         place.setId(placeId);
         placeService.removePlace(place);
+
+        log.debug("Place with id(" + place.getId() + ") has been deleted");
     }
 
     @Override
     public PlaceDTO getPlaceWithId(Long placeId) {
+
         if(placeId == null) {
-            //TODO: Exception handling
+            throw new IllegalArgumentException();
+        }
+
+        log.debug("facade getPlaceWithId({})", placeId);
+
+        Place place = placeService.findById(placeId);
+
+        if (place == null) {
+            log.debug("Place with id(" + placeId + ") has not been found");
             return null;
         }
-        Place place = placeService.findById(placeId);
-        return (place == null) ? null : beanMappingService.mapTo(place, PlaceDTO.class);
+
+        log.debug("Place with id(" + place.getId() + ") has been retrieved");
+
+        return beanMappingService.mapTo(place, PlaceDTO.class);
     }
 
     @Override
     public PlaceDTO getPlaceWithName(String placeName) {
-        if(placeName == null || placeName.isEmpty()) {
-            //TODO: Exception handling
+
+        if(placeName == null) {
+            throw new IllegalArgumentException();
+        }
+
+        log.debug("facade getPlaceWithName({})", placeName);
+
+        Place place = placeService.findByName(placeName);
+
+        if (place == null) {
+            log.debug("Place with name(" + placeName + ") has not been found");
             return null;
         }
-        Place place = placeService.findByName(placeName);
-        return (place == null) ? null : beanMappingService.mapTo(place, PlaceDTO.class);
+
+        log.debug("Place with name(" + place.getName() + ") has been retrieved");
+
+        return beanMappingService.mapTo(place, PlaceDTO.class);
     }
 
     @Override
     public List<RideDTO> getRidesWithOriginatingPlace(Long placeId) {
+
         if(placeId == null) {
-            //TODO: Exception handling
+            throw new IllegalArgumentException();
+        }
+
+        log.debug("facade getRidesWithOriginatingPlace({})", placeId);
+
+        Place place = placeService.findById(placeId);
+
+        if (place == null) {
+            log.debug("Place with id(" + placeId + ") has not been found");
             return null;
         }
-        Place place = placeService.findById(placeId);
-        return (place == null) ? null : beanMappingService.mapTo(place.getOriginatingRides(), RideDTO.class);
+
+        log.debug("Place with id(" + place.getId() + ") has been retrieved");
+
+        return beanMappingService.mapTo(place.getOriginatingRides(), RideDTO.class);
     }
 
     @Override
     public List<RideDTO> getRidesWithDestinationPlace(Long placeId) {
+
         if(placeId == null) {
-            //TODO: Exception handling
+            throw new IllegalArgumentException();
+        }
+
+        log.debug("facade getRidesWithDestinationPlace({})", placeId);
+
+        Place place = placeService.findById(placeId);
+
+        if (place == null) {
+            log.debug("Place with id(" + placeId + ") has not been found");
             return null;
         }
-        Place place = placeService.findById(placeId);
-        return (place == null) ? null : beanMappingService.mapTo(place.getDestinationRides(), RideDTO.class);
+
+        log.debug("Place with id(" + place.getId() + ") has been retrieved");
+
+        return beanMappingService.mapTo(place.getDestinationRides(), RideDTO.class);
     }
 
     @Override
     public List<RideDTO> getRidesWithOriginatingAndDestinationPlace(Long originatingPlaceId, Long destinationPlaceId) {
+
         if(originatingPlaceId == null || destinationPlaceId == null) {
-            //TODO: Exception handling
-            return null;
+            throw new IllegalArgumentException();
         }
+
+        log.debug("facade getRidesWithOriginatingAndDestinationPlace({})", originatingPlaceId, destinationPlaceId);
+
         List<Ride> resultRideList = placeService
                 .findRidesWithOriginatingAndDestinationPlace(originatingPlaceId, destinationPlaceId);
-        return (resultRideList == null) ? null : beanMappingService.mapTo(resultRideList, RideDTO.class);
+
+        if (resultRideList == null) {
+            log.debug("No rides with criteria have been found been found");
+            return null;
+        }
+
+        log.debug("Rides with criteria have been retrieved, amount of rides: " + resultRideList.size());
+
+        return beanMappingService.mapTo(resultRideList, RideDTO.class);
     }
 
     @Override
     public List<PlaceDTO> getAllPlaces() {
-        return beanMappingService.mapTo(placeService.findAll(), PlaceDTO.class);
+
+        log.debug("facade getAllPlaces({})");
+
+        List<Place> allPlaces = placeService.findAll();
+
+        log.debug("All places have been retrieved, amount of places: " + allPlaces.size());
+
+        return beanMappingService.mapTo(allPlaces, PlaceDTO.class);
     }
 }

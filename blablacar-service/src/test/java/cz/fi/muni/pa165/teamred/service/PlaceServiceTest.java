@@ -215,7 +215,7 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         //not needed using defensive programming
         doThrow(new IllegalArgumentException()).when(placeDao).findByName(null);
 
-        assertThatThrownBy(() -> placeService.findByName(null)).isInstanceOf(IllegalArgumentException.class);
+
     }
 
     @Test

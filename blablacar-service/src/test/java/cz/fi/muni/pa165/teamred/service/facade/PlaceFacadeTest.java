@@ -58,6 +58,9 @@ public class PlaceFacadeTest {
     private PlaceCreateDTO placeCreate1;
     private PlaceCreateDTO placeCreate2;
 
+    public PlaceFacadeTest() {
+    }
+
     @BeforeClass
     void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -130,10 +133,7 @@ public class PlaceFacadeTest {
 
     @Test
     void placeCreateNullTest() {
-        Long verifyId = placeFacade.createPlace(null);
-
-        assertThat(verifyId).isNull();
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.createPlace(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -184,10 +184,7 @@ public class PlaceFacadeTest {
 
     @Test
     void deletePlaceNullTest() {
-        placeFacade.deletePlace(null);
-
-        verify(placeService, never()).removePlace(any());
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.deletePlace(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -296,7 +293,7 @@ public class PlaceFacadeTest {
         List<RideDTO> testRideList = placeFacade
                 .getRidesWithOriginatingAndDestinationPlace(place1.getId(), null);
 
-        assertThat(testRideList).isNull();
+        assertThat(testRideList).isEmpty();
         //TODO: Test exception handling
     }
 
