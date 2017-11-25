@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         }
 
         userDao.create(user);
-        log.info("Service: " + UserServiceImpl.class + "created User: " + user.toString());
+        log.debug("Service: " + UserServiceImpl.class + "created User: " + user.toString());
         return user;
     }
 
@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
         }
 
         userDao.update(user);
-        log.info("Service: " + UserServiceImpl.class + "updated User: " + user.toString());
+        log.debug("Service: " + UserServiceImpl.class + "updated User: " + user.toString());
     }
 
     //____________________________________________________________________________________________________________Delete
     @Override
     public void deleteUser(User user) throws IllegalArgumentException {
             userDao.delete(user);
-            log.info("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
+            log.debug("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
     }
 
     //______________________________________________________________________________________________________________Adds
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
                     ride.toString());
         }
         user.addRideAsPassenger(ride);
-        log.info("Service: " + UserServiceImpl.class + "added Ride as Passenger: " +
+        log.debug("Service: " + UserServiceImpl.class + "added Ride as Passenger: " +
                 ride.toString() +
                 " to User: " + user.toString());
     }
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
                     ride.toString());
         }
         user.addRideAsDriver(ride);
-        log.info("Service: " + UserServiceImpl.class + "added Ride as Driver: " +
+        log.debug("Service: " + UserServiceImpl.class + "added Ride as Driver: " +
                 ride.toString() +
                 " to User: " + user.toString());
     }
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
                     comment.toString());
         }
         user.addComment(comment);
-        log.info("Service: " + UserServiceImpl.class + "added Comment: " +
+        log.debug("Service: " + UserServiceImpl.class + "added Comment: " +
                 comment.toString() +
                 " to User: " + user.toString());
     }
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeUserRideAsPassenger(User user, Ride ride) throws IllegalArgumentException {
         user.removerRideAsPassenger(ride);
-        log.info("Service: " + UserServiceImpl.class + "removed Ride as Passenger: " +
+        log.debug("Service: " + UserServiceImpl.class + "removed Ride as Passenger: " +
                 ride.toString() +
                 " from User: " + user.toString());
     }
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeUserRideAsDriver(User user, Ride ride) throws IllegalArgumentException {
         user.removerRideAsDriver(ride);
-        log.info("Service: " + UserServiceImpl.class + "added Ride as Driver: " +
+        log.debug("Service: " + UserServiceImpl.class + "added Ride as Driver: " +
                 ride.toString() +
                 " from User: " + user.toString());
     }
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeUserComment(User user, Comment comment) throws IllegalArgumentException {
         user.removeComment(comment);
-        log.info("Service: " + UserServiceImpl.class + "removed Comment: " +
+        log.debug("Service: " + UserServiceImpl.class + "removed Comment: " +
                 comment.toString() +
                 " from User: " + user.toString());
     }
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Passed id paramenter is null");
         }
         User found = userDao.findById(id);
-        log.info("Service: " + UserServiceImpl.class + "found User: " +
+        log.debug("Service: " + UserServiceImpl.class + "found User: " +
                 found.toString());
         return found;
     }
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsers() {
         List<User> found = userDao.findAll();
-        log.info("Service: " +
+        log.debug("Service: " +
                 UserServiceImpl.class +
                 "found: " +
                 found.size() +
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Passed name paramenter is null");
         }
         User found = userDao.findByNickname(name);
-        log.info("Service: " + UserServiceImpl.class + "found User: " +
+        log.debug("Service: " + UserServiceImpl.class + "found User: " +
                 found.toString());
         return found;
     }
