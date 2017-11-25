@@ -67,6 +67,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<Ride> findRidesWithOriginatingAndDestinationPlace(Long originatingPlaceId, Long destinationPlaceId) throws IllegalArgumentException {
 
+        if(originatingPlaceId == null || destinationPlaceId == null) {
+            throw new IllegalArgumentException();
+        }
+
         Place placeOriginating = placeDao.findById(originatingPlaceId);
         Place placeDestination = placeDao.findById(destinationPlaceId);
 

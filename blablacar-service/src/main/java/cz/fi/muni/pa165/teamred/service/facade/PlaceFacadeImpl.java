@@ -49,9 +49,13 @@ public class PlaceFacadeImpl implements PlaceFacade {
         Place mappedPlace = beanMappingService.mapTo(placeCreateDTO, Place.class);
         Place createdPlace = placeService.createPlace(mappedPlace);
 
-        log.debug("Place with id(" + createdPlace.toString() + ") has been created");
+        if(createdPlace == null) {
+            return null;
+        }
 
+        log.debug("Place with id(" + (createdPlace == null ? null : createdPlace.getId()) + ") has been created");
         return createdPlace.getId();
+
     }
 
     @Override

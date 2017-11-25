@@ -97,9 +97,6 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void createNullPlaceTest() {
-        //not needed using defensive programming
-        doThrow(new IllegalArgumentException()).when(placeDao).create(null);
-
         assertThatThrownBy(() -> placeService.createPlace(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -115,9 +112,6 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void updateNullPlaceTest() {
-        //not needed using defensive programming
-        doThrow(new IllegalArgumentException()).when(placeDao).update(null);
-
         assertThatThrownBy(() -> placeService.updatePlace(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -132,9 +126,6 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void removeNullPlaceTest() {
-        //not needed using defensive programming
-        doThrow(new IllegalArgumentException()).when(placeDao).delete(null);
-
         assertThatThrownBy(() -> placeService.removePlace(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -183,9 +174,6 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void findByIdNullTest() {
-        //not needed using defensive programming
-        doThrow(new IllegalArgumentException()).when(placeDao).findById(null);
-
         assertThatThrownBy(() -> placeService.findById(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -212,10 +200,7 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void findByNameNullTest() {
-        //not needed using defensive programming
-        doThrow(new IllegalArgumentException()).when(placeDao).findByName(null);
-
-
+        assertThatThrownBy(() -> placeService.findByName(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -251,5 +236,12 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
                 placeService.findRidesWithOriginatingAndDestinationPlace(place1.getId(),place1.getId());
 
         assertThat(fromFirstToFirst).isNull();
+    }
+
+    @Test
+    void findRidesWithOriginatingAndDestinationPlaceNullTest() {
+        assertThatThrownBy(() -> placeService
+                .findRidesWithOriginatingAndDestinationPlace(null,place1.getId()))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
