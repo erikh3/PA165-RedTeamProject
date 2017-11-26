@@ -5,6 +5,8 @@ package cz.fi.muni.pa165.teamred.dto;
 import java.util.*;
 
 /**
+ * DataTransferObject for Ride
+ *
  * @author Šimon Mačejovský
  */
 public class RideDTO {
@@ -18,6 +20,7 @@ public class RideDTO {
     private Set<UserDTO> passengers = new HashSet<>();
     private Set<CommentDTO> comments = new HashSet<>();
 
+    // getters and setters
     public Long getId() {
         return id;
     }
@@ -90,6 +93,8 @@ public class RideDTO {
         this.comments = comments;
     }
 
+
+    // adds and removes
     public boolean addPassenger(UserDTO psg){
         return this.passengers.add(psg);
     }

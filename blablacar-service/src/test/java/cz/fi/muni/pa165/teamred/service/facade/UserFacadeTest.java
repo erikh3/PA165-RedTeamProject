@@ -2,11 +2,11 @@ package cz.fi.muni.pa165.teamred.service.facade;
 
 import cz.fi.muni.pa165.teamred.dto.UserCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.UserDTO;
-import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.service.BeanMappingService;
+import cz.fi.muni.pa165.teamred.service.PassengerService;
 import cz.fi.muni.pa165.teamred.service.UserService;
 import cz.fi.muni.pa165.teamred.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
@@ -38,18 +38,16 @@ public class UserFacadeTest {
     @Mock
     UserService userService;
 
+    @Mock
+    PassengerService passengerService;
+
     @Autowired
     @InjectMocks
     UserFacadeImpl userFacade;
 
     private User validUser;
-    private User invalidUser;
 
     private Ride validRide;
-    private Ride invalidRide;
-
-    private Comment validComment;
-    private Comment invalidComment;
 
     private UserCreateDTO userCreateDTO;
 
@@ -125,38 +123,36 @@ public class UserFacadeTest {
         verify(userService).createUser(validUser);
     }
     //_________________________________________________________________________________________________________Add Tests
+
     @Test
-    void testAddRideAsPassenger(){
-        doAnswer(invocation -> {
+    void testAddPassengerToRide(){
+        doAnswer( invocation -> {
             validUser.addRideAsPassenger(validRide);
+            validRide.addPassenger(validUser);
             return null;
-        }).when(userService).addUserRideAsPassenger(validUser, validRide);
+        }).when(passengerService).addPassengerToRide(validUser.getId(), validRide.getId());
 
-        userService.addUserRideAsPassenger(validUser, validRide);
+        userFacade.addRideAsPassenger(validUser.getId(), validRide.getId());
 
-        verify(userService).addUserRideAsPassenger(validUser, validRide);
-        assertThat(validUser.getRidesAsPassenger()).containsOnly(validRide);
+        verify(passengerService).addPassengerToRide(validUser.getId(), validRide.getId());
+
+        assertThat(validUser.getRidesAsPassenger()).contains(validRide);
+        assertThat(validRide.getPassengers()).contains(validUser);
     }
 
 
-
     //______________________________________________________________________________________________________Remove Tests
+
     @Test
-    void testRemoveRideAsPassenger(){
-        validUser.addRideAsPassenger(validRide);
-        validRide.addPassenger(validUser);
+    void testRemovePasssengerFromRide(){
+        doNothing().when(passengerService).removePassengerFromRide(validUser.getId(), validRide.getId());
 
-        doAnswer(invocation -> {
-            validUser.removerRideAsPassenger(validRide);
-            validRide.removePassenger(validUser);
-            return null;
-        }).when(userService).removeUserRideAsPassenger(validUser, validRide);
+        userFacade.removeRideFromPassenger(validUser.getId(), validRide.getId());
 
-        userService.removeUserRideAsPassenger(validUser, validRide);
+        verify(passengerService).removePassengerFromRide(validUser.getId(), validRide.getId());
 
-        verify(userService).removeUserRideAsPassenger(validUser, validRide);
-        assertThat(validUser.getRidesAsPassenger()).isEmpty();
-
+        assertThat(validUser.getRidesAsPassenger().size()).isEqualTo(0);
+        assertThat(validRide.getPassengers().size()).isEqualTo(0);
     }
 
     //________________________________________________________________________________________________________Find Tests
@@ -194,9 +190,12 @@ public class UserFacadeTest {
         assertThat(resUserDTO).isEqualToComparingFieldByField(validUserDTO);
     }
 
+    @Test
+    void testFindUserRidesAsDriver(){
+    }
 
 
-
-
-
+    @Test
+    void testFindUserRidesAsPassenger(){
+    }
 }

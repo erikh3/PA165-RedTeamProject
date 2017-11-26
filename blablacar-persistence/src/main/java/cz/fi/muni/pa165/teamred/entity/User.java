@@ -136,13 +136,13 @@ public class User {
         this.ridesAsPassenger.add(ride);
     }
 
-    public boolean removerRideAsPassenger(Ride ride){ return this.ridesAsPassenger.remove(ride); }
+    public boolean removeRideAsPassenger(Ride ride){ return this.ridesAsPassenger.remove(ride); }
 
     public void addRideAsDriver(Ride ride){
         this.ridesAsDriver.add(ride);
     }
 
-    public boolean removerRideAsDriver(Ride ride){ return this.ridesAsDriver.remove(ride); }
+    public boolean removeRideAsDriver(Ride ride){ return this.ridesAsDriver.remove(ride); }
 
     //________________________________________________________________________________________Equals and HashCode method
 

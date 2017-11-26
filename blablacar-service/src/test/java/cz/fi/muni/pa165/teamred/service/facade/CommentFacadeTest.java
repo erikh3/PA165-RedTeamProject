@@ -54,6 +54,12 @@ public class CommentFacadeTest {
     private Comment positiveComment;
     private CommentDTO positiveCommentDTO;
 
+    @Mock
+    private User mockedUser = new User();
+
+    @Mock
+    private Ride mockedRide = new Ride();
+
     @BeforeClass
     void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -73,6 +79,10 @@ public class CommentFacadeTest {
         commentCreate = new Comment();
         when(beanMappingService.mapTo(commentCreateDTO, Comment.class)).thenReturn(commentCreate);
 
+        mockedUser.setId(4L);
+
+        mockedRide.setId(8L);
+
         positiveComment = new Comment();
         positiveComment.setId(4L);
         positiveComment.setText("positive comment");
@@ -89,14 +99,19 @@ public class CommentFacadeTest {
     void createTest() {
         Comment createdComment = new Comment();
         createdComment.setId(42L);
+        createdComment.setAuthor(mockedUser);
+        createdComment.setRide(mockedRide);
 
         when(commentService.createComment(commentCreate)).thenReturn(createdComment);
-        when(rideService.findById(any())).thenReturn(new Ride());
-        when(userService.findUserById(any())).thenReturn(new User());
+        when(rideService.findById(any())).thenReturn(mockedRide);
+        when(userService.findUserById(any())).thenReturn(mockedUser);
 
         Long id = commentFacadeImpl.createComment(commentCreateDTO);
 
         verify(commentService).createComment(commentCreate);
+
+        verify(mockedUser).addComment(createdComment);
+        verify(mockedRide).addComment(createdComment);
 
         assertThat(id).isEqualTo(createdComment.getId());
     }
@@ -112,11 +127,17 @@ public class CommentFacadeTest {
 
     @Test
     void deleteTest() {
+        positiveComment.setAuthor(mockedUser);
+        positiveComment.setRide(mockedRide);
+
         doNothing().when(commentService).deleteComment(positiveComment);
 
         commentFacadeImpl.deleteComment(positiveComment.getId());
 
         verify(commentService).deleteComment(positiveComment);
+
+        verify(positiveComment.getAuthor()).removeComment(positiveComment);
+        verify(positiveComment.getRide()).removeComment(positiveComment);
     }
 
     @Test
