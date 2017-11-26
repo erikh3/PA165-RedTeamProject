@@ -58,6 +58,9 @@ public class PlaceFacadeTest {
     private PlaceCreateDTO placeCreate1;
     private PlaceCreateDTO placeCreate2;
 
+    public PlaceFacadeTest() {
+    }
+
     @BeforeClass
     void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -130,18 +133,13 @@ public class PlaceFacadeTest {
 
     @Test
     void placeCreateNullTest() {
-        Long verifyId = placeFacade.createPlace(null);
-
-        assertThat(verifyId).isNull();
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.createPlace(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void placeCreateEmptyNameTest() {
         Long verifyId = placeFacade.createPlace(new PlaceCreateDTO());
-
         assertThat(verifyId).isNull();
-        //TODO: Test exception handling
     }
 
     @Test
@@ -157,18 +155,14 @@ public class PlaceFacadeTest {
 
     @Test
     void changePlaceNameIdNullTest() {
-        placeFacade.changePlaceName(null,"Breclav");
-
-        verify(placeService, never()).updatePlace(any());
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.changePlaceName(null,"Breclav"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void changePlaceNameStringNullTest() {
-        placeFacade.changePlaceName(place1.getId(),null);
-
-        verify(placeService, never()).updatePlace(any());
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.changePlaceName(place1.getId(),null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -184,10 +178,7 @@ public class PlaceFacadeTest {
 
     @Test
     void deletePlaceNullTest() {
-        placeFacade.deletePlace(null);
-
-        verify(placeService, never()).removePlace(any());
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.deletePlace(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -203,10 +194,8 @@ public class PlaceFacadeTest {
 
     @Test
     void getPlaceWithIdNullTest() {
-        PlaceDTO testPlace = placeFacade.getPlaceWithId(null);
-
-        assertThat(testPlace).isNull();
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.getPlaceWithId(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -222,10 +211,8 @@ public class PlaceFacadeTest {
 
     @Test
     void getPlaceWithNameNullTest() {
-        PlaceDTO testPlace = placeFacade.getPlaceWithName(null);
-
-        assertThat(testPlace).isNull();
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.getPlaceWithName(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -244,10 +231,8 @@ public class PlaceFacadeTest {
 
     @Test
     void getRidesWithOriginatingPlaceNullTest() {
-        List<RideDTO> testRideList = placeFacade.getRidesWithOriginatingPlace(null);
-
-        assertThat(testRideList).isNull();
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.getRidesWithOriginatingPlace(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -266,10 +251,8 @@ public class PlaceFacadeTest {
 
     @Test
     void getRidesWithDestinationPlaceNullTest() {
-        List<RideDTO> testRideList = placeFacade.getRidesWithDestinationPlace(null);
-
-        assertThat(testRideList).isNull();
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade.getRidesWithDestinationPlace(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -293,11 +276,9 @@ public class PlaceFacadeTest {
 
     @Test
     void getRidesWithOriginatingAndDestinationPlaceNullTest() {
-        List<RideDTO> testRideList = placeFacade
-                .getRidesWithOriginatingAndDestinationPlace(place1.getId(), null);
-
-        assertThat(testRideList).isNull();
-        //TODO: Test exception handling
+        assertThatThrownBy(() -> placeFacade
+                .getRidesWithOriginatingAndDestinationPlace(place1.getId(), null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
