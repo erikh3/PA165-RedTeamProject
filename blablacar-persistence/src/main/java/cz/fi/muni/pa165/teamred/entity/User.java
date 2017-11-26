@@ -3,7 +3,6 @@ package cz.fi.muni.pa165.teamred.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -16,7 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
-public class User implements Serializable{
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,6 +106,22 @@ public class User implements Serializable{
         this.userComments = userComments;
     }
 
+    public Set<Ride> getRidesAsDriver() {
+        return Collections.unmodifiableSet(ridesAsDriver);
+    }
+
+    public void setRidesAsDriver(Set<Ride> ridesAsDriver) {
+        this.ridesAsDriver = ridesAsDriver;
+    }
+
+    public Set<Ride> getRidesAsPassenger() {
+        return Collections.unmodifiableSet(ridesAsPassenger);
+    }
+
+    public void setRidesAsPassenger(Set<Ride> ridesAsPassenger) {
+        this.ridesAsPassenger = ridesAsPassenger;
+    }
+
     //__________________________________________________________________________________________________Adds and Removes
 
     public void addComment(Comment comment){
@@ -121,19 +136,20 @@ public class User implements Serializable{
         this.ridesAsPassenger.add(ride);
     }
 
-    public boolean removerRideAsPassenger(Ride ride){ return this.ridesAsPassenger.remove(ride); }
+    public boolean removeRideAsPassenger(Ride ride){ return this.ridesAsPassenger.remove(ride); }
 
     public void addRideAsDriver(Ride ride){
         this.ridesAsDriver.add(ride);
     }
 
-    public boolean removerRideAsDriver(Ride ride){ return this.ridesAsDriver.remove(ride); }
+    public boolean removeRideAsDriver(Ride ride){ return this.ridesAsDriver.remove(ride); }
 
     //________________________________________________________________________________________Equals and HashCode method
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof User)) return false;
 
         User user = (User) o;
