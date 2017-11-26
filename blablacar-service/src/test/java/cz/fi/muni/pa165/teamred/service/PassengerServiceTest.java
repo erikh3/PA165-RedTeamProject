@@ -8,9 +8,7 @@ import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.Invocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -114,9 +112,12 @@ public class PassengerServiceTest extends AbstractTestNGSpringContextTests {
         verify(userDao).update(validUser);
         verify(rideDao).update(validRide);
 
-        assertThat(validUser.getRidesAsPassenger().contains(validRide));
-        assertThat(validRide.getPassengers().contains(validUser));
-        assertThat(seats-1).isEqualTo(validRide.getAvailableSeats());
+        assertThat(validUser.getRidesAsPassenger()
+                .contains(validRide));
+        assertThat(validRide.getPassengers()
+                .contains(validUser));
+        assertThat(seats-1)
+                .isEqualTo(validRide.getAvailableSeats());
     }
 
     @Test
@@ -128,7 +129,8 @@ public class PassengerServiceTest extends AbstractTestNGSpringContextTests {
         verify(userDao, never()).update(existingUser);
         verify(rideDao, never()).update(existingRide);
 
-        assertThat(seats).isEqualTo(existingRide.getAvailableSeats());
+        assertThat(seats)
+                .isEqualTo(existingRide.getAvailableSeats());
     }
 
 
@@ -140,16 +142,20 @@ public class PassengerServiceTest extends AbstractTestNGSpringContextTests {
 
         passengerService.addPassengerToRide(validUser.getId(), validRide.getId());
 
-        assertThat(validUser.getRidesAsPassenger()).isEqualTo(rides);
-        assertThat(validRide.getPassengers()).isEqualTo(passengers);
-        assertThat(validRide.getAvailableSeats()).isEqualTo(0);
+        assertThat(validUser.getRidesAsPassenger())
+                .isEqualTo(rides);
+        assertThat(validRide.getPassengers())
+                .isEqualTo(passengers);
+        assertThat(validRide.getAvailableSeats())
+                .isEqualTo(0);
     }
 
     @Test
     void testNonCompleteBidirectionalReferenceRideOnly(){
         validRide.addPassenger(validUser);
 
-        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId())).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId()))
+                .isInstanceOf(IllegalStateException.class);
     }
 
 
@@ -157,21 +163,24 @@ public class PassengerServiceTest extends AbstractTestNGSpringContextTests {
     void testNonCompleteBidirectionalReferenceUserOnly(){
         validUser.addRideAsPassenger(validRide);
 
-        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId())).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId()))
+                .isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     void testAddPasssengerToNonExistingRide(){
         when(rideDao.findById(validRide.getId())).thenReturn(null);
 
-        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId()))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testAddNonExistingPassengerToRide(){
         when(userDao.findById(validUser.getId())).thenReturn(null);
 
-        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy( () -> passengerService.addPassengerToRide(validUser.getId(), validRide.getId()))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     //______________________________________________________________________________________________________Remove Tests
@@ -183,7 +192,8 @@ public class PassengerServiceTest extends AbstractTestNGSpringContextTests {
 
         assertThat(!validUser.getRidesAsPassenger().contains(validRide));
         assertThat(!validRide.getPassengers().contains(validUser));
-        assertThat(seats + 1).isEqualTo(validRide.getAvailableSeats());
+        assertThat(seats + 1)
+                .isEqualTo(validRide.getAvailableSeats());
     }
 
 
@@ -193,6 +203,7 @@ public class PassengerServiceTest extends AbstractTestNGSpringContextTests {
 
         passengerService.removePassengerFromRide(validUser.getId(), existingRide.getId());
 
-        assertThat(seats).isEqualTo(existingRide.getAvailableSeats());
+        assertThat(seats)
+                .isEqualTo(existingRide.getAvailableSeats());
     }
 }

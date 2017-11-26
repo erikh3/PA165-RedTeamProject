@@ -112,7 +112,8 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
     void createNullCommentTest() {
         doThrow(new IllegalArgumentException()).when(commentDao).create(null);
 
-        assertThatThrownBy(() -> commentService.createComment(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentService.createComment(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -130,7 +131,8 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
     void updateNullCommentTest() {
         doThrow(new IllegalArgumentException()).when(commentDao).update(null);
 
-        assertThatThrownBy(() -> commentService.updateComment(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentService.updateComment(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -143,7 +145,8 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
 
         List<Comment> result = commentService.findAll();
 
-        assertThat(result).containsExactlyInAnyOrder(sampleComment, secondComment);
+        assertThat(result)
+                .containsExactlyInAnyOrder(sampleComment, secondComment);
     }
 
     @Test
@@ -152,7 +155,8 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
 
         List<Comment> result = commentService.findAll();
 
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isEmpty();
     }
 
     @Test
@@ -161,10 +165,12 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
         when(commentDao.findById(secondComment.getId())).thenReturn(secondComment);
 
         Comment shouldBeSample = commentService.findById(sampleComment.getId());
-        assertThat(shouldBeSample).isEqualToComparingFieldByField(shouldBeSample);
+        assertThat(shouldBeSample)
+                .isEqualToComparingFieldByField(shouldBeSample);
 
         Comment shouldBeSecond = commentService.findById(secondComment.getId());
-        assertThat(shouldBeSecond).isEqualToComparingFieldByFieldRecursively(secondComment);
+        assertThat(shouldBeSecond)
+                .isEqualToComparingFieldByFieldRecursively(secondComment);
     }
 
     @Test
@@ -182,20 +188,24 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
         when(commentDao.getCommentsWithRideId(ride2.getId())).thenReturn(new ArrayList<>(ride2.getComments()));
 
         List<Comment> ride1Comments = commentService.findAllWithRideId(ride1.getId());
-        assertThat(ride1Comments).containsExactlyInAnyOrder(sampleComment);
+        assertThat(ride1Comments)
+                .containsExactlyInAnyOrder(sampleComment);
 
         List<Comment> ride2Comments = commentService.findAllWithRideId(ride2.getId());
-        assertThat(ride2Comments).containsExactlyInAnyOrder(secondComment);
+        assertThat(ride2Comments)
+                .containsExactlyInAnyOrder(secondComment);
     }
 
     @Test
     void findCommentsWithRideMultipleCommentsTest() {
         secondComment.setRide(ride1);
         ride1.addComment(secondComment);
-        when(commentDao.getCommentsWithRideId(ride1.getId())).thenReturn(new ArrayList<>(ride1.getComments()));
+        when(commentDao.getCommentsWithRideId(ride1.getId()))
+                .thenReturn(new ArrayList<>(ride1.getComments()));
 
         List<Comment> ride1Comments = commentService.findAllWithRideId(ride1.getId());
-        assertThat(ride1Comments).containsExactlyInAnyOrder(sampleComment, secondComment);
+        assertThat(ride1Comments)
+        .containsExactlyInAnyOrder(sampleComment, secondComment);
     }
 
     @Test
@@ -204,14 +214,16 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
 
         List<Comment> result = commentService.findAllWithRideId(ride1.getId());
 
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isEmpty();
     }
 
     @Test
     void findCommentsWithRideNullRideTest() {
         when(commentDao.getCommentsWithRideId(null)).thenThrow(new IllegalArgumentException());
 
-        assertThatThrownBy(() -> commentService.findAllWithRideId(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentService.findAllWithRideId(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -220,10 +232,12 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
         when(commentDao.getCommentsWithUserId(maros.getId())).thenReturn(new ArrayList<>(maros.getUserComments()));
 
         List<Comment> adamComments = commentService.findAllWithAuthorId(adam.getId());
-        assertThat(adamComments).containsExactlyInAnyOrder(sampleComment);
+        assertThat(adamComments)
+                .containsExactlyInAnyOrder(sampleComment);
 
         List<Comment> marosComments = commentService.findAllWithAuthorId(maros.getId());
-        assertThat(marosComments).containsExactlyInAnyOrder(secondComment);
+        assertThat(marosComments)
+                .containsExactlyInAnyOrder(secondComment);
     }
 
     @Test
@@ -233,7 +247,8 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
         when(commentDao.getCommentsWithUserId(adam.getId())).thenReturn(new ArrayList<>(adam.getUserComments()));
 
         List<Comment> adamComments = commentService.findAllWithAuthorId(adam.getId());
-        assertThat(adamComments).containsExactlyInAnyOrder(sampleComment, secondComment);
+        assertThat(adamComments)
+                .containsExactlyInAnyOrder(sampleComment, secondComment);
     }
 
     @Test
@@ -242,14 +257,16 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
 
         List<Comment> adamComments = commentService.findAllWithAuthorId(adam.getId());
 
-        assertThat(adamComments).isEmpty();
+        assertThat(adamComments)
+                .isEmpty();
     }
 
     @Test
     void findCommentsWithAuthorNullAuthorTest() {
         when(commentDao.getCommentsWithUserId(null)).thenThrow(new IllegalArgumentException());
 
-        assertThatThrownBy(() -> commentService.findAllWithAuthorId(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentService.findAllWithAuthorId(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -265,6 +282,7 @@ public class CommentServiceTest extends AbstractTestNGSpringContextTests {
     void deleteNullCommentTest() {
         doThrow(new IllegalArgumentException()).when(commentDao).delete(null);
 
-        assertThatThrownBy(() -> commentService.deleteComment(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commentService.deleteComment(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

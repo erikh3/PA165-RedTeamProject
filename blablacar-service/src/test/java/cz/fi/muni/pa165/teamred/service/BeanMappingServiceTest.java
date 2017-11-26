@@ -34,6 +34,7 @@ public class BeanMappingServiceTest extends AbstractTestNGSpringContextTests {
     void placeMapping() {
         List<PlaceDTO> resultList = beanMappingService.mapTo(placeList, PlaceDTO.class);
 
-        assertThat(resultList.size()).isEqualTo(2);
+        assertThat(resultList.size())
+                .isEqualTo(2);
     }
 }

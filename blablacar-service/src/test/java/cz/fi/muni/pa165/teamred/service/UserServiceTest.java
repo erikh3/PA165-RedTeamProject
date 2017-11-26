@@ -1,7 +1,6 @@
 package cz.fi.muni.pa165.teamred.service;
 
 import cz.fi.muni.pa165.teamred.dao.UserDao;
-import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
@@ -43,10 +42,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     private User invalidUser;
 
     private Ride validRide;
-    private Ride invalidRide;
-
-    private Comment validComment;
-    private Comment invalidComment;
 
     private Calendar calendar = Calendar.getInstance();
 
@@ -91,29 +86,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         calendar.add(Calendar.DATE,5);
         validRide.setDeparture((calendar.getTime()));
         validRide.setId(1L);
-        validRide.setDriver(new User()); //It is not required by this service to control this users attributed through ride
-
-
-        invalidRide = new Ride();
-        invalidRide.setSeatPrice(20.0);
-        invalidRide.setDestinationPlace(validPlaceDest);
-        invalidRide.setSourcePlace(validPlaceSource);
-        invalidRide.setAvailableSeats(4);
-        invalidRide.setDeparture(calendar.getTime());
-        invalidRide.setId(1L);
-
-
-        //Comment Inits
-        validComment = new Comment();
-        validComment.setId(1L);
-        validComment.setCreated(calendar.getTime());
-        validComment.setText("Hello from Valid Comment");
-
-        invalidComment = new Comment();
-        invalidComment.setId(2L);
-        invalidComment.setCreated(calendar.getTime());
-        invalidComment.setText("Hello from Invalid Comment");
-
+        validRide.setDriver(new User()); //It is not required by this service to control this users attributes through ride
     }
 
     //______________________________________________________________________________________________________Create Tests
@@ -124,26 +97,30 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
         verify(userDao).create(validUser);
 
-        assertThat(createdUser).isEqualToComparingFieldByField(validUser);
+        assertThat(createdUser)
+                .isEqualToComparingFieldByField(validUser);
     }
 
     @Test
     void testCreateNullUser() {
-        assertThatThrownBy(() -> userService.createUser(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.createUser(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testCreateUserNullName() {
         invalidUser.setName(null);
 
-        assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.createUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testCreateUserNullNickname() {
         invalidUser.setNickname(null);
 
-        assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.createUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
 
@@ -151,7 +128,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     void testCreateUserNullSurname() {
         invalidUser.setSurname(null);
 
-        assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.createUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
 
@@ -159,14 +137,16 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     void testCreateUserEmptyName() {
         invalidUser.setName("");
 
-        assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.createUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testCreateUserEmptyNickname() {
         invalidUser.setNickname("");
 
-        assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.createUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
 
@@ -174,7 +154,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     void testCreateUserEmptySurname() {
         invalidUser.setSurname("");
 
-        assertThatThrownBy(() -> userService.createUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.createUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     //______________________________________________________________________________________________________Update Tests
@@ -188,7 +169,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         }).when(userDao).update(any());
 
         userService.editUser(validUser);
-        assertThat(validUser.getName()).isEqualTo(newName);
+        assertThat(validUser.getName())
+                .isEqualTo(newName);
     }
 
 
@@ -202,7 +184,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         }).when(userDao).update(any());
 
         userService.editUser(validUser);
-        assertThat(validUser.getSurname()).isEqualTo(newSurname);
+        assertThat(validUser.getSurname())
+                .isEqualTo(newSurname);
     }
 
 
@@ -216,34 +199,39 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         }).when(userDao).update(any());
 
         userService.editUser(validUser);
-        assertThat(validUser.getNickname()).isEqualTo(newNickname);
+        assertThat(validUser.getNickname())
+                .isEqualTo(newNickname);
     }
 
 
     @Test
     void testUpdateNullUser(){
-        assertThatThrownBy(() -> userService.editUser(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.editUser(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testUpdateNullUserName(){
         invalidUser.setName(null);
 
-        assertThatThrownBy(() -> userService.editUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.editUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testUpdateNullUserSurname(){
         invalidUser.setSurname(null);
 
-        assertThatThrownBy(() -> userService.editUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.editUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testUpdateNullUserNickname(){
         invalidUser.setNickname(null);
 
-        assertThatThrownBy(() -> userService.editUser(invalidUser)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.editUser(invalidUser))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     //________________________________________________________________________________________________________Find Tests
@@ -256,7 +244,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
         List<User> resultUserList = (List<User>) userService.findAllUsers();
 
-        assertThat(resultUserList).containsExactlyInAnyOrder(validUser);
+        assertThat(resultUserList)
+                .containsExactlyInAnyOrder(validUser);
     }
 
     @Test
@@ -264,7 +253,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         when(userDao.findById(validUser.getId())).thenReturn(validUser);
 
         User foundUser = userService.findUserById(validUser.getId());
-        assertThat(foundUser).isEqualToComparingFieldByField(validUser);
+        assertThat(foundUser)
+                .isEqualToComparingFieldByField(validUser);
     }
 
     @Test
@@ -273,7 +263,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
         validUser.addRideAsDriver(validRide);
 
-        assertThat(userService.getUserRidesAsDriver(validUser.getId())).containsExactly(validRide);
+        assertThat(userService.getUserRidesAsDriver(validUser.getId()))
+                .containsExactly(validRide);
     }
 
     @Test
@@ -282,7 +273,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
         validUser.addRideAsPassenger(validRide);
 
-        assertThat(userService.getUserRidesAsPassenger(validUser.getId())).containsExactly(validRide);
+        assertThat(userService.getUserRidesAsPassenger(validUser.getId()))
+                .containsExactly(validRide);
     }
 
     //______________________________________________________________________________________________________Delete Tests
@@ -303,6 +295,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void testDeleteNullUser(){
-        assertThatThrownBy(() -> userService.deleteUser(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.deleteUser(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

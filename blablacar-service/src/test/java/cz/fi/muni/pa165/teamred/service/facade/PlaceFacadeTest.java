@@ -133,13 +133,15 @@ public class PlaceFacadeTest {
 
     @Test
     void placeCreateNullTest() {
-        assertThatThrownBy(() -> placeFacade.createPlace(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> placeFacade.createPlace(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void placeCreateEmptyNameTest() {
         Long verifyId = placeFacade.createPlace(new PlaceCreateDTO());
-        assertThat(verifyId).isNull();
+        assertThat(verifyId)
+                .isNull();
     }
 
     @Test
@@ -178,7 +180,8 @@ public class PlaceFacadeTest {
 
     @Test
     void deletePlaceNullTest() {
-        assertThatThrownBy(() -> placeFacade.deletePlace(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> placeFacade.deletePlace(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -206,7 +209,8 @@ public class PlaceFacadeTest {
         PlaceDTO testPlace = placeFacade.getPlaceWithName(place1.getName());
 
         verify(placeService).findByName(placeDTO1.getName());
-        assertThat(testPlace).isEqualToComparingFieldByField(placeDTO1);
+        assertThat(testPlace)
+                .isEqualToComparingFieldByField(placeDTO1);
     }
 
     @Test
@@ -226,7 +230,8 @@ public class PlaceFacadeTest {
         List<RideDTO> testRideList = placeFacade.getRidesWithOriginatingPlace(place1.getId());
 
         verify(placeService).findById(place1.getId());
-        assertThat(testRideList).containsExactly(rideDTO1);
+        assertThat(testRideList)
+                .containsExactly(rideDTO1);
     }
 
     @Test
@@ -246,7 +251,8 @@ public class PlaceFacadeTest {
         List<RideDTO> testRideList = placeFacade.getRidesWithDestinationPlace(place1.getId());
 
         verify(placeService).findById(place1.getId());
-        assertThat(testRideList).containsExactly(rideDTO2);
+        assertThat(testRideList)
+                .containsExactly(rideDTO2);
     }
 
     @Test
@@ -271,7 +277,8 @@ public class PlaceFacadeTest {
                 .getRidesWithOriginatingAndDestinationPlace(place1.getId(),place2.getId());
 
         verify(placeService).findRidesWithOriginatingAndDestinationPlace(place1.getId(),place2.getId());
-        assertThat(testRideList).containsExactly(rideDTO1);
+        assertThat(testRideList)
+                .containsExactly(rideDTO1);
     }
 
     @Test
@@ -297,7 +304,8 @@ public class PlaceFacadeTest {
         List<PlaceDTO> testPlaceList = placeFacade.getAllPlaces();
 
         verify(placeService).findAll();
-        assertThat(testPlaceList).containsExactlyInAnyOrder(placeDTO1,placeDTO2);
+        assertThat(testPlaceList)
+                .containsExactlyInAnyOrder(placeDTO1,placeDTO2);
     }
 
 }

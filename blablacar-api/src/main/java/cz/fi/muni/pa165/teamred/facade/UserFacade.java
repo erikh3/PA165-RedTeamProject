@@ -62,7 +62,7 @@ public interface UserFacade {
     /**
      * Finds user by ID.
      *
-     * @param userId
+     * @param userId user's ID
      * @return found user, null otherwise
      */
     UserDTO findUserById(Long userId);

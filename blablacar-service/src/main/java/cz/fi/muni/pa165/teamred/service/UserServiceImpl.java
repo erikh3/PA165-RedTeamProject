@@ -1,12 +1,10 @@
 package cz.fi.muni.pa165.teamred.service;
 
 import cz.fi.muni.pa165.teamred.dao.UserDao;
-import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -25,11 +23,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) throws IllegalArgumentException {
         if (!isValidUser(user)) {
-            throw new IllegalArgumentException("User argument is not valid.");
+            throw new IllegalArgumentException(UserServiceImpl.class +
+                    " - User argument is not valid.");
         }
 
         userDao.create(user);
-        log.debug("Service: " + UserServiceImpl.class + "created User: " + user.toString());
+        log.debug(UserServiceImpl.class +
+                " - Created User: " + user.toString());
         return user;
     }
 
@@ -37,54 +37,64 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editUser(User user) throws IllegalArgumentException {
         if (!isValidUser(user)) {
-            throw new IllegalArgumentException("User argument is not valid.");
+            throw new IllegalArgumentException(UserServiceImpl.class +
+                    " - User argument is not valid.");
         }
 
         userDao.update(user);
-        log.debug("Service: " + UserServiceImpl.class + "updated User: " + user.toString());
+        log.debug(UserServiceImpl.class +
+                " - Updated User: " + user.toString());
     }
 
     //____________________________________________________________________________________________________________Delete
     @Override
     public void deleteUser(User user) throws IllegalArgumentException {
-            if (user == null || userDao.findById(user.getId()) == null){
-                throw new IllegalArgumentException("User null or not found, User: " + user);
-            }
-            userDao.delete(user);
-            log.debug("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
+        if (user == null){
+            throw new IllegalArgumentException(UserServiceImpl.class +
+                    " - Null User.");
+        }
+        if (userDao.findById(user.getId()) == null) {
+            throw new IllegalArgumentException(UserServiceImpl.class +
+                    " - Not found User: " + user);
+        }
+        userDao.delete(user);
+        log.debug("Service: " + UserServiceImpl.class + "removed User: " + user.toString());
     }
 
     //_____________________________________________________________________________________________________________Finds
     @Override
     public User findUserById(Long id) throws IllegalArgumentException {
         if (id == null) {
-            throw new IllegalArgumentException("Passed id paramenter is null");
+            throw new IllegalArgumentException(UserServiceImpl.class +
+                    " - Passed id paramenter is null");
         }
         User found = userDao.findById(id);
-        log.debug("Service: " + UserServiceImpl.class + "found User: " +
-                found.toString());
+        log.debug(UserServiceImpl.class +
+                " - Found User: " + found.toString());
+
         return found;
     }
 
     @Override
     public List<User> findAllUsers() {
         List<User> found = userDao.findAll();
-        log.debug("Service: " +
-                UserServiceImpl.class +
-                "found: " +
-                found.size() +
+        log.debug(UserServiceImpl.class +
+                " - found: " + found.size() +
                 " users.");
+
         return found;
     }
 
     @Override
     public User findUserByNickname(String name) throws IllegalArgumentException {
         if (name == null) {
-            throw new IllegalArgumentException("Passed name paramenter is null");
+            throw new IllegalArgumentException(UserServiceImpl.class +
+                    " - Name paramenter is null");
         }
         User found = userDao.findByNickname(name);
-        log.debug("Service: " + UserServiceImpl.class + "found User: " +
-                found.toString());
+        log.debug(UserServiceImpl.class +
+                " - found User: " + found.toString());
+
         return found;
     }
 
@@ -115,7 +125,6 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        /*Checking birthdate with actual time check maybe?*/
         return true;
     }
 }

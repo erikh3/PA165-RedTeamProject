@@ -1,6 +1,5 @@
 package cz.fi.muni.pa165.teamred.service;
 
-import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import org.springframework.stereotype.Service;
@@ -30,33 +29,33 @@ public interface UserService {
 
     /**
      * Finds a User by id.
-     * @param id users ID
-     * @return found User, null otherwise
+     * @param id - users ID
+     * @return - found User, null otherwise
      */
     User findUserById(Long id);
 
     /**
      * Finds all users.
-     * @return all users , empty list if no user found
+     * @return - all users , empty list if no user found
      */
     Collection<User> findAllUsers();
 
     /**
      * Finds a User by nickname.
-     * @param nickname Users nickname
-     * @return found User, null otherwise
+     * @param nickname - Users nickname
+     * @return - found User, null otherwise
      */
     User findUserByNickname(String nickname);
 
     /**
      * Finds all users rides as driver.
-     * @return all users, empty list if no user found
+     * @return - all users, empty list if no user found
      */
     Collection<Ride> getUserRidesAsDriver(Long userId);
 
     /**
      * Finds all users rides as passenger.
-     * @return all users, empty list if no user found
+     * @return - all users, empty list if no user found
      */
     Collection<Ride> getUserRidesAsPassenger(Long userId);
 }

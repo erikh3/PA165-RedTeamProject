@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.teamred.service.facade;
 
+import cz.fi.muni.pa165.teamred.dto.RideDTO;
 import cz.fi.muni.pa165.teamred.dto.UserCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.UserDTO;
 import cz.fi.muni.pa165.teamred.entity.Place;
@@ -33,17 +34,17 @@ import static org.mockito.Mockito.*;
 public class UserFacadeTest {
 
     @Mock
-    BeanMappingService beanMappingService;
+    private BeanMappingService beanMappingService;
 
     @Mock
-    UserService userService;
+    private UserService userService;
 
     @Mock
-    PassengerService passengerService;
+    private PassengerService passengerService;
 
     @Autowired
     @InjectMocks
-    UserFacadeImpl userFacade;
+    private UserFacadeImpl userFacade;
 
     private User validUser;
 
@@ -110,7 +111,6 @@ public class UserFacadeTest {
 
         userFacade.editUser(validUserDTO);
 
-        validUser.setSurname("Von Neuman");
         verify(userService).editUser(validUser);
     }
 
@@ -136,8 +136,10 @@ public class UserFacadeTest {
 
         verify(passengerService).addPassengerToRide(validUser.getId(), validRide.getId());
 
-        assertThat(validUser.getRidesAsPassenger()).contains(validRide);
-        assertThat(validRide.getPassengers()).contains(validUser);
+        assertThat(validUser.getRidesAsPassenger())
+                .contains(validRide);
+        assertThat(validRide.getPassengers())
+                .contains(validUser);
     }
 
 
@@ -151,8 +153,10 @@ public class UserFacadeTest {
 
         verify(passengerService).removePassengerFromRide(validUser.getId(), validRide.getId());
 
-        assertThat(validUser.getRidesAsPassenger().size()).isEqualTo(0);
-        assertThat(validRide.getPassengers().size()).isEqualTo(0);
+        assertThat(validUser
+                .getRidesAsPassenger().size()).isEqualTo(0);
+        assertThat(validRide
+                .getPassengers().size()).isEqualTo(0);
     }
 
     //________________________________________________________________________________________________________Find Tests
@@ -169,7 +173,8 @@ public class UserFacadeTest {
         List<UserDTO> testUserRes = new ArrayList<>(userFacade.getAllUsers());
 
         verify(userService).findAllUsers();
-        assertThat(testUserRes).containsExactlyInAnyOrder(validUserDTO);
+        assertThat(testUserRes)
+                .containsExactlyInAnyOrder(validUserDTO);
     }
 
     @Test
@@ -178,7 +183,8 @@ public class UserFacadeTest {
         when(userService.findUserById(1L)).thenReturn(validUser);
 
         UserDTO resUserDTO = userFacade.findUserById(validUser.getId());
-        assertThat(resUserDTO).isEqualToComparingFieldByField(validUserDTO);
+        assertThat(resUserDTO)
+                .isEqualToComparingFieldByField(validUserDTO);
     }
 
     @Test
@@ -187,15 +193,62 @@ public class UserFacadeTest {
         when(userService.findUserByNickname("j_doe")).thenReturn(validUser);
 
         UserDTO resUserDTO = userFacade.findUserByNickname(validUser.getNickname());
-        assertThat(resUserDTO).isEqualToComparingFieldByField(validUserDTO);
+        assertThat(resUserDTO)
+                .isEqualToComparingFieldByField(validUserDTO);
     }
 
     @Test
     void testFindUserRidesAsDriver(){
+        List<RideDTO> ridesDTOList = new ArrayList<>();
+        List<Ride> ridesList = new ArrayList<>();
+        ridesList.add(validRide);
+
+        RideDTO rideDTO = new RideDTO();
+        rideDTO.setId(validRide.getId());
+        rideDTO.setAvailableSeats(validRide.getAvailableSeats());
+        rideDTO.setDeparture(validRide.getDeparture());
+        rideDTO.setSeatPrice(validRide.getSeatPrice());
+
+        ridesDTOList.add(rideDTO);
+
+        when(beanMappingService.mapTo(ridesList, RideDTO.class)).thenReturn(ridesDTOList);
+        when(userService.getUserRidesAsDriver(validUser.getId())).thenReturn(ridesList);
+
+        verify(userService).findUserById(validUser.getId());
+
+        List<RideDTO> resList = new ArrayList<>(userFacade.getUserRidesAsDriver(validUser.getId()));
+
+        assertThat(resList.size())
+                .isEqualTo(1);
+        assertThat(resList)
+                .containsExactlyInAnyOrder(rideDTO);
     }
 
 
     @Test
     void testFindUserRidesAsPassenger(){
+        List<RideDTO> ridesDTOList = new ArrayList<>();
+        List<Ride> ridesList = new ArrayList<>();
+        ridesList.add(validRide);
+
+        RideDTO rideDTO = new RideDTO();
+        rideDTO.setId(validRide.getId());
+        rideDTO.setAvailableSeats(validRide.getAvailableSeats());
+        rideDTO.setDeparture(validRide.getDeparture());
+        rideDTO.setSeatPrice(validRide.getSeatPrice());
+
+        ridesDTOList.add(rideDTO);
+
+        when(beanMappingService.mapTo(ridesList, RideDTO.class)).thenReturn(ridesDTOList);
+        when(userService.getUserRidesAsPassenger(validUser.getId())).thenReturn(ridesList);
+
+        verify(userService).findUserById(validUser.getId());
+
+        List<RideDTO> resList = new ArrayList<>(userFacade.getUserRidesAsPassenger(validUser.getId()));
+
+        assertThat(resList.size())
+                .isEqualTo(1);
+        assertThat(resList)
+                .containsExactlyInAnyOrder(rideDTO);
     }
 }
