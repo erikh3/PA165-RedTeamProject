@@ -144,7 +144,8 @@ public class CommentFacadeTest {
     void getCommentWithId() {
         CommentDTO commentDTO = commentFacadeImpl.getCommentWithId(positiveComment.getId());
 
-        assertThat(commentDTO).isEqualToComparingFieldByFieldRecursively(positiveCommentDTO);
+        assertThat(commentDTO)
+                .isEqualToComparingFieldByFieldRecursively(positiveCommentDTO);
     }
 
     @Test
@@ -160,7 +161,8 @@ public class CommentFacadeTest {
 
         List<CommentDTO> commentDTOList = commentFacadeImpl.getAllComments();
 
-        assertThat(commentDTOList).containsExactlyInAnyOrder(positiveCommentDTO);
+        assertThat(commentDTOList)
+                .containsExactlyInAnyOrder(positiveCommentDTO);
     }
 
     @Test
@@ -180,7 +182,8 @@ public class CommentFacadeTest {
 
         List<CommentDTO> commentDTOList = commentFacadeImpl.getCommentsWithRide(ride.getId());
 
-        assertThat(commentDTOList).containsExactlyInAnyOrder(positiveCommentDTO);
+        assertThat(commentDTOList)
+                .containsExactlyInAnyOrder(positiveCommentDTO);
     }
 
     @Test
@@ -200,6 +203,7 @@ public class CommentFacadeTest {
 
         List<CommentDTO> commentDTOList = commentFacadeImpl.getCommentsWithAuthor(user.getId());
 
-        assertThat(commentDTOList).containsExactlyInAnyOrder(positiveCommentDTO);
+        assertThat(commentDTOList)
+                .containsExactlyInAnyOrder(positiveCommentDTO);
     }
 }

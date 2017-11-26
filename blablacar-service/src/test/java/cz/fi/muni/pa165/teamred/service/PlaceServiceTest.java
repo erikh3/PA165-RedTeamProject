@@ -17,7 +17,6 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,11 +30,11 @@ import static org.mockito.Mockito.*;
 public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    PlaceDao placeDao;
+    private PlaceDao placeDao;
 
     @Autowired
     @InjectMocks
-    PlaceService placeService;
+    private PlaceService placeService;
 
     private Ride ride1;
     private Ride ride2;
@@ -92,12 +91,14 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         Place verifyPlace = placeService.createPlace(place1);
 
         verify(placeDao).create(place1);
-        assertThat(verifyPlace).isEqualToComparingFieldByField(place1);
+        assertThat(verifyPlace)
+                .isEqualToComparingFieldByField(place1);
     }
 
     @Test
     void createNullPlaceTest() {
-        assertThatThrownBy(() -> placeService.createPlace(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> placeService.createPlace(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -112,7 +113,8 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void updateNullPlaceTest() {
-        assertThatThrownBy(() -> placeService.updatePlace(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> placeService.updatePlace(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -126,7 +128,8 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void removeNullPlaceTest() {
-        assertThatThrownBy(() -> placeService.removePlace(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> placeService.removePlace(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -135,11 +138,13 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         allPlaces.add(place1);
         allPlaces.add(place2);
 
-        when(placeDao.findAll()).thenReturn(allPlaces);
+        when(placeDao.findAll())
+                .thenReturn(allPlaces);
 
         List<Place> result = placeService.findAll();
 
-        assertThat(result).containsExactlyInAnyOrder(place1, place2);
+        assertThat(result)
+                .containsExactlyInAnyOrder(place1, place2);
     }
 
     @Test
@@ -148,7 +153,8 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
         List<Place> result = placeService.findAll();
 
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isEmpty();
     }
 
     @Test
@@ -157,10 +163,12 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         when(placeDao.findById(place2.getId())).thenReturn(place2);
 
         Place found1 = placeService.findById(place1.getId());
-        assertThat(found1).isEqualToComparingFieldByField(found1);
+        assertThat(found1)
+                .isEqualToComparingFieldByField(found1);
 
         Place found2 = placeService.findById(place2.getId());
-        assertThat(found2).isEqualToComparingFieldByFieldRecursively(place2);
+        assertThat(found2)
+                .isEqualToComparingFieldByFieldRecursively(place2);
     }
 
     @Test
@@ -169,12 +177,14 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
         Place result = placeService.findById(-1L);
 
-        assertThat(result).isNull();
+        assertThat(result)
+                .isNull();
     }
 
     @Test
     void findByIdNullTest() {
-        assertThatThrownBy(() -> placeService.findById(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> placeService.findById(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -183,10 +193,12 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         when(placeDao.findByName(place2.getName())).thenReturn(place2);
 
         Place found1 = placeService.findByName(place1.getName());
-        assertThat(found1).isEqualToComparingFieldByField(found1);
+        assertThat(found1)
+                .isEqualToComparingFieldByField(found1);
 
         Place found2 = placeService.findByName(place2.getName());
-        assertThat(found2).isEqualToComparingFieldByFieldRecursively(place2);
+        assertThat(found2)
+                .isEqualToComparingFieldByFieldRecursively(place2);
     }
 
     @Test
@@ -195,12 +207,14 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
 
         Place result = placeService.findByName("not existing name");
 
-        assertThat(result).isNull();
+        assertThat(result)
+                .isNull();
     }
 
     @Test
     void findByNameNullTest() {
-        assertThatThrownBy(() -> placeService.findByName(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> placeService.findByName(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -213,8 +227,10 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         List<Ride> fromSecondToFirst =
                 placeService.findRidesWithOriginatingAndDestinationPlace(place2.getId(),place1.getId());
 
-        assertThat(fromFirstToSecond).containsExactly(ride1);
-        assertThat(fromSecondToFirst).containsExactly(ride2);
+        assertThat(fromFirstToSecond)
+                .containsExactly(ride1);
+        assertThat(fromSecondToFirst)
+                .containsExactly(ride2);
     }
 
     @Test
@@ -225,7 +241,8 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         List<Ride> fromFirstToSecond =
                 placeService.findRidesWithOriginatingAndDestinationPlace(place1.getId(),place2.getId());
 
-        assertThat(fromFirstToSecond).isNull();
+        assertThat(fromFirstToSecond)
+                .isNull();
     }
 
     @Test
@@ -235,7 +252,8 @@ public class PlaceServiceTest extends AbstractTestNGSpringContextTests {
         List<Ride> fromFirstToFirst =
                 placeService.findRidesWithOriginatingAndDestinationPlace(place1.getId(),place1.getId());
 
-        assertThat(fromFirstToFirst).isNull();
+        assertThat(fromFirstToFirst)
+                .isNull();
     }
 
     @Test
