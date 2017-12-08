@@ -17,12 +17,14 @@ import java.util.List;
  * Created by jcibik on 12/4/17.
  */
 @Controller
+@RequestMapping(value = "/")
 public class WelcomeController {
 
     @Autowired
     private WelcomeService welcomeService;
 
-    @RequestMapping(value = "/")
+    //matches all url "/*"
+    @RequestMapping
     public String doWelcome(Model model){
         //Retrieve data
         String message = welcomeService.getWelcomeMessage("Visitor");

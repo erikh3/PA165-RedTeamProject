@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.teamred.config;
 
+import cz.fi.muni.pa165.teamred.InMemoryDatabaseSpring;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -24,6 +25,7 @@ public class WebMvcInitializer implements WebApplicationInitializer {
         ServletRegistration.Dynamic registration = servletContext.addServlet("dispatcher", new DispatcherServlet(rootContext));
         registration.addMapping("/");
         registration.setLoadOnStartup(1);
+
 
         //Listener
         servletContext.addListener(new ContextLoaderListener(rootContext));
