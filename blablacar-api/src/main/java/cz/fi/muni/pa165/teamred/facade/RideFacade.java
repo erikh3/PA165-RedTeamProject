@@ -12,6 +12,7 @@ import java.util.List;
  *
  * @author Šimon Mačejovský
  */
+
 public interface RideFacade {
 
 
