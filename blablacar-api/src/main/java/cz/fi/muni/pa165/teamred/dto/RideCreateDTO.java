@@ -1,6 +1,7 @@
 package cz.fi.muni.pa165.teamred.dto;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
@@ -23,8 +24,15 @@ public class RideCreateDTO {
     @NotNull
     private  Long destinationPlaceId;
 
+    @NotNull
+    private int availableSeats;
 
-//    private UserDTO driver;
+    @NotNull
+    private double seatPrize;
+
+
+
+    //    private UserDTO driver;
 
     /**
      * Constructor
@@ -64,21 +72,44 @@ public class RideCreateDTO {
         this.destinationPlaceId = destinationPlaceid;
     }
 
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(int availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
+    public double getSeatPrize() {
+        return seatPrize;
+    }
+
+    public void setSeatPrize(double seatPrize) {
+        this.seatPrize = seatPrize;
+    }
+
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof RideDTO)) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        RideDTO other = (RideDTO) obj;
+        RideCreateDTO that = (RideCreateDTO) o;
 
-        return (Objects.equals(driverId, other.getDriver()) &&
-                Objects.equals(departure,other.getDeparture()));
+        if (availableSeats != that.availableSeats) return false;
+        if (Double.compare(that.seatPrize, seatPrize) != 0) return false;
+        if (departure != null ? !departure.equals(that.departure) : that.departure != null) return false;
+        return driverId != null ? driverId.equals(that.driverId) : that.driverId == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getDeparture().hashCode();
-        result = 31 * result + driverId.hashCode();
+        int result;
+        long temp;
+        result = departure != null ? departure.hashCode() : 0;
+        result = 31 * result + (driverId != null ? driverId.hashCode() : 0);
+        result = 31 * result + availableSeats;
+        temp = Double.doubleToLongBits(seatPrize);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 }

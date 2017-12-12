@@ -60,6 +60,9 @@ public class RideFacadeImpl implements RideFacade {
         mappedRide.setDestinationPlace(destinationPlace);
         destinationPlace.addDestinationRide(mappedRide);
 
+        mappedRide.setAvailableSeats(rideCreateDTO.getAvailableSeats());
+        mappedRide.setSeatPrice(rideCreateDTO.getSeatPrize());
+
         Ride ride = rideService.createRide(mappedRide);
         log.debug("Created new Ride: " + ride.toString());
         return  ride.getId();
