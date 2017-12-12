@@ -2,19 +2,19 @@ package cz.fi.muni.pa165.teamred.service.facade;
 
 import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.RideDTO;
-import cz.fi.muni.pa165.teamred.dto.UserDTO;
-import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.facade.RideFacade;
-import cz.fi.muni.pa165.teamred.service.*;
+import cz.fi.muni.pa165.teamred.service.BeanMappingService;
+import cz.fi.muni.pa165.teamred.service.PlaceService;
+import cz.fi.muni.pa165.teamred.service.RideService;
+import cz.fi.muni.pa165.teamred.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -59,6 +59,9 @@ public class RideFacadeImpl implements RideFacade {
         Place destinationPlace = placeService.findById(rideCreateDTO.getDestinationPlaceId());
         mappedRide.setDestinationPlace(destinationPlace);
         destinationPlace.addDestinationRide(mappedRide);
+
+        mappedRide.setAvailableSeats(rideCreateDTO.getSeatsAvailable());
+        mappedRide.setSeatPrice(rideCreateDTO.getSeatPrize());
 
         Ride ride = rideService.createRide(mappedRide);
         log.debug("Created new Ride: " + ride.toString());
