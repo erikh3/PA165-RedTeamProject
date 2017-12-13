@@ -78,7 +78,7 @@ public class RideDTO {
     }
 
     public Set<UserDTO> getPassengers() {
-        return this.passengers;
+        return new HashSet<>(this.passengers);
     }
 
     public void setPassengers(Set<UserDTO> passengers) {
@@ -86,7 +86,7 @@ public class RideDTO {
     }
 
     public Set<CommentDTO> getComments() {
-        return this.comments;
+        return new HashSet<>(this.comments);
     }
 
     public void setComments(Set<CommentDTO> comments) {

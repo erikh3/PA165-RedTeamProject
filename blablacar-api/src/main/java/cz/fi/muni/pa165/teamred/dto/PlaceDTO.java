@@ -35,7 +35,7 @@ public class PlaceDTO {
     }
 
     public Set<RideDTO> getOriginatingRides() {
-        return originatingRides;
+        return new HashSet<>(originatingRides);
     }
 
     public void setOriginatingRides(Set<RideDTO> originatingRides) {
@@ -43,7 +43,7 @@ public class PlaceDTO {
     }
 
     public Set<RideDTO> getDestinationRides() {
-        return destinationRides;
+        return new HashSet<>(destinationRides);
     }
 
     public void setDestinationRides(Set<RideDTO> destinationRides) {

@@ -50,7 +50,7 @@ public class UserDTO {
     }
 
     public Set<RideDTO> getRidesAsDriver() {
-        return Collections.unmodifiableSet(this.ridesAsDriver);
+        return new HashSet<>(this.ridesAsDriver);
     }
 
     public void setRidesAsDriver(Set<RideDTO> ridesAsDriver) {
@@ -58,7 +58,7 @@ public class UserDTO {
     }
 
     public Set<RideDTO> getRidesAsPassenger() {
-        return Collections.unmodifiableSet(this.ridesAsPassenger);
+        return new HashSet<>(this.ridesAsPassenger);
     }
 
     public void setRidesAsPassenger(Set<RideDTO> ridesAsPassenger) {
@@ -66,7 +66,7 @@ public class UserDTO {
     }
 
     public Set<CommentDTO> getComments() {
-        return Collections.unmodifiableSet(this.comments);
+        return new HashSet<>(this.comments);
     }
 
     public void setComments(Set<CommentDTO> comments) {
