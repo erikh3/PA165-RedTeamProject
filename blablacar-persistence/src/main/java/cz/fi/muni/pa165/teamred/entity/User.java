@@ -99,7 +99,7 @@ public class User {
     }
 
     public Set<Comment> getUserComments() {
-        return Collections.unmodifiableSet(this.userComments);
+        return new HashSet<>(this.userComments);
     }
 
     public void setUserComments(Set<Comment> userComments) {
@@ -107,7 +107,7 @@ public class User {
     }
 
     public Set<Ride> getRidesAsDriver() {
-        return Collections.unmodifiableSet(ridesAsDriver);
+        return new HashSet<>(ridesAsDriver);
     }
 
     public void setRidesAsDriver(Set<Ride> ridesAsDriver) {
@@ -115,7 +115,7 @@ public class User {
     }
 
     public Set<Ride> getRidesAsPassenger() {
-        return Collections.unmodifiableSet(ridesAsPassenger);
+        return new HashSet<>(ridesAsPassenger);
     }
 
     public void setRidesAsPassenger(Set<Ride> ridesAsPassenger) {

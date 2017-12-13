@@ -116,11 +116,11 @@ public class Ride {
     }
 
     public Set<User> getPassengers() {
-        return Collections.unmodifiableSet(passengers);
+        return new HashSet<>(passengers);
     }
 
     public Set<Comment> getComments() {
-        return Collections.unmodifiableSet(comments);
+        return new HashSet<>(comments);
     }
 
     //adders
