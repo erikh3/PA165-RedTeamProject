@@ -11,7 +11,6 @@ import java.util.List;
  *
  * @author miroslav.laco@gmail.com
  */
-// todo: exception handling
 public interface PlaceFacade {
     /**
      * Creates place

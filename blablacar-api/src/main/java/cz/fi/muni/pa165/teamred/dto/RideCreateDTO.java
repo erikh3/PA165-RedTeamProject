@@ -23,6 +23,12 @@ public class RideCreateDTO {
     @NotNull
     private  Long destinationPlaceId;
 
+    @NotNull
+    private double seatPrize;
+
+    @NotNull
+    private int seatsAvailable;
+
 
 //    private UserDTO driver;
 
@@ -62,6 +68,22 @@ public class RideCreateDTO {
 
     public void setDestinationPlaceId(Long destinationPlaceid) {
         this.destinationPlaceId = destinationPlaceid;
+    }
+
+    public double getSeatPrize() {
+        return seatPrize;
+    }
+
+    public void setSeatPrize(double seatPrize) {
+        this.seatPrize = seatPrize;
+    }
+
+    public int getSeatsAvailable() {
+        return seatsAvailable;
+    }
+
+    public void setSeatsAvailable(int seatsAvailable) {
+        this.seatsAvailable = seatsAvailable;
     }
 
     @Override

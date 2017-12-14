@@ -50,7 +50,7 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public void deleteRide(Ride ride) throws IllegalArgumentException {
-        if (!isValidRide(ride)){
+        if (ride == null){
             throw new IllegalArgumentException();
         }
 
