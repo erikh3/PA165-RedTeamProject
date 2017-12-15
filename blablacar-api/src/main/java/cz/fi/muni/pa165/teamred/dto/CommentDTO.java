@@ -1,8 +1,5 @@
 package cz.fi.muni.pa165.teamred.dto;
 
-import cz.fi.muni.pa165.teamred.entity.Ride;
-import cz.fi.muni.pa165.teamred.entity.User;
-
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,8 +10,8 @@ public class CommentDTO {
     private Long id;
     private Date created;
     private String text;
-    private UserDTO author;
-    private RideDTO rideDTO;
+    private Long authorId;
+    private Long rideId;
 
     public Long getId() {
         return id;
@@ -40,20 +37,20 @@ public class CommentDTO {
         this.text = text;
     }
 
-    public UserDTO getAuthor() {
-        return author;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(UserDTO userDTO) {
-        this.author = userDTO;
+    public void setAuthorId(Long userId) {
+        this.authorId = userId;
     }
 
-    public RideDTO getRide() {
-        return rideDTO;
+    public Long getRideId() {
+        return rideId;
     }
 
-    public void setRideDTO(RideDTO rideDTO) {
-        this.rideDTO = rideDTO;
+    public void setRideId(Long rideId) {
+        this.rideId = rideId;
     }
 
     @Override
@@ -65,8 +62,8 @@ public class CommentDTO {
 
         return Objects.equals(this.getCreated(), that.getCreated())
                 && Objects.equals(this.getText(), that.getText())
-                && Objects.equals(this.getAuthor(), that.getAuthor())
-                && Objects.equals(this.getRide(), that.getRide());
+                && Objects.equals(this.getAuthorId(), that.getAuthorId())
+                && Objects.equals(this.getRideId(), that.getRideId());
     }
 
     @Override
@@ -74,8 +71,8 @@ public class CommentDTO {
         int result = 0;
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
-        result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + (rideDTO != null ? rideDTO.hashCode() : 0);
+        result = 31 * result + (authorId != null ? authorId.hashCode() : 0);
+        result = 31 * result + (rideId != null ? rideId.hashCode() : 0);
         return result;
     }
 
@@ -85,8 +82,8 @@ public class CommentDTO {
                 "id=" + id +
                 ", created=" + created +
                 ", text='" + text + '\'' +
-                ", author=" + author +
-                ", rideDTO=" + rideDTO +
+                ", authorId=" + authorId +
+                ", rideId=" + rideId +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.teamred.dto;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * DataTransferObject for creating Ride
@@ -86,28 +87,20 @@ public class RideCreateDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RideCreateDTO)) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof RideDTO)) return false;
 
-        RideCreateDTO that = (RideCreateDTO) o;
+        RideDTO other = (RideDTO) obj;
 
-        if (Double.compare(that.getSeatPrize(), getSeatPrize()) != 0) return false;
-        if (getSeatsAvailable() != that.getSeatsAvailable()) return false;
-        if (getDeparture() != null ? !getDeparture().equals(that.getDeparture()) : that.getDeparture() != null)
-            return false;
-        return getDriverId() != null ? getDriverId().equals(that.getDriverId()) : that.getDriverId() == null;
+        return (Objects.equals(driverId, other.getDriver()) &&
+                Objects.equals(departure,other.getDeparture()));
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = getDeparture() != null ? getDeparture().hashCode() : 0;
-        result = 31 * result + (getDriverId() != null ? getDriverId().hashCode() : 0);
-        temp = Double.doubleToLongBits(getSeatPrize());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + getSeatsAvailable();
+        int result = getDeparture().hashCode();
+        result = 31 * result + driverId.hashCode();
         return result;
     }
 }

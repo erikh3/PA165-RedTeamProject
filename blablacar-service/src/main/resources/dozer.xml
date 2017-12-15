@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <configuration>
+        <!-- these are always bi-directional -->
+        <custom-converters>
+            <converter type="cz.fi.muni.pa165.teamred.service.config.RideIdConverter">
+                <class-a>cz.fi.muni.pa165.teamred.entity.Ride</class-a>
+                <class-b>java.lang.Long</class-b>
+            </converter>
+
+            <converter type="cz.fi.muni.pa165.teamred.service.config.PlaceIdConverter">
+                <class-a>cz.fi.muni.pa165.teamred.entity.Place</class-a>
+                <class-b>java.lang.Long</class-b>
+            </converter>
+
+            <converter type="cz.fi.muni.pa165.teamred.service.config.UserIdConverter">
+                <class-a>cz.fi.muni.pa165.teamred.entity.User</class-a>
+                <class-b>java.lang.Long</class-b>
+            </converter>
+
+            <converter type="cz.fi.muni.pa165.teamred.service.config.CommentIdConverter">
+                <class-a>cz.fi.muni.pa165.teamred.entity.Comment</class-a>
+                <class-b>java.lang.Long</class-b>
+            </converter>
+
+            <converter type="cz.fi.muni.pa165.teamred.service.config.RideCreateDTORide">
+                <class-a>cz.fi.muni.pa165.teamred.dto.RideCreateDTO</class-a>
+                <class-b>cz.fi.muni.pa165.teamred.entity.Ride</class-b>
+            </converter>
+        </custom-converters>
+    </configuration>
+
+    <mapping>
+        <class-a>cz.fi.muni.pa165.teamred.entity.Comment</class-a>
+        <class-b>cz.fi.muni.pa165.teamred.dto.CommentDTO</class-b>
+        <field>
+            <a>author</a>
+            <b>authorId</b>
+        </field>
+        <field>
+            <a>ride</a>
+            <b>rideId</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.fi.muni.pa165.teamred.entity.User</class-a>
+        <class-b>cz.fi.muni.pa165.teamred.dto.UserDTO</class-b>
+        <field>
+            <a>userComments</a>
+            <b>comments</b>
+        </field>
+    </mapping>
+</mappings>
