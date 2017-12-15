@@ -13,8 +13,8 @@ public class PlaceDTO {
 
     private Long id;
     private String name;
-    private Set<RideDTO> originatingRides = new HashSet<>();
-    private Set<RideDTO> destinationRides = new HashSet<>();
+    private Set<Long> originatingRides = new HashSet<>();
+    private Set<Long> destinationRides = new HashSet<>();
 
     //Getters + Setters
 
@@ -34,37 +34,37 @@ public class PlaceDTO {
         this.name = name;
     }
 
-    public Set<RideDTO> getOriginatingRides() {
-        return new HashSet<>(originatingRides);
+    public Set<Long> getOriginatingRides() {
+        return originatingRides;
     }
 
-    public void setOriginatingRides(Set<RideDTO> originatingRides) {
+    public void setOriginatingRides(Set<Long> originatingRides) {
         this.originatingRides = originatingRides;
     }
 
-    public Set<RideDTO> getDestinationRides() {
-        return new HashSet<>(destinationRides);
+    public Set<Long> getDestinationRides() {
+        return destinationRides;
     }
 
-    public void setDestinationRides(Set<RideDTO> destinationRides) {
+    public void setDestinationRides(Set<Long> destinationRides) {
         this.destinationRides = destinationRides;
     }
 
     //Adders + Removers
 
-    public boolean addOriginatingRide(RideDTO ride) {
+    public boolean addOriginatingRide(Long ride) {
         return originatingRides.add(ride);
     }
 
-    public boolean removeOriginatingRide(RideDTO ride) {
+    public boolean removeOriginatingRide(Long ride) {
         return originatingRides.remove(ride);
     }
 
-    public boolean addDestinationRide(RideDTO ride) {
+    public boolean addDestinationRide(Long ride) {
         return destinationRides.add(ride);
     }
 
-    public boolean removeDestinationRide(RideDTO ride) {
+    public boolean removeDestinationRide(Long ride) {
         return destinationRides.remove(ride);
     }
 

@@ -1,5 +1,7 @@
 package cz.fi.muni.pa165.teamred.service.facade;
 
+import cz.fi.muni.pa165.teamred.dto.AddPassengerDTO;
+import cz.fi.muni.pa165.teamred.dto.RemovePassengerDTO;
 import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.RideDTO;
 import cz.fi.muni.pa165.teamred.entity.Place;
@@ -112,4 +114,29 @@ public class RideFacadeImpl implements RideFacade {
         rideService.updateRide(ride);
         log.debug("Updated departure in Ride: " + ride.toString());
     }
+
+    @Override
+    public void addPassenger(AddPassengerDTO addPassengerDTO) {
+        Ride ride = rideService.findById(addPassengerDTO.getRideId());
+        User user = userService.findUserById(addPassengerDTO.getPassengerId());
+        if (!ride.getPassengers().contains(user)) {
+            ride.addPassenger(user);
+            rideService.updateRide(ride);
+            userService.editUser(user);
+            log.debug("Added passenger ({}) to ride ({})", user.getId(), ride.getId());
+        }
+    }
+
+    @Override
+    public void removePassenger(RemovePassengerDTO removePassengerDTO) {
+        Ride ride = rideService.findById(removePassengerDTO.getRideId());
+        User user = userService.findUserById(removePassengerDTO.getPassengerId());
+        if (ride.getPassengers().contains(user)) {
+            ride.removePassenger(user);
+            rideService.updateRide(ride);
+            userService.editUser(user);
+            log.debug("Passenger ({}) removed from ride ({})", user.getId(), ride.getId());
+        }
+    }
+
 }
