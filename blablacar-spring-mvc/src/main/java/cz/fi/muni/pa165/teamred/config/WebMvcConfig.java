@@ -59,7 +59,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         log.debug("mapping URL / to home view");
-        registry.addViewController("/").setViewName("pa165");
+        registry.addViewController("/").setViewName("welcome");
     }
 
 
