@@ -1,25 +1,20 @@
 package cz.fi.muni.pa165.teamred.config;
 
-import cz.fi.muni.pa165.teamred.facade.RideFacade;
+import cz.fi.muni.pa165.teamred.sampledata.BlablacarWithSampleDataConfiguration;
 import cz.fi.muni.pa165.teamred.service.config.ServiceConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.jndi.JndiTemplate;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import javax.validation.Validator;
 /**
  * Created by jcibik on 12/4/17.
@@ -27,7 +22,7 @@ import javax.validation.Validator;
 
 @Configuration
 @ComponentScan("cz.fi.muni.pa165.teamred")
-@Import(ServiceConfiguration.class)
+@Import({ServiceConfiguration.class, BlablacarWithSampleDataConfiguration.class})
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
