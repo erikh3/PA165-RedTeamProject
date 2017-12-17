@@ -1,8 +1,10 @@
 package cz.fi.muni.pa165.teamred.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * DataTransferObject for creating Ride
@@ -11,6 +13,8 @@ import java.util.Objects;
  */
 public class RideCreateDTO {
 
+    @Future
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @NotNull
     private Date departure;
 
@@ -87,20 +91,27 @@ public class RideCreateDTO {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof RideDTO)) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RideCreateDTO)) return false;
 
-        RideDTO other = (RideDTO) obj;
+        RideCreateDTO that = (RideCreateDTO) o;
 
-        return (Objects.equals(driverId, other.getDriver()) &&
-                Objects.equals(departure,other.getDeparture()));
+        if (getDeparture() != null ? !getDeparture().equals(that.getDeparture()) : that.getDeparture() != null)
+            return false;
+        if (getDriverId() != null ? !getDriverId().equals(that.getDriverId()) : that.getDriverId() != null)
+            return false;
+        if (getSourcePlaceId() != null ? !getSourcePlaceId().equals(that.getSourcePlaceId()) : that.getSourcePlaceId() != null)
+            return false;
+        return getDestinationPlaceId() != null ? getDestinationPlaceId().equals(that.getDestinationPlaceId()) : that.getDestinationPlaceId() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getDeparture().hashCode();
-        result = 31 * result + driverId.hashCode();
+        int result = getDeparture() != null ? getDeparture().hashCode() : 0;
+        result = 31 * result + (getDriverId() != null ? getDriverId().hashCode() : 0);
+        result = 31 * result + (getSourcePlaceId() != null ? getSourcePlaceId().hashCode() : 0);
+        result = 31 * result + (getDestinationPlaceId() != null ? getDestinationPlaceId().hashCode() : 0);
         return result;
     }
 }
