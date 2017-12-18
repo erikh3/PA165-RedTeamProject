@@ -30,7 +30,7 @@
 
     </jsp:attribute>
 
-    
+
 
 
     <jsp:attribute name="foot">
