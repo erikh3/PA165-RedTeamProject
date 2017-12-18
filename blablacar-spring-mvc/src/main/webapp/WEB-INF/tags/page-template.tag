@@ -43,15 +43,6 @@
             <ul class="nav navbar-nav">
                 <li><blablacar-tags:a href="/"><f:message key="navigation-menu.blablacar"/></blablacar-tags:a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><f:message key="navigation-menu.admin"/><b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><blablacar-tags:a href="/user/list"><f:message key="navigation-menu.admin.users"/></blablacar-tags:a></li>
-                        <li><blablacar-tags:a href="/comment/list"><f:message key="navigation-menu.admin.comments"/></blablacar-tags:a></li>
-                        <li><blablacar-tags:a href="/ride/list"><f:message key="navigation-menu.admin.rides"/></blablacar-tags:a></li>
-                        <li><blablacar-tags:a href="/place/list"><f:message key="navigation-menu.admin.places"/></blablacar-tags:a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><f:message key="navigation-menu.docs"/><b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Javadocs</li>
@@ -73,6 +64,19 @@
                         <li><a href="https://maven.apache.org/">Maven</a></li>
                     </ul>
                 </li>
+                <c:if test="${not empty userSession.userId}">
+                    <li>
+                        <blablacar-tags:a href="/user"><f:message key="navigation-menu.starting"/></blablacar-tags:a>
+                    </li>
+                    <li>
+                        <blablacar-tags:a href="/user/user-details">Logged in as: ${userSession.user.nickname}</blablacar-tags:a>
+                    </li>
+                </c:if>
+                <c:if test="${userSession.userIsLoggedIn}">
+                    <li>
+                        <div class="btn btn-default" id="sign-out-btn" >Sign out</div>
+                    </li>
+                </c:if>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -126,10 +130,13 @@
         <p>&copy;&nbsp;<%=java.time.Year.now().toString()%>&nbsp;Masaryk University</p>
     </footer>
 </div>
-<jsp:invoke fragment="foot"/>
 <!-- javascripts placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src='<c:url value="/resources/javascript/application.js" />'></script>
+
+
+<jsp:invoke fragment="foot"/>
 </body>
 </html>
 

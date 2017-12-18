@@ -1,6 +1,5 @@
 package cz.fi.muni.pa165.teamred.dto;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,9 +12,12 @@ public class UserDTO {
     private String name;
     private String surname;
     private String nickname;
-    private Set<RideDTO> ridesAsDriver = new HashSet<>();
-    private Set<RideDTO> ridesAsPassenger = new HashSet<>();
-    private Set<CommentDTO> comments = new HashSet<>();
+    private String loginId;
+    private Set<Long> ridesAsDriver = new HashSet<>();
+    private Set<Long> ridesAsPassenger = new HashSet<>();
+    private Set<Long> comments = new HashSet<>();
+
+    private boolean isAdmin;
 
     public Long getId() {
         return id;
@@ -49,53 +51,69 @@ public class UserDTO {
         this.nickname = nickname;
     }
 
-    public Set<RideDTO> getRidesAsDriver() {
-        return Collections.unmodifiableSet(this.ridesAsDriver);
+    public Set<Long> getRidesAsDriver() {
+        return this.ridesAsDriver;
     }
 
-    public void setRidesAsDriver(Set<RideDTO> ridesAsDriver) {
+    public void setRidesAsDriver(Set<Long> ridesAsDriver) {
         this.ridesAsDriver = ridesAsDriver;
     }
 
-    public Set<RideDTO> getRidesAsPassenger() {
-        return Collections.unmodifiableSet(this.ridesAsPassenger);
+    public Set<Long> getRidesAsPassenger() {
+        return this.ridesAsPassenger;
     }
 
-    public void setRidesAsPassenger(Set<RideDTO> ridesAsPassenger) {
+    public void setRidesAsPassenger(Set<Long> ridesAsPassenger) {
         this.ridesAsPassenger = ridesAsPassenger;
     }
 
-    public Set<CommentDTO> getComments() {
-        return Collections.unmodifiableSet(this.comments);
+    public Set<Long> getComments() {
+        return this.comments;
     }
 
-    public void setComments(Set<CommentDTO> comments) {
+    public void setComments(Set<Long> comments) {
         this.comments = comments;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     //____________________________________________________________________________________________________Add and remove
 
-    public boolean addRideAsDriver(RideDTO ride){
-        return this.ridesAsDriver.add(ride);
+    public boolean addRideAsDriver(Long rideId){
+        return this.ridesAsDriver.add(rideId);
     }
 
-    public boolean removeRideAsDriver(RideDTO ride){
-        return this.ridesAsDriver.remove(ride);
+    public boolean removeRideAsDriver(Long rideId){
+        return this.ridesAsDriver.remove(rideId);
     }
 
-    public boolean addRideAsPassenger(RideDTO ride){
-        return this.ridesAsPassenger.add(ride);
+    public boolean addRideAsPassenger(Long rideId){
+        return this.ridesAsPassenger.add(rideId);
     }
 
-    public boolean removeRideAsPassenger(RideDTO ride){
-        return this.ridesAsPassenger.remove(ride);
+    public boolean removeRideAsPassenger(Long rideId){
+        return this.ridesAsPassenger.remove(rideId);
     }
 
-    public boolean addComment(CommentDTO comment){
+    public boolean addComment(Long comment){
         return this.comments.add(comment);
     }
 
-    public boolean removeComment(CommentDTO comment){
+    public boolean removeComment(Long comment){
         return this.comments.remove(comment);
     }
 

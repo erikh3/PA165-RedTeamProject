@@ -54,7 +54,7 @@ public class Place {
     }
 
     public Set<Ride> getOriginatingRides() {
-        return Collections.unmodifiableSet(originatingRides);
+        return new HashSet<>(originatingRides);
     }
 
     public void setOriginatingRides(Set<Ride> originatingRides) {
@@ -62,7 +62,7 @@ public class Place {
     }
 
     public Set<Ride> getDestinationRides() {
-        return Collections.unmodifiableSet(this.destinationRides);
+        return new HashSet<>(this.destinationRides);
     }
 
     public void setDestinationRides(Set<Ride> destinationRides) {

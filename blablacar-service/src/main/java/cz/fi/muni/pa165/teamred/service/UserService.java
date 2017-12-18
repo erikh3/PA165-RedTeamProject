@@ -35,6 +35,13 @@ public interface UserService {
     User findUserById(Long id);
 
     /**
+     * Finds a User by login id provided from authorization third party.
+     * @param loginId - users login ID
+     * @return - found User, null otherwise
+     */
+    User findUserByLoginId(String loginId);
+
+    /**
      * Finds all users.
      * @return - all users , empty list if no user found
      */

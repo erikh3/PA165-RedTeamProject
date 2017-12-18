@@ -3,3 +3,79 @@ Stylesheet used in PA165 Project
 
 User related elements stylesheet.
 */
+
+.background-holder{
+    background-position: top;
+    background-size: 50%;
+}
+
+.green-shader{
+    background-color: rgba(120,218,85,0.5);
+    height:100%;
+    overflow: hidden;
+}
+
+.driver-holder{
+    background: url("../images/user/1024px-Austin_Allegro_Interior_with_Quartic_steering_wheel.jpg") ;
+}
+.driver-holder,
+.passenger-holder{
+    text-align: center;
+    position: relative;
+    height: 500px;
+}
+
+.driver-holder h2,
+.passenger-holder h2{
+    position: absolute;
+    z-index:10;
+    margin: 0;
+    left:0;
+    top:0;
+    width:100%;
+    padding: 1em;
+    color: rgb(120,218,85);
+    background-color: rgba(255,255,255,0.9);
+}
+
+.passenger-holder{
+    background: url("../images/user/1d_v2.jpg");
+}
+.no-padding{
+    padding: 0;
+}
+.top-button,
+.bottom-button{
+    display:inline-block;
+    margin:0;
+    -webkit-transform:skew(-45deg);
+    -moz-transform:skew(-45deg);
+    -o-transform:skew(-45deg);
+    transform:skew(-45deg);
+    width: 50%;
+    height: 100%;
+    padding-top: 40%;
+    float: left;
+}
+.top-button p,
+.bottom-button p{
+    margin:0;
+    -webkit-transform:skew(45deg);
+    -moz-transform:skew(45deg);
+    -o-transform:skew(45deg);
+    transform:skew(45deg);
+    color: #fff;
+}
+
+.top-button:hover,
+.bottom-button:hover{
+    background-color:rgba(120,218,85,0.7);
+    transition: .3s ease-in;
+}
+
+
+
+.driver-holder.jumbotron,
+.passenger-holder.jumbotron{
+    padding: 0 !important;
+}

@@ -1,8 +1,6 @@
 package cz.fi.muni.pa165.teamred.facade;
 
-import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
-import cz.fi.muni.pa165.teamred.dto.RideDTO;
-import cz.fi.muni.pa165.teamred.dto.UserDTO;
+import cz.fi.muni.pa165.teamred.dto.*;
 
 import java.util.Date;
 import java.util.List;
@@ -71,4 +69,17 @@ public interface RideFacade {
      */
     void editDeparture(Long rideId, Date newDeparture);
 
+    /**
+     * Adds new passenger to ride
+     *
+     * @param addPassengerDTO
+     */
+    void addPassenger(AddPassengerDTO addPassengerDTO);
+
+    /**
+     * Removes passenger from ride
+     *
+     * @param removePassengerDTO
+     */
+    void removePassenger(RemovePassengerDTO removePassengerDTO);
 }

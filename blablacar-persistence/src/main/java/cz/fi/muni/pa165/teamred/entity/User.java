@@ -22,7 +22,6 @@ public class User {
     @Column(updatable = false, nullable = false)
     private Long id;
 
-
     @NotNull(message = "User Name cannot be null.")
     @Column(nullable = false)
     @Size(
@@ -41,6 +40,12 @@ public class User {
     @Column(nullable = false, unique = true)
     @Size(min = 3, max = 255)
     private String nickname;
+
+    @NotNull(message = "User Login ID cannot be null.")
+    @Column(name = "login", updatable = false, nullable = false)
+    private String loginId;
+
+    private boolean isAdmin;
 
     @OneToMany(mappedBy = "driver")
     private Set<Ride> ridesAsDriver = new HashSet<>();
@@ -99,7 +104,7 @@ public class User {
     }
 
     public Set<Comment> getUserComments() {
-        return Collections.unmodifiableSet(this.userComments);
+        return new HashSet<>(this.userComments);
     }
 
     public void setUserComments(Set<Comment> userComments) {
@@ -107,7 +112,7 @@ public class User {
     }
 
     public Set<Ride> getRidesAsDriver() {
-        return Collections.unmodifiableSet(ridesAsDriver);
+        return new HashSet<>(ridesAsDriver);
     }
 
     public void setRidesAsDriver(Set<Ride> ridesAsDriver) {
@@ -115,11 +120,27 @@ public class User {
     }
 
     public Set<Ride> getRidesAsPassenger() {
-        return Collections.unmodifiableSet(ridesAsPassenger);
+        return new HashSet<>(ridesAsPassenger);
     }
 
     public void setRidesAsPassenger(Set<Ride> ridesAsPassenger) {
         this.ridesAsPassenger = ridesAsPassenger;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     //__________________________________________________________________________________________________Adds and Removes

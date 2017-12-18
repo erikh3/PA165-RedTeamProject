@@ -51,6 +51,24 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
+    public User findByLoginId(String loginId) throws IllegalArgumentException {
+        if (loginId == null) {
+            throw new IllegalArgumentException("User loginId is null.");
+        }
+        try {
+            return entityManager
+                    .createQuery
+                            ("select u from User u where login =:login",
+                                    User.class)
+                    .setParameter("login", loginId)
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            //Print Exception Message
+            return null;
+        }
+    }
+
+    @Override
     public User findByNickname(String nickname) throws IllegalArgumentException {
         if (nickname == null) {
             throw new IllegalArgumentException("User nickname is null.");

@@ -1,9 +1,10 @@
 package cz.fi.muni.pa165.teamred.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * DataTransferObject for creating Ride
@@ -12,6 +13,8 @@ import java.util.Objects;
  */
 public class RideCreateDTO {
 
+    @Future
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @NotNull
     private Date departure;
 
@@ -25,14 +28,13 @@ public class RideCreateDTO {
     private  Long destinationPlaceId;
 
     @NotNull
-    private int availableSeats;
-
-    @NotNull
     private double seatPrize;
 
+    @NotNull
+    private int seatsAvailable;
 
 
-    //    private UserDTO driver;
+//    private UserDTO driver;
 
     /**
      * Constructor
@@ -72,14 +74,6 @@ public class RideCreateDTO {
         this.destinationPlaceId = destinationPlaceid;
     }
 
-    public int getAvailableSeats() {
-        return availableSeats;
-    }
-
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
-    }
-
     public double getSeatPrize() {
         return seatPrize;
     }
@@ -88,28 +82,36 @@ public class RideCreateDTO {
         this.seatPrize = seatPrize;
     }
 
+    public int getSeatsAvailable() {
+        return seatsAvailable;
+    }
+
+    public void setSeatsAvailable(int seatsAvailable) {
+        this.seatsAvailable = seatsAvailable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof RideCreateDTO)) return false;
 
         RideCreateDTO that = (RideCreateDTO) o;
 
-        if (availableSeats != that.availableSeats) return false;
-        if (Double.compare(that.seatPrize, seatPrize) != 0) return false;
-        if (departure != null ? !departure.equals(that.departure) : that.departure != null) return false;
-        return driverId != null ? driverId.equals(that.driverId) : that.driverId == null;
+        if (getDeparture() != null ? !getDeparture().equals(that.getDeparture()) : that.getDeparture() != null)
+            return false;
+        if (getDriverId() != null ? !getDriverId().equals(that.getDriverId()) : that.getDriverId() != null)
+            return false;
+        if (getSourcePlaceId() != null ? !getSourcePlaceId().equals(that.getSourcePlaceId()) : that.getSourcePlaceId() != null)
+            return false;
+        return getDestinationPlaceId() != null ? getDestinationPlaceId().equals(that.getDestinationPlaceId()) : that.getDestinationPlaceId() == null;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = departure != null ? departure.hashCode() : 0;
-        result = 31 * result + (driverId != null ? driverId.hashCode() : 0);
-        result = 31 * result + availableSeats;
-        temp = Double.doubleToLongBits(seatPrize);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        int result = getDeparture() != null ? getDeparture().hashCode() : 0;
+        result = 31 * result + (getDriverId() != null ? getDriverId().hashCode() : 0);
+        result = 31 * result + (getSourcePlaceId() != null ? getSourcePlaceId().hashCode() : 0);
+        result = 31 * result + (getDestinationPlaceId() != null ? getDestinationPlaceId().hashCode() : 0);
         return result;
     }
 }
