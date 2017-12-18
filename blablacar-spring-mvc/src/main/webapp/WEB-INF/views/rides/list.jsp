@@ -66,6 +66,10 @@
                 <button type="submit" class="btn btn-primary">All rides</button>
             </form:form>
 
+            <form:form action="${pageContext.request.contextPath}/ride/new" id="new-ride" method="post">
+        <button type="submit" class="btn btn-primary">New ride</button>
+    </form:form>
+
         </ul>
     </jsp:attribute>
     <jsp:attribute name="foot">

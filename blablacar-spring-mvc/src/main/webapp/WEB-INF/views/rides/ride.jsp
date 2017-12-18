@@ -30,6 +30,10 @@
 
     </jsp:attribute>
 
+    <form:form action="${pageContext.request.contextPath}/ride/delete" id="delete-ride" method="post">
+        <button type="submit" class="btn btn-primary">Delete ride</button>
+    </form:form>
+
 
 
 
