@@ -5,6 +5,7 @@ import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.RideDTO;
 import cz.fi.muni.pa165.teamred.facade.PlaceFacade;
 import cz.fi.muni.pa165.teamred.facade.RideFacade;
+import cz.fi.muni.pa165.teamred.facade.UserFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class RideController {
 
     @Autowired
     private PlaceFacade placeFacade;
+
+    @Autowired
+    private UserFacade userFacade;
 
     final static Logger log = LoggerFactory.getLogger(CommentController.class);
 
@@ -139,8 +143,6 @@ public class RideController {
         return "";
     }
 
-
-
     @RequestMapping(value = "/removePassenger")
     public String removePassengerToRide() {
         //TODO
@@ -167,6 +169,8 @@ public class RideController {
         //TODO
         //list all rides from user with id retrieved from user session bean
         //return the list
+        List<RideDTO> rides = new ArrayList<>(userFacade.getUserRidesAsPassenger(id));
+        model.addAttribute("rides", rides);
         return new ArrayList<>();
     }
 

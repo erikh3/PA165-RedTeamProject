@@ -20,7 +20,51 @@
     <jsp:attribute name="body">
         <ul class="rides-list">
 
+            <script>
+                $(document).ready(function(){
+                    $("#list_psg_rides").click(function() {
+                        $.ajax({
+                            url : 'list-pass',
+                            success : function (data) {
+                                $("#psg_list").html(data);
+                            }
+                        });
 
+                    });
+
+                });
+            </script>
+
+            <button id="list_psg_rides"> Show rides as passenger</button>
+            <p id="psg_list"></p>
+
+            <script>
+                $(document).ready(function(){
+                    $("#list_drv_rides").click(function() {
+                        $.ajax({
+                            url : 'list-driver',
+                            success : function (data) {
+                                $("#drv_list").html(data);
+                            }
+                        });
+
+                    });
+
+                });
+            </script>
+
+            <button id="list_drv_rides"> Show rides as driver</button>
+            <p id="drv_list"></p>
+
+
+
+
+
+
+
+            <form:form action="${pageContext.request.contextPath}/ride/list" id="list-all-rides" method="post">
+                <button type="submit" class="btn btn-primary">All rides</button>
+            </form:form>
 
         </ul>
     </jsp:attribute>

@@ -19,7 +19,20 @@
     </jsp:attribute>
     <jsp:attribute name="body">
 
+        <form:form action="${pageContext.request.contextPath}/ride/showRide/[rideId]" id="show-ride" method="get">
+            <c:out value="${rideDTO.departure}"/>
+            <c:out value="${rideDTO.sourcePlace}"/>
+            <c:out value="${rideDTO.destinationPlace}"/>
+            <c:out value="${rideDTO.availableSeats}"/>
+            <c:out value="${rideDTO.seatPrice}"/>
+
+        </form:form>
+
     </jsp:attribute>
+
+    
+
+
     <jsp:attribute name="foot">
         <!--Load only necessary files-->
 
