@@ -25,6 +25,7 @@ public class UserController {
     private UserFacade userFacade;
 
     @RequestMapping("")
+
     public String doWelcomeUserPage(Model model, HttpServletRequest request, HttpServletResponse response){
         if (actualUserId == null){
             return "redirect:/";

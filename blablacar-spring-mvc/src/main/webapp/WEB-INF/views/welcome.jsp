@@ -15,13 +15,19 @@
 <blablacar-tags:page-template title="${title}">
     <jsp:attribute name="head">
         <!--Load only necessary files-->
+        <meta name="google-signin-client_id" content="332736943859-mrr2173fc1kseq1l2i4h0na68mnpmbp3.apps.googleusercontent.com">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/welcome.css"  crossorigin="anonymous">
     </jsp:attribute>
     <jsp:attribute name="body">
-        <fmt:message key="page.welcome.hello-world"/>
+        <%--<fmt:message key="page.welcome.hello-world"/>--%>
+
+        <div id="sign-in-out-button" class="g-signin2" data-onsuccess="onSignIn"></div>
+        <a href="#" onclick="signOut();">Sign out</a>
+
     </jsp:attribute>
     <jsp:attribute name="foot">
         <!--Load only necessary files-->
-
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src='<c:url value="/resources/javascript/GoogleOAuth.js"/>'></script>
     </jsp:attribute>
 </blablacar-tags:page-template>

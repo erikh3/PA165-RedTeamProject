@@ -27,12 +27,21 @@ public interface UserDao {
     void update(User user) throws IllegalArgumentException;
 
     /**
-    * Finds a user with id in database
+    * Finds a user with loginId in database
     *
-    * @param id of the user to be found
+    * @param loginId of the user (provided byt authorization third party)
     * @return User if found, null otherwise
-    * @exception IllegalArgumentException if id argument is null
+    * @exception IllegalArgumentException if loginId argument is null
     */
+    User findByLoginId(String loginId) throws IllegalArgumentException;
+
+    /**
+     * Finds a user with id in database
+     *
+     * @param id of the user to be found
+     * @return User if found, null otherwise
+     * @exception IllegalArgumentException if id argument is null
+     */
     User findById(Long id) throws IllegalArgumentException;
 
     /**
@@ -58,4 +67,5 @@ public interface UserDao {
     * @exception IllegalArgumentException if user argument is null
     */
     void delete(User user) throws IllegalArgumentException;
+    
 }

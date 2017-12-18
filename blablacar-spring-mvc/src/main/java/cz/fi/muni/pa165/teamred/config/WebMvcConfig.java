@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -21,7 +22,7 @@ import javax.validation.Validator;
  */
 
 @Configuration
-@ComponentScan("cz.fi.muni.pa165.teamred")
+@ComponentScan({"cz.fi.muni.pa165.teamred","cz.fi.muni.pa165.teamred.config"})
 @Import({ServiceConfiguration.class, BlablacarWithSampleDataConfiguration.class})
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {

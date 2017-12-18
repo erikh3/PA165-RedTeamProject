@@ -198,6 +198,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         alice.setName("Alice");
         alice.setNickname("ALI42");
         alice.setSurname("Lialam");
+        alice.setLoginId("9999");
         return alice;
     }
 
@@ -206,6 +207,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         adam.setName("Adam");
         adam.setSurname("Moloh");
         adam.setNickname("XxX_<>_XxX");
+        adam.setLoginId("9998");
         return adam;
     }
 
@@ -214,6 +216,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         bob.setName("Bob");
         bob.setSurname("Josh");
         bob.setNickname("transp0nder_45");
+        bob.setLoginId("9997");
         return bob;
     }
 
@@ -222,6 +225,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         john.setName("John");
         john.setSurname("Doe");
         john.setNickname("NotReallyAnnoN");
+        john.setLoginId("9996");
         return john;
     }
 

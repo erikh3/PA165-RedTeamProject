@@ -76,6 +76,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findUserByLoginId(String loginId) throws IllegalArgumentException {
+        if (loginId == null) {
+            throw new IllegalArgumentException(UserServiceImpl.class +
+                    " - Passed loginId paramenter is null");
+        }
+
+        User found = userDao.findByLoginId(loginId);
+        log.debug(UserServiceImpl.class +
+                " - Found User: " + found.toString());
+
+        return found;
+    }
+
+    @Override
     public List<User> findAllUsers() {
         List<User> found = userDao.findAll();
         log.debug(UserServiceImpl.class +
