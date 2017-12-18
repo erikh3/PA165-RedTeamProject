@@ -1,12 +1,41 @@
+
+(function($)
+{
+
+    $( document ).ready(function() {
+        $("#sign-out-btn").on("click",function (e) {
+            signOut();
+        });
+        $('#sign-in-out-button').on('click', function (e) {
+        })
+
+    });
+
+})(jQuery);
+
+
 function onSignIn(googleUser) {
 
     var id_token = googleUser.getAuthResponse().id_token;
 
     //AJAX on server for token validation
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:8080/pa165/tokensignin');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send('idtoken=' + id_token);
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('POST', 'http://localhost:8080/pa165/tokensignin');
+    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // xhr.send('idtoken=' + id_token);
+    $.ajax({
+        type: "POST",
+        beforeSend: function(request) {
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        },
+        url: "/pa165/tokensignin",
+        data: 'idtoken=' + id_token,
+        processData: false,
+        success: function(msg) {
+            window.location = "/pa165";
+        }
+    });
+
 }
 
 function signOut() {
@@ -16,15 +45,28 @@ function signOut() {
     auth2.signOut().then(function () {
 
         //AJAX on server for token validation
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8080/pa165/tokensignout');
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send('idtoken=' + id_token);
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('POST', 'http://localhost:8080/pa165/tokensignout');
+        // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // xhr.send('idtoken=' + id_token);
 
-        alert("asd");
-        window.location.replace("/pa165");
-
+        $.ajax({
+            type: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            },
+            url: "/pa165/tokensignout",
+            data: 'idtoken=' + id_token,
+            processData: false,
+            success: function(msg) {
+                window.location = "/pa165";
+            }
+        });
     });
+}
 
-
+function onLoad() {
+    gapi.load('auth2', function() {
+        gapi.auth2.init();
+    });
 }

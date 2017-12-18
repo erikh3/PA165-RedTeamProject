@@ -79,19 +79,19 @@ public class WelcomeController {
             idToken = verifier.verify(token);
         } catch (GeneralSecurityException e) {
             redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "redirect:welcome";
+            return "welcome";
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "redirect:welcome";
+            return "welcome";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "redirect:welcome";
+            return "welcome";
         }
 
         if (idToken == null) {
             redirectAttributes.addFlashAttribute("alert_warning", "Seems like you are here for the first time..." +
                     "We can not create an account for you now. Try again later, please.");
-            return "redirect:welcome";
+            return "welcome";
         }
         GoogleIdToken.Payload payload = idToken.getPayload();
 
@@ -123,7 +123,7 @@ public class WelcomeController {
             } catch (Exception ex) {
                 redirectAttributes.addFlashAttribute("alert_warning", "Seems like you are here for the first time..." +
                     "We can not create an account for you now. Try again later, please.");
-                return "redirect:welcome";
+                return "welcome";
             }
         }
 
@@ -138,7 +138,7 @@ public class WelcomeController {
         String givenName = (String) payload.get("given_name");
         redirectAttributes.addFlashAttribute("alert_success", "Hello " + givenName + "! You have been successfully logged in");
 
-        return "redirect:/user";
+        return "welcome";
     }
 
     @RequestMapping(value = "/tokensignout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)

@@ -6,7 +6,6 @@ import cz.fi.muni.pa165.teamred.facade.PlaceFacade;
 import cz.fi.muni.pa165.teamred.facade.RideFacade;
 import cz.fi.muni.pa165.teamred.facade.UserFacade;
 import cz.fi.muni.pa165.teamred.models.PlaceForm;
-import cz.fi.muni.pa165.teamred.service.PassengerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,7 +213,7 @@ public class RideController {
                                    HttpServletRequest request) {
         model.addAttribute("rides",placeFacade.getRidesWithOriginatingAndDestinationPlace(placeForm.getFromId(),placeForm.getToId()));
         model.addAttribute("places", placeFacade.getAllPlaces());
-        return "/welcome";
+        return "welcome";
     }
 
 

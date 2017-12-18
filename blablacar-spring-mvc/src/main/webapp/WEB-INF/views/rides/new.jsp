@@ -19,27 +19,32 @@
     </jsp:attribute>
     <jsp:attribute name="body">
 
-        <form:form action="${pageContext.request.contextPath}/ride/create" id="ride-create-form" method="post" modelAttribute="rideCreateDTO">
+        <form:form action="${pageContext.request.contextPath}/ride/create" id="ride-create-form" method="post" modelAttribute="rideCreateDTO" class="form-group">
             <form:input path="driverId" type="text" value="${rideCreateDTO.driverId}" cssClass="hidden" />
-            <form:select path="sourcePlaceId" type="text" form="ride-create-form" >
+            <label for="select-from">From</label>
+            <form:select id="select-from" path="sourcePlaceId" type="text" form="ride-create-form" class="form-control" >
                 <c:forEach items="${places}" var="placeF">
                    <option value="${placeF.id}">
                        ${placeF.name}
                    </option>
                 </c:forEach>
             </form:select>
-            <form:select path="destinationPlaceId" type="text" form="ride-create-form" >
+            <label for="select-to">To</label>
+            <form:select id="select-to" path="destinationPlaceId" type="text" form="ride-create-form" class="form-control" >
                 <c:forEach items="${places}" var="placeT">
                    <option value="${placeT.id}">
                            ${placeT.name}
                    </option>
                 </c:forEach>
             </form:select>
-            <form:input path="departure" type="date" form="ride-create-form"/>
-            <form:input path="seatPrize" type="number" />
-            <form:input path="seatsAvailable" type="number" />
+            <label for="input-departure">Departure time</label>
+            <form:input id="input-departure" path="departure" type="date" form="ride-create-form" class="form-control"/>
+            <label for="input-seat-prize">Seat Prize</label>
+            <form:input id="input-seat-prize" path="seatPrize" type="number" class="form-control" />
+            <label for="input-seats-available">Seats Available</label>
+            <form:input id="input-seats-available" path="seatsAvailable" type="number" class="form-control" />
 
-            <button type="submit">Create ride</button>
+            <button type="submit" class="btn btn-default">Create ride</button>
         </form:form>
 
         <script>

@@ -74,15 +74,7 @@
                 </c:if>
                 <c:if test="${userSession.userIsLoggedIn}">
                     <li>
-                        <a id="sign-out-btn" href="">Sign out</a>
-                        <script>
-                            $( document ).ready(function() {
-                                $("#sign-in-out-button").on("click",function () {
-                                    signOut();
-                                    window.location.replace(${pageContext});
-                                })
-                            });
-                        </script>
+                        <div class="btn btn-default" id="sign-out-btn" >Sign out</div>
                     </li>
                 </c:if>
             </ul>
@@ -141,6 +133,9 @@
 <!-- javascripts placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src='<c:url value="/resources/javascript/application.js" />'></script>
+
+
 <jsp:invoke fragment="foot"/>
 </body>
 </html>

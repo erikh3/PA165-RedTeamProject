@@ -101,25 +101,17 @@
                                 </td>
                             </tr>
 
-                </c:forEach>
+                    </c:forEach>
                 </table>
-            </c:if>
-            <c:if test="${(fn:length(rides) eq 0)}">
-                No rides found
             </c:if>
         </c:if>
 
+        <script>
+        </script>
     </jsp:attribute>
     <jsp:attribute name="foot">
-        <script>
-            $( document ).ready(function() {
-                $('#sign-in-out-button').on('click', function () {
-                   window.location.reload();
-                })
-            });
-        </script>
         <!--Load only necessary files-->
-        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
         <script src='<c:url value="/resources/javascript/GoogleOAuth.js"/>'></script>
     </jsp:attribute>
 </blablacar-tags:page-template>

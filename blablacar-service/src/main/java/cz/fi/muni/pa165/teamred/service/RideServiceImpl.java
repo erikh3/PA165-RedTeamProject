@@ -1,17 +1,15 @@
 package cz.fi.muni.pa165.teamred.service;
 
-import cz.fi.muni.pa165.teamred.dao.CommentDao;
 import cz.fi.muni.pa165.teamred.dao.RideDao;
 import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Šimon Mačejovský
@@ -50,10 +48,6 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public void deleteRide(Ride ride) throws IllegalArgumentException {
-        if (!isValidRide(ride)){
-            throw new IllegalArgumentException();
-        }
-
         rideDao.delete(ride);
         log.debug("Service: " + RideServiceImpl.class + "deleted Ride: " + ride.toString());
     }
