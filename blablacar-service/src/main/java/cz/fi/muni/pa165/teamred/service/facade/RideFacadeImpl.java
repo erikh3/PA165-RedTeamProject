@@ -1,9 +1,9 @@
 package cz.fi.muni.pa165.teamred.service.facade;
 
+import cz.fi.muni.pa165.teamred.dto.AddPassengerDTO;
+import cz.fi.muni.pa165.teamred.dto.RemovePassengerDTO;
 import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.RideDTO;
-import cz.fi.muni.pa165.teamred.dto.UserDTO;
-import cz.fi.muni.pa165.teamred.entity.Comment;
 import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -38,6 +37,9 @@ public class RideFacadeImpl implements RideFacade {
     @Inject
     private PlaceService placeService;
 
+    @Inject
+    private PassengerService passengerService;
+
     @Autowired
     private BeanMappingService beanMappingService;
 
@@ -59,6 +61,9 @@ public class RideFacadeImpl implements RideFacade {
         Place destinationPlace = placeService.findById(rideCreateDTO.getDestinationPlaceId());
         mappedRide.setDestinationPlace(destinationPlace);
         destinationPlace.addDestinationRide(mappedRide);
+
+        mappedRide.setAvailableSeats(rideCreateDTO.getSeatsAvailable());
+        mappedRide.setSeatPrice(rideCreateDTO.getSeatPrize());
 
         Ride ride = rideService.createRide(mappedRide);
         log.debug("Created new Ride: " + ride.toString());
@@ -109,4 +114,23 @@ public class RideFacadeImpl implements RideFacade {
         rideService.updateRide(ride);
         log.debug("Updated departure in Ride: " + ride.toString());
     }
+
+    @Override
+    public void addPassenger(AddPassengerDTO addPassengerDTO) {
+        Ride ride = rideService.findById(addPassengerDTO.getRideId());
+        User user = userService.findUserById(addPassengerDTO.getPassengerId());
+        if (!ride.getPassengers().contains(user)) {
+            passengerService.addPassengerToRide(user.getId(),ride.getId());
+        }
+    }
+
+    @Override
+    public void removePassenger(RemovePassengerDTO removePassengerDTO) {
+        Ride ride = rideService.findById(removePassengerDTO.getRideId());
+        User user = userService.findUserById(removePassengerDTO.getPassengerId());
+        if (ride.getPassengers().contains(user)) {
+            passengerService.removePassengerFromRide(user.getId(),ride.getId());
+        }
+    }
+
 }

@@ -11,16 +11,17 @@ import java.util.Set;
  */
 @SuppressWarnings("WeakerAccess")
 public class UserFactory {
-    public static User createUser(String name, String surName, String nickName) {
+    public static User createUser(String name, String surName, String nickName, String loginId) {
         User user = new User();
         user.setName(name);
         user.setSurname(surName);
         user.setNickname(nickName);
+        user.setLoginId(loginId);
         return user;
     }
 
-    public static User createUser(String name, String surName, String nickName, Set<Ride> ridesAsDriver) {
-        User user = createUser(name, surName, nickName);
+    public static User createUser(String name, String surName, String nickName, String loginId, Set<Ride> ridesAsDriver) {
+        User user = createUser(name, surName, nickName, loginId);
 
         if (ridesAsDriver != null) {
             for (Ride ride : ridesAsDriver) {
@@ -35,9 +36,10 @@ public class UserFactory {
     public static User createUser(String name,
                                   String surName,
                                   String nickName,
+                                  String loginId,
                                   Set<Ride> ridesAsDriver,
                                   Set<Ride> ridesAsPassenger) {
-        User user = createUser(name, surName, nickName, ridesAsDriver);
+        User user = createUser(name, surName, nickName, loginId, ridesAsDriver);
 
         if (ridesAsPassenger != null) {
             for (Ride ride : ridesAsPassenger) {
@@ -52,10 +54,11 @@ public class UserFactory {
     public static User createUser(String name,
                                   String surName,
                                   String nickName,
+                                  String loginId,
                                   Set<Ride> ridesAsDriver,
                                   Set<Ride> ridesAsPassenger,
                                   Set<Comment> comments) {
-        User user = createUser(name, surName, nickName, ridesAsDriver, ridesAsPassenger);
+        User user = createUser(name, surName, nickName, loginId, ridesAsDriver, ridesAsPassenger);
 
         if (comments != null) {
             for (Comment comment : comments) {
@@ -68,10 +71,10 @@ public class UserFactory {
     }
 
     public static User createAdam() {
-        return createUser("Adam", "Adamecký", "YO_boss");
+        return createUser("Adam", "Adamecký", "YO_boss", "99998");
     }
 
     public static User createBob() {
-        return createUser("Bob", "Ross", "paintIsLife");
+        return createUser("Bob", "Ross", "paintIsLife", "99999");
     }
 }

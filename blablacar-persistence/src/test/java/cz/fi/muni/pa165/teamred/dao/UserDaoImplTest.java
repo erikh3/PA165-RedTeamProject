@@ -61,6 +61,10 @@ public class UserDaoImplTest extends AbstractTestNGSpringContextTests {
         u2.setNickname("nickname2");
         u3.setNickname("nickname3");
 
+        u1.setLoginId("9997");
+        u2.setLoginId("9998");
+        u3.setLoginId("9999");
+
         em.persist(u1);
         em.persist(u2);
         em.persist(u3);

@@ -21,6 +21,10 @@ public class UserCreateDTO {
     @Size(min = 3, max = 50)
     private String nickname;
 
+    @NotNull
+    @Size(min = 3, max = 50)
+    private String loginId;
+
     public UserCreateDTO() {
     }
 
@@ -48,6 +52,14 @@ public class UserCreateDTO {
         this.nickname = nickname;
     }
 
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,6 +82,7 @@ public class UserCreateDTO {
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", nickname='" + nickname + '\'' +
+                ", loginId='" + loginId + '\'' +
                 '}';
     }
 }

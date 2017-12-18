@@ -35,6 +35,11 @@
                 <version>2.0.2-beta</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-api</artifactId>
+                <version>${tomcat.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -56,5 +61,8 @@
         <module>blablacar-persistence</module>
         <module>blablacar-api</module>
         <module>blablacar-service</module>
+        <module>blablacar-spring-mvc</module>
+        <module>blablacar-sample-data</module>
+        <module>blablacar-rest</module>
     </modules>
 </project>
