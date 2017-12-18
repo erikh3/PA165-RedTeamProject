@@ -6,21 +6,30 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import cz.fi.muni.pa165.teamred.config.UserSession;
+import cz.fi.muni.pa165.teamred.dto.PlaceDTO;
 import cz.fi.muni.pa165.teamred.dto.UserCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.UserDTO;
+import cz.fi.muni.pa165.teamred.entity.Place;
+import cz.fi.muni.pa165.teamred.facade.PlaceFacade;
 import cz.fi.muni.pa165.teamred.facade.UserFacade;
+import cz.fi.muni.pa165.teamred.models.PlaceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +41,9 @@ public class WelcomeController {
 
     @Autowired
     private UserFacade userFacade;
+
+    @Autowired
+    private PlaceFacade placeFacade;
 
     @Autowired
     private UserSession session;
@@ -88,6 +100,7 @@ public class WelcomeController {
         }
 
         //Create new user in our app
+        Long newId = null;
         if(foundUser == null) {
             try {
                 String email = payload.getEmail();
@@ -100,18 +113,46 @@ public class WelcomeController {
                 newUser.setNickname(email);
                 newUser.setLoginId(googleId);
 
-                userFacade.createUser(newUser);
+                newId = userFacade.createUser(newUser);
 
             } catch (Exception ex) {
                 return "welcome"; //TODO: Display error message
             }
         }
 
-        session.setUserId(foundUser.getId().toString());
+        newId = (foundUser != null) ? foundUser.getId() : newId;
+
+
+        session.setUserId(newId.toString());
+        session.setUser(userFacade.findUserById(newId));
+        session.setUserIsLoggedIn(true);
 
         //TODO: Redirect after POST
         //Return to view
-        return "welcome";
+        return "/user/user";
+    }
+
+    @RequestMapping("/sign-out")
+    public String signOutUser(Model model, HttpServletRequest request, HttpServletResponse response){
+        session.setUserId(null);
+        session.setUser(null);
+        session.setUserIsLoggedIn(false);
+        return "redirect:/";
+    }
+
+    @ModelAttribute(name = "userSession")
+    public UserSession addUserSession(){
+        return session;
+    }
+
+    @ModelAttribute(name = "places")
+    public List<PlaceDTO> addAllPlaces(){
+        return new ArrayList<>(placeFacade.getAllPlaces());
+    }
+
+    @ModelAttribute(name = "placeForm")
+    public PlaceForm addPlaceForm(){
+        return new PlaceForm();
     }
 
 }

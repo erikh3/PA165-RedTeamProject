@@ -39,7 +39,7 @@
             <form:input path="seatPrize" type="number" />
             <form:input path="seatsAvailable" type="number" />
 
-            <button type="submit"> Submit new Ride user with id 1</button>
+            <button type="submit">Create ride</button>
         </form:form>
 
         <script>

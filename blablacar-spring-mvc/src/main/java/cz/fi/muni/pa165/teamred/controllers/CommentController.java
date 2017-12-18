@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.teamred.controllers;
 
+import cz.fi.muni.pa165.teamred.config.UserSession;
 import cz.fi.muni.pa165.teamred.dto.CommentCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.CommentDTO;
 import cz.fi.muni.pa165.teamred.facade.CommentFacade;
@@ -32,13 +33,8 @@ public class CommentController {
 
     final static Logger log = LoggerFactory.getLogger(CommentController.class);
 
-    //change this to user session bean
-    //TODO
-    private Long id = 1L;
-
-    //This is just an example you can work with models or models map
-    //as for variables from jsp you can parse them from model or a url path it is up to you,
-    //again this is just and example of allowed urls to work with
+    @Autowired
+    private UserSession userSession;
 
     @Autowired
     private CommentFacade commentFacade;
@@ -64,7 +60,7 @@ public class CommentController {
             }
             model.addAttribute("commentCreateDTO", comment);
             //TODO
-            return "welcome";
+            return "redirect:/comment/new?rideId=" + comment.getRideId();
         }
         //create
         Long id = commentFacade.createComment(comment);
@@ -79,7 +75,7 @@ public class CommentController {
     public String addCommentForm(@RequestParam(value = "rideId", required = true) Long rideId, ModelMap model){
         CommentCreateDTO newComment = new CommentCreateDTO();
         newComment.setRideId(rideId);
-        newComment.setAuthorId(this.id);
+        newComment.setAuthorId(Long.valueOf(userSession.getUserId()));
         model.addAttribute("commentCreateDTO", newComment);
         //redirect to comment create form
         return "comments/new";
@@ -110,5 +106,10 @@ public class CommentController {
     @RequestMapping("")
     public String redirectTo404Page(Model model, HttpServletRequest request, HttpServletResponse response){
         return "error404";
+    }
+
+    @ModelAttribute(name = "userSession")
+    public UserSession addUserSession(){
+        return userSession;
     }
 }

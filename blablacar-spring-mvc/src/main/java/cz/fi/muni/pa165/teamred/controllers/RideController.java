@@ -1,12 +1,11 @@
 package cz.fi.muni.pa165.teamred.controllers;
 
 import cz.fi.muni.pa165.teamred.config.UserSession;
-import cz.fi.muni.pa165.teamred.dto.PlaceDTO;
-import cz.fi.muni.pa165.teamred.dto.RideCreateDTO;
-import cz.fi.muni.pa165.teamred.dto.RideDTO;
+import cz.fi.muni.pa165.teamred.dto.*;
 import cz.fi.muni.pa165.teamred.facade.PlaceFacade;
 import cz.fi.muni.pa165.teamred.facade.RideFacade;
 import cz.fi.muni.pa165.teamred.facade.UserFacade;
+import cz.fi.muni.pa165.teamred.models.PlaceForm;
 import cz.fi.muni.pa165.teamred.service.PassengerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,33 +33,18 @@ import java.util.List;
 @RequestMapping("/ride")
 public class RideController {
 
+    final static Logger log = LoggerFactory.getLogger(RideController.class);
+
     @Autowired
     private RideFacade rideFacade;
-
-
     @Autowired
     private PlaceFacade placeFacade;
-
     @Autowired
     private UserFacade userFacade;
 
     @Autowired
-    private PassengerService passengerService;
+    private UserSession userSession;
 
-    final static Logger log = LoggerFactory.getLogger(CommentController.class);
-
-    //change this to user session bean
-    //private Long id = 1L;
-
-    private UserSession user;
-    private Long id = Long.parseLong(user.getUserId());
-
-    //This is just an example you can work with models or models map
-    //as for variables from jsp you can parse them from model or a url path it is up to you,
-    //again this is just and example of allowed urls to work with
-
-
-    //only for post method allowed creating a new comment
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String createRide(@Valid @ModelAttribute("rideCreateDTO") RideCreateDTO ride,
                              BindingResult result,
@@ -71,18 +55,18 @@ public class RideController {
 
         log.debug("create(ride={})", ride);
 
-//        if (!isValidBinding(result, model)) {
-//            model.addAttribute("rideCreateDTO", ride);
-//            String referer = request.getHeader("Referer");
-//            return "redirect:" + referer;
-//        }
+        if (!isValidBinding(result, model)) {
+            model.addAttribute("rideCreateDTO", ride);
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
 
         //create
         Long id = rideFacade.createRide(ride);
         //report success
         redirectAttributes.addFlashAttribute("alert_success", "Ride " + id + " was created");
         //redirect to ride with this comment
-        return "redirect:showRide/" + id;
+        return "redirect:/ride/list-driver";
     }
 
     private boolean isValidBinding(BindingResult result, Model model) {
@@ -104,16 +88,21 @@ public class RideController {
     public String addRideForm(ModelMap model) {
         RideCreateDTO newRide = new RideCreateDTO();
         List<PlaceDTO> places = new ArrayList<>(placeFacade.getAllPlaces());
-        //TODO change this to user session bean
-        newRide.setDriverId(id);
+        newRide.setDriverId(Long.valueOf(userSession.getUserId()));
         model.addAttribute("rideCreateDTO", newRide);
         model.addAttribute("places" , places);
-        //redirect to comment create form
         return "rides/new";
     }
 
     @RequestMapping(value = "/showRide/{rideId}", method = RequestMethod.GET)
     public String showRide(@PathVariable Long rideId, Model model) {
+        RideDTO rideDTO = rideFacade.getRideWithId(rideId);
+        model.addAttribute("rideDTO", rideDTO);
+        return "rides/ride";
+    }
+
+    @RequestMapping(value = "/showRide", method = RequestMethod.GET)
+    public String showRide2(@RequestParam(name = "rideId") Long rideId, Model model) {
         RideDTO rideDTO = rideFacade.getRideWithId(rideId);
         model.addAttribute("rideDTO", rideDTO);
         return "rides/ride";
@@ -135,84 +124,77 @@ public class RideController {
             return "redirect:" + referer;
         }
 
-        //create
         rideFacade.changePrice(ride.getId(), ride.getSeatPrice());
         rideFacade.editAvailableSeats(ride.getId(), ride.getAvailableSeats());
         rideFacade.editDeparture(ride.getId(), ride.getDeparture());
-        //report success
-        redirectAttributes.addFlashAttribute("alert_success", "Ride " + id + " was udated");
-        //redirect to ride with this comment
-        return "redirect:ride/showRide/" + id;
+
+        redirectAttributes.addFlashAttribute("alert_success", "Ride " + userSession.getUserId() + " was udated");
+
+        return "redirect:ride/showRide/" + ride.getId();
     }
 
     @RequestMapping(value = "/addPassenger")
-    public String addPassengerToRide(@Valid @ModelAttribute("rideDTO") RideDTO ride,
+    public String addPassengerToRide(@RequestParam(name = "rideId") Long rideId,
                                      Model model,
                                      RedirectAttributes redirectAttributes,
                                      HttpServletResponse response,
                                      HttpServletRequest request) {
-        //TODO
-        passengerService.addPassengerToRide(id, ride.getId());
-        redirectAttributes.addFlashAttribute("alert_success", "Joined ride " + ride.getId());
-        return "redirect:ride/list";
+
+        AddPassengerDTO passengerDTO = new AddPassengerDTO();
+        passengerDTO.setPassengerId(Long.valueOf(userSession.getUserId()));
+        passengerDTO.setRideId(rideId);
+        rideFacade.addPassenger(passengerDTO);
+
+        model.addAttribute("rides", rideFacade.getAllRides());
+
+        redirectAttributes.addFlashAttribute("alert_success", "Joined ride " + rideId);
+        return "redirect:/ride/list";
     }
 
     @RequestMapping(value = "/removePassenger")
-    public String removePassengerToRide(@Valid @ModelAttribute("rideDTO") RideDTO ride,
+    public String removePassengerToRide(@RequestParam(name = "rideId") Long rideId,
                                         Model model,
                                         RedirectAttributes redirectAttributes,
                                         HttpServletResponse response,
                                         HttpServletRequest request) {
-        //TODO
-        passengerService.removePassengerFromRide(id, ride.getId());
-        redirectAttributes.addFlashAttribute("alert_success", "Removed from ride " + ride.getId());
-        return "redirect:ride/list";
+
+        RemovePassengerDTO removePassengerDTO = new RemovePassengerDTO();
+
+        removePassengerDTO.setPassengerId(Long.valueOf(userSession.getUserId()));
+        removePassengerDTO.setRideId(rideId);
+        rideFacade.removePassenger(removePassengerDTO);
+
+        redirectAttributes.addFlashAttribute("alert_success", "Removed from ride " + rideId);
+        return "redirect:/ride/list";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deleteRide(@RequestParam(value = "id", required = true) Long rideId, Model model,
+    public String deleteRide(@RequestParam(value = "rideId", required = true) Long rideId, Model model,
                              RedirectAttributes redirectAttributes, HttpServletRequest request,
                              HttpServletResponse response) {
-
-        //TODO
-        //Delete ride with received id
-        //check it first
 
         rideFacade.deleteRide(rideId);
 
         redirectAttributes.addFlashAttribute("alert_success", "Ride was deleted");
-        // redirect to caller page
-        String referer = request.getHeader("Referer");
-        return "redirect:ride/list" + referer;
+        return "redirect:/ride/list-driver";
     }
 
-    //Only for a get method allowed to list all rides
     @RequestMapping(value = "/list-pass", method = RequestMethod.GET)
-    //public @ResponseBody
     public String listAllUserRidesAsPassenger(Model model, HttpServletRequest request, HttpServletResponse response) {
-        //TODO
-        //list all rides from user with id retrieved from user session bean
-        //return the list
-        List<RideDTO> rides = new ArrayList<>(userFacade.getUserRidesAsPassenger(id));
+        List<RideDTO> rides = new ArrayList<>(userFacade.getUserRidesAsPassenger(Long.valueOf(userSession.getUserId())));
         model.addAttribute("rides", rides);
-        return "rides/list";
+        return "rides/list-pass";
     }
 
-    //Only for a get method allowed to list all rides
     @RequestMapping(value = "/list-driver", method = RequestMethod.GET)
-    //public @ResponseBody
     public String listAllUserRidesAsDriver(Model model, HttpServletRequest request, HttpServletResponse response) {
-        //TODO
-        //return the list
-        List<RideDTO> rides = new ArrayList<>(userFacade.getUserRidesAsDriver(id));
+        List<RideDTO> rides = new ArrayList<>(userFacade.getUserRidesAsDriver(Long.valueOf(userSession.getUserId())));
         model.addAttribute("rides", rides);
-        return "rides/list";
+        return "rides/list-driver";
     }
 
-    //Only for a get method allowed to list all rides
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listAllRides(Model model, HttpServletRequest request, HttpServletResponse response) {
-        //return the list
         List<RideDTO> rides = rideFacade.getAllRides();
         model.addAttribute("rides", rides);
         return "rides/all";
@@ -221,5 +203,24 @@ public class RideController {
     @RequestMapping("")
     public String redirectTo404Page(Model model, HttpServletRequest request, HttpServletResponse response) {
         return "error404";
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    public String findRides(@Valid @ModelAttribute("placeForm") PlaceForm placeForm,
+                                   BindingResult result,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes,
+                                   HttpServletResponse response,
+                                   HttpServletRequest request) {
+        model.addAttribute("rides",placeFacade.getRidesWithOriginatingAndDestinationPlace(placeForm.getFromId(),placeForm.getToId()));
+        model.addAttribute("places", placeFacade.getAllPlaces());
+        return "/welcome";
+    }
+
+
+
+    @ModelAttribute(name = "userSession")
+    public UserSession addUserSession(){
+        return userSession;
     }
 }
