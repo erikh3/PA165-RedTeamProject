@@ -53,7 +53,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         validDriver.setName("John");
         validDriver.setSurname("Doe");
         validDriver.setNickname("j_doe");
-        validDriver.setLoginId(new Long(9997));
+        validDriver.setLoginId("9997");
 
 
         ride.setDriver(validDriver);
@@ -86,7 +86,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         validDriver.setName("John");
         validDriver.setSurname("Diggle");
         validDriver.setNickname("arrow");
-        validDriver.setLoginId(new Long(9998));
+        validDriver.setLoginId("9998");
 
 
         ride.setDriver(validDriver);
@@ -230,7 +230,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         newPassenger.setName("Adam");
         newPassenger.setSurname("Smith");
         newPassenger.setNickname("smitty");
-        newPassenger.setLoginId(new Long(9990));
+        newPassenger.setLoginId("9990");
 
         persistedRide.addPassenger(newPassenger);
         rideDao.update(persistedRide);
@@ -243,7 +243,7 @@ public class RideDaoTest extends AbstractTestNGSpringContextTests {
         newDriver.setName("Adam");
         newDriver.setSurname("Smith");
         newDriver.setNickname("smitty");
-        newDriver.setLoginId(new Long(9990));
+        newDriver.setLoginId("9990");
 
         persistedRide.setDriver(newDriver);
         rideDao.update(persistedRide);

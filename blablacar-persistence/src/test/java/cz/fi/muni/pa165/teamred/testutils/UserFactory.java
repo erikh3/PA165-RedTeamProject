@@ -11,7 +11,7 @@ import java.util.Set;
  */
 @SuppressWarnings("WeakerAccess")
 public class UserFactory {
-    public static User createUser(String name, String surName, String nickName, Long loginId) {
+    public static User createUser(String name, String surName, String nickName, String loginId) {
         User user = new User();
         user.setName(name);
         user.setSurname(surName);
@@ -20,7 +20,7 @@ public class UserFactory {
         return user;
     }
 
-    public static User createUser(String name, String surName, String nickName, Long loginId, Set<Ride> ridesAsDriver) {
+    public static User createUser(String name, String surName, String nickName, String loginId, Set<Ride> ridesAsDriver) {
         User user = createUser(name, surName, nickName, loginId);
 
         if (ridesAsDriver != null) {
@@ -36,7 +36,7 @@ public class UserFactory {
     public static User createUser(String name,
                                   String surName,
                                   String nickName,
-                                  Long loginId,
+                                  String loginId,
                                   Set<Ride> ridesAsDriver,
                                   Set<Ride> ridesAsPassenger) {
         User user = createUser(name, surName, nickName, loginId, ridesAsDriver);
@@ -54,7 +54,7 @@ public class UserFactory {
     public static User createUser(String name,
                                   String surName,
                                   String nickName,
-                                  Long loginId,
+                                  String loginId,
                                   Set<Ride> ridesAsDriver,
                                   Set<Ride> ridesAsPassenger,
                                   Set<Comment> comments) {
@@ -71,10 +71,10 @@ public class UserFactory {
     }
 
     public static User createAdam() {
-        return createUser("Adam", "Adamecký", "YO_boss", new Long(99998));
+        return createUser("Adam", "Adamecký", "YO_boss", "99998");
     }
 
     public static User createBob() {
-        return createUser("Bob", "Ross", "paintIsLife", new Long(99999));
+        return createUser("Bob", "Ross", "paintIsLife", "99999");
     }
 }
