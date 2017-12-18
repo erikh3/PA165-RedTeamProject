@@ -22,6 +22,14 @@
         <c:forEach var="ride" items="rides">
             <li class="ride-item">
                 <c:out value="${ride.id}"></c:out>
+                <c:out value="${ride.departure}"></c:out>
+                <c:out value="${ride.sourcePlace}"></c:out>
+                <c:out value="${ride.destinationPlace}"></c:out>
+                <c:out value="${ride.availableSeats}"></c:out>
+                <c:out value="${ride.seatPrice}"></c:out>
+                <form:form action="${pageContext.request.contextPath}/ride/addPassenger" id="join-ride" method="post">
+                    <button type="submit" class="btn btn-primary">Join ride</button>
+                </form:form>
             </li>
         </c:forEach>
         </ul>
