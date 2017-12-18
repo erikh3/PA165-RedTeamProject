@@ -12,6 +12,7 @@ public class UserDTO {
     private String name;
     private String surname;
     private String nickname;
+    private String loginId;
     private Set<Long> ridesAsDriver = new HashSet<>();
     private Set<Long> ridesAsPassenger = new HashSet<>();
     private Set<Long> comments = new HashSet<>();
@@ -72,6 +73,14 @@ public class UserDTO {
         this.comments = comments;
     }
 
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
     //____________________________________________________________________________________________________Add and remove
 
     public boolean addRideAsDriver(Long rideId){
@@ -124,4 +133,5 @@ public class UserDTO {
                 ", nickname='" + nickname + '\'' +
                 '}';
     }
+
 }

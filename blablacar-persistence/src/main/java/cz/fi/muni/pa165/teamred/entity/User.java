@@ -22,7 +22,6 @@ public class User {
     @Column(updatable = false, nullable = false)
     private Long id;
 
-
     @NotNull(message = "User Name cannot be null.")
     @Column(nullable = false)
     @Size(
@@ -41,6 +40,12 @@ public class User {
     @Column(nullable = false, unique = true)
     @Size(min = 3, max = 255)
     private String nickname;
+
+    @NotNull(message = "User Login ID cannot be null.")
+    @Column(name = "login", updatable = false, nullable = false)
+    private String loginId;
+
+    private boolean isAdmin;
 
     @OneToMany(mappedBy = "driver")
     private Set<Ride> ridesAsDriver = new HashSet<>();
@@ -120,6 +125,22 @@ public class User {
 
     public void setRidesAsPassenger(Set<Ride> ridesAsPassenger) {
         this.ridesAsPassenger = ridesAsPassenger;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     //__________________________________________________________________________________________________Adds and Removes

@@ -10,7 +10,7 @@ function onSignIn(googleUser) {
 
     //TODO: AJAX on server
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://yourbackend.example.com/tokensignin'); //TODO: Change URL
+    xhr.open('POST', 'http://localhost:8080/pa165/tokensignin');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
         console.log('Signed in as: ' + xhr.responseText);

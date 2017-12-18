@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.teamred.controllers;
 
+import cz.fi.muni.pa165.teamred.config.UserSession;
 import cz.fi.muni.pa165.teamred.facade.UserFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,9 @@ public class UserController {
 
     @Autowired
     private UserFacade userFacade;
+
+    @Autowired
+    private UserSession session;
 
     @RequestMapping
     public String doWelcomeUserPage(Model model, HttpServletRequest request, HttpServletResponse response){

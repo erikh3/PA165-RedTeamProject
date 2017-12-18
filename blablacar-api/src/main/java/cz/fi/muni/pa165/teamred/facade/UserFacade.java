@@ -68,6 +68,14 @@ public interface UserFacade {
     UserDTO findUserById(Long userId);
 
     /**
+     * Finds user by login ID provided by authorization third party.
+     *
+     * @param loginId user's ID
+     * @return found user, null otherwise
+     */
+    UserDTO findUserByLoginId(String loginId);
+
+    /**
      * Finds user by nickname.
      *
      * @param nickname to find

@@ -101,6 +101,21 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    public UserDTO findUserByLoginId(String loginId) {
+        User user = userService.findUserByLoginId(loginId);
+        if (user == null){
+            log.debug(UserFacadeImpl.class +
+                    " - User not found with id: " + loginId);
+            return null;
+        }
+
+        log.debug(UserFacadeImpl.class +
+                " - Found User with paramenters" + user.toString());
+
+        return (user == null) ? null : beanMappingService.mapTo(user, UserDTO.class);
+    }
+
+    @Override
     public UserDTO findUserByNickname(String nick) {
         User user = userService.findUserByNickname(nick);
         if (user == null){

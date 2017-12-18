@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jndi.JndiTemplate;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Scope;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.validation.Validator;
@@ -26,7 +28,7 @@ import javax.validation.Validator;
  */
 
 @Configuration
-@ComponentScan("cz.fi.muni.pa165.teamred")
+@ComponentScan( {"cz.fi.muni.pa165.teamred","cz.fi.muni.pa165.teamred.config"})
 @Import(ServiceConfiguration.class)
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {

@@ -19,10 +19,11 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/welcome.css"  crossorigin="anonymous">
     </jsp:attribute>
     <jsp:attribute name="body">
-        <fmt:message key="page.welcome.hello-world"/>
+        <%--<fmt:message key="page.welcome.hello-world"/>--%>
 
         <div id="sign-in-out-button" class="g-signin2" data-onsuccess="onSignIn"></div>
         <a href="#" onclick="signOut();">Sign out</a>
+
     </jsp:attribute>
     <jsp:attribute name="foot">
         <!--Load only necessary files-->
