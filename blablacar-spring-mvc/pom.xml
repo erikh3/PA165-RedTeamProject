@@ -135,6 +135,13 @@
             <version>1.9.13</version>
         </dependency>
 
+        <!--Google OAuth 2.0 token verification-->
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.23.0</version>
+        </dependency>
+
 
 
         <dependency>
