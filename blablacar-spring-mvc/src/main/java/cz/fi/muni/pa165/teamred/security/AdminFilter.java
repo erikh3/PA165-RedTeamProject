@@ -11,8 +11,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/user/*", "/ride/*", "/comment/*"})
-public class ProtectFilter implements Filter {
+//TODO: LIST URL WITH ONLY ADMIN ACCESS
+@WebFilter(urlPatterns = {"/user/*"})
+public class AdminFilter implements Filter {
 
     @Autowired
     private UserSession session;
@@ -30,7 +31,7 @@ public class ProtectFilter implements Filter {
 
         session = appContext.getBean(UserSession.class);
 
-        if (session.getUserId() == null) {
+        if (session.getUserId() == null || !session.isAdmin()) {
             response401((HttpServletResponse) servletResponse);
             return;
         }
@@ -45,6 +46,6 @@ public class ProtectFilter implements Filter {
 
     private void response401(HttpServletResponse response) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().println("<html><body><h1>401 Unauthorized</h1>You do not have permissions to access...</body></html>");
+        response.getWriter().println("<html><body><h1>401 Unauthorized</h1>You do not have ADMIN permissions to access...</body></html>");
     }
 }
