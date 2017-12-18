@@ -17,6 +17,8 @@ public class UserDTO {
     private Set<Long> ridesAsPassenger = new HashSet<>();
     private Set<Long> comments = new HashSet<>();
 
+    private boolean isAdmin;
+
     public Long getId() {
         return id;
     }
@@ -81,6 +83,14 @@ public class UserDTO {
         this.loginId = loginId;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
     //____________________________________________________________________________________________________Add and remove
 
     public boolean addRideAsDriver(Long rideId){
@@ -133,5 +143,4 @@ public class UserDTO {
                 ", nickname='" + nickname + '\'' +
                 '}';
     }
-
 }

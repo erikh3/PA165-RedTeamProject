@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,13 +25,12 @@ public class UserController {
     @Autowired
     private UserFacade userFacade;
 
-    @RequestMapping("")
-
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String doWelcomeUserPage(Model model, HttpServletRequest request, HttpServletResponse response){
         if (actualUserId == null){
             return "redirect:/";
         }
-        return "user";
+        return "users/user";
     }
 
     @RequestMapping("/user-driver-rides")
