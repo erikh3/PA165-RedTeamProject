@@ -93,6 +93,11 @@
             <artifactId>javax.el</artifactId>
             <scope>test</scope> <!-- conflicts with tomcat libraries, but needed for tests to run -->
         </dependency>
-        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>4.3.11.RELEASE</version>
+        </dependency>
+
     </dependencies>
 </project>
