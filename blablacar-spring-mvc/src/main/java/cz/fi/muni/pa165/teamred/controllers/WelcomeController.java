@@ -9,7 +9,6 @@ import cz.fi.muni.pa165.teamred.config.UserSession;
 import cz.fi.muni.pa165.teamred.dto.PlaceDTO;
 import cz.fi.muni.pa165.teamred.dto.UserCreateDTO;
 import cz.fi.muni.pa165.teamred.dto.UserDTO;
-import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.facade.PlaceFacade;
 import cz.fi.muni.pa165.teamred.facade.UserFacade;
 import cz.fi.muni.pa165.teamred.models.PlaceForm;
@@ -18,19 +17,16 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by jcibik on 12/4/17.
@@ -38,6 +34,9 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/")
 public class WelcomeController {
+
+    @Autowired
+    private UserSession userSession;
 
     @Autowired
     private UserFacade userFacade;
@@ -60,33 +59,39 @@ public class WelcomeController {
     }
 
     @RequestMapping(value = "/tokensignin", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String doTokenSignIn(@RequestParam Map<String,String> paramMap, ModelMap modelMap){
+    public String doTokenSignIn(@RequestParam Map<String,String> paramMap,
+                                ModelMap modelMap,
+                                RedirectAttributes redirectAttributes,
+                                UriComponentsBuilder uriBuilder){
 
         if(paramMap == null && paramMap.get("idtoken") == null) {
             throw new IllegalArgumentException("Token not provided");
         }
 
-        String token = paramMap.get("idtoken").toString();
+        String token = paramMap.get("idtoken");
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
                 .setAudience(Collections.singletonList(clientId))
                 .build();
 
-        //TODO: Handle Exceptions!
         GoogleIdToken idToken = null;
         try {
             idToken = verifier.verify(token);
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:welcome";
         } catch (IOException e) {
-            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:welcome";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:welcome";
         }
 
-        String id = session.getUserId();
-
         if (idToken == null) {
-            System.out.println("Invalid ID token.");
-            return "welcome"; //TODO: Display error message
+            redirectAttributes.addFlashAttribute("alert_warning", "Seems like you are here for the first time..." +
+                    "We can not create an account for you now. Try again later, please.");
+            return "redirect:welcome";
         }
         GoogleIdToken.Payload payload = idToken.getPayload();
 
@@ -95,12 +100,11 @@ public class WelcomeController {
         UserDTO foundUser = null;
         try{
             foundUser = userFacade.findUserByLoginId(googleId);
-        }catch (NullPointerException e) { //TODO: Other exceptions handling
-            //this means probably that user is null; have not found out yet the cause
+        }catch (NullPointerException e) {
+            //this means that user is null
         }
 
         //Create new user in our app
-        Long newId = null;
         if(foundUser == null) {
             try {
                 String email = payload.getEmail();
@@ -113,46 +117,110 @@ public class WelcomeController {
                 newUser.setNickname(email);
                 newUser.setLoginId(googleId);
 
-                newId = userFacade.createUser(newUser);
+                userFacade.createUser(newUser);
+                foundUser = userFacade.findUserByLoginId(googleId);
 
             } catch (Exception ex) {
-                return "welcome"; //TODO: Display error message
+                redirectAttributes.addFlashAttribute("alert_warning", "Seems like you are here for the first time..." +
+                    "We can not create an account for you now. Try again later, please.");
+                return "redirect:welcome";
             }
         }
 
-        newId = (foundUser != null) ? foundUser.getId() : newId;
+        if(foundUser != null) {
+            Long id = foundUser.getId();
+            session.setUserId(foundUser.getId());
+            session.setAdmin(foundUser.isAdmin());
+            session.setUser(foundUser);
+            session.setUserIsLoggedIn(true);
+        }
 
+        String givenName = (String) payload.get("given_name");
+        redirectAttributes.addFlashAttribute("alert_success", "Hello " + givenName + "! You have been successfully logged in");
 
-        session.setUserId(newId.toString());
-        session.setUser(userFacade.findUserById(newId));
-        session.setUserIsLoggedIn(true);
-
-        //TODO: Redirect after POST
-        //Return to view
-        return "/user/user";
+        return "redirect:/user";
     }
 
-    @RequestMapping("/sign-out")
-    public String signOutUser(Model model, HttpServletRequest request, HttpServletResponse response){
-        session.setUserId(null);
-        session.setUser(null);
-        session.setUserIsLoggedIn(false);
-        return "redirect:/";
-    }
+    @RequestMapping(value = "/tokensignout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String doTokenSignOut(@RequestParam Map<String,String> paramMap,
+                                 ModelMap modelMap,
+                                 RedirectAttributes redirectAttributes,
+                                 UriComponentsBuilder uriBuilder) {
 
-    @ModelAttribute(name = "userSession")
-    public UserSession addUserSession(){
-        return session;
-    }
+        if(paramMap == null && paramMap.get("idtoken") == null) {
+            //Allow to sign out without token - token verification is not possible
+            session.setUserId(null);
 
-    @ModelAttribute(name = "places")
-    public List<PlaceDTO> addAllPlaces(){
-        return new ArrayList<>(placeFacade.getAllPlaces());
+            redirectAttributes.addFlashAttribute("alert_success", "You have been successfully signed out!");
+            return "welcome";
+        }
+
+        String token = paramMap.get("idtoken");
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
+                .setAudience(Collections.singletonList(clientId))
+                .build();
+
+        GoogleIdToken idToken = null;
+
+        try {
+            idToken = verifier.verify(token);
+        } catch (GeneralSecurityException e) {
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+        }
+
+        if (idToken == null) {
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+        }
+        GoogleIdToken.Payload payload = idToken.getPayload();
+
+        //Get login ID = Google User identifier
+        String googleId = payload.getSubject();
+        UserDTO foundUser = null;
+        try{
+            foundUser = userFacade.findUserByLoginId(googleId);
+        }catch (NullPointerException e) {
+            //this means  that user is null
+        }
+
+        if (foundUser == null) {
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+        }
+
+        if(Objects.equals(session.getUserId(),foundUser.getId())) {
+            //Token verification successful
+            session.setUserId(null);
+
+            redirectAttributes.addFlashAttribute("alert_success", "You have been successfully signed out!");
+
+            userSession.setUserIsLoggedIn(false);
+            userSession.setUser(null);
+            userSession.setAdmin(false);
+
+            return "welcome";
+
+        }
+
+        return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
     }
 
     @ModelAttribute(name = "placeForm")
-    public PlaceForm addPlaceForm(){
-        return new PlaceForm();
-    }
+    public PlaceForm addPlaceForm(){return new PlaceForm();}
 
+    @ModelAttribute(name = "places")
+    public List<PlaceDTO> addPlaces(){return placeFacade.getAllPlaces();}
+
+    @ModelAttribute(name = "userSession")
+    public UserSession addUserSession(){
+        return userSession;
+    }
 }

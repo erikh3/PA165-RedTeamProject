@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Scope(value = "session", proxyMode =ScopedProxyMode.TARGET_CLASS)
 public class UserSession {
 
-    private String userId;
+    private Long userId;
 
     private UserDTO user;
 
@@ -19,11 +19,11 @@ public class UserSession {
 
     private boolean isAdmin = false;
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void logInUser(String userId, boolean isAdmin, UserDTO user){
+    public void logInUser(Long userId, boolean isAdmin, UserDTO user){
         this.user = user;
         this.setUserId(userId);
         this.setUserIsLoggedIn(true);
@@ -46,7 +46,7 @@ public class UserSession {
         isAdmin = admin;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

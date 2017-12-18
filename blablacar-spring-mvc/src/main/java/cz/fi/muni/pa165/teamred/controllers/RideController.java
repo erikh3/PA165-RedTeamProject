@@ -88,7 +88,7 @@ public class RideController {
     public String addRideForm(ModelMap model) {
         RideCreateDTO newRide = new RideCreateDTO();
         List<PlaceDTO> places = new ArrayList<>(placeFacade.getAllPlaces());
-        newRide.setDriverId(Long.valueOf(userSession.getUserId()));
+        newRide.setDriverId(userSession.getUserId());
         model.addAttribute("rideCreateDTO", newRide);
         model.addAttribute("places" , places);
         return "rides/new";
@@ -141,7 +141,7 @@ public class RideController {
                                      HttpServletRequest request) {
 
         AddPassengerDTO passengerDTO = new AddPassengerDTO();
-        passengerDTO.setPassengerId(Long.valueOf(userSession.getUserId()));
+        passengerDTO.setPassengerId(userSession.getUserId());
         passengerDTO.setRideId(rideId);
         rideFacade.addPassenger(passengerDTO);
 
@@ -168,7 +168,7 @@ public class RideController {
         return "redirect:/ride/list";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete")
     public String deleteRide(@RequestParam(value = "rideId", required = true) Long rideId, Model model,
                              RedirectAttributes redirectAttributes, HttpServletRequest request,
                              HttpServletResponse response) {

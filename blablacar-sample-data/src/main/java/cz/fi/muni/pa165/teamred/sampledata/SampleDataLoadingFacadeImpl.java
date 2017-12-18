@@ -225,7 +225,8 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         john.setName("John");
         john.setSurname("Doe");
         john.setNickname("NotReallyAnnoN");
-        john.setLoginId("9996");
+        john.setLoginId("106857542309531409105");
+        john.setAdmin(true);
         return john;
     }
 

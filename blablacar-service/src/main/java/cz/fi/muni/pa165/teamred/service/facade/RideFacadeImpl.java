@@ -8,10 +8,7 @@ import cz.fi.muni.pa165.teamred.entity.Place;
 import cz.fi.muni.pa165.teamred.entity.Ride;
 import cz.fi.muni.pa165.teamred.entity.User;
 import cz.fi.muni.pa165.teamred.facade.RideFacade;
-import cz.fi.muni.pa165.teamred.service.BeanMappingService;
-import cz.fi.muni.pa165.teamred.service.PlaceService;
-import cz.fi.muni.pa165.teamred.service.RideService;
-import cz.fi.muni.pa165.teamred.service.UserService;
+import cz.fi.muni.pa165.teamred.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +36,9 @@ public class RideFacadeImpl implements RideFacade {
 
     @Inject
     private PlaceService placeService;
+
+    @Inject
+    private PassengerService passengerService;
 
     @Autowired
     private BeanMappingService beanMappingService;
@@ -120,10 +120,7 @@ public class RideFacadeImpl implements RideFacade {
         Ride ride = rideService.findById(addPassengerDTO.getRideId());
         User user = userService.findUserById(addPassengerDTO.getPassengerId());
         if (!ride.getPassengers().contains(user)) {
-            ride.addPassenger(user);
-            rideService.updateRide(ride);
-            userService.editUser(user);
-            log.debug("Added passenger ({}) to ride ({})", user.getId(), ride.getId());
+            passengerService.addPassengerToRide(user.getId(),ride.getId());
         }
     }
 
@@ -132,10 +129,7 @@ public class RideFacadeImpl implements RideFacade {
         Ride ride = rideService.findById(removePassengerDTO.getRideId());
         User user = userService.findUserById(removePassengerDTO.getPassengerId());
         if (ride.getPassengers().contains(user)) {
-            ride.removePassenger(user);
-            rideService.updateRide(ride);
-            userService.editUser(user);
-            log.debug("Passenger ({}) removed from ride ({})", user.getId(), ride.getId());
+            passengerService.removePassengerFromRide(user.getId(),ride.getId());
         }
     }
 

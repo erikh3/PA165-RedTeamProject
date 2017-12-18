@@ -81,7 +81,6 @@
                     </c:if>
                 </div>
             </div>
-            <p>User details should be printed out</p>
         </div>
 
     </jsp:attribute>

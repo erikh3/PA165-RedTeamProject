@@ -77,7 +77,7 @@
                                         <button type="submit" class="btn btn-warning" name="rideId" value="${ride.id}">Manage rides</button>
                                     </form:form>
                                 </c:if>
-                                <c:if test = "${not ( ride.driver.id eq userSession.userId)}">
+                                <c:if test = "${not ( ride.driver.id eq userSession.userId) && (ride.availableSeats gt 0)}">
                                     <form:form action="${pageContext.request.contextPath}/ride/addPassenger" id="join-ride" method="get">
                                         <button type="submit" class="btn btn-success" name="rideId" value="${ride.id}">Join ride</button>
                                     </form:form>

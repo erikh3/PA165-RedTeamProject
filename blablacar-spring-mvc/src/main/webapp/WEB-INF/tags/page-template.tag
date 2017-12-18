@@ -74,7 +74,15 @@
                 </c:if>
                 <c:if test="${userSession.userIsLoggedIn}">
                     <li>
-                        <a href="${pageContext.request.contextPath}/sign-out" onclick="signOut();">Sign out</a>
+                        <a id="sign-out-btn" href="">Sign out</a>
+                        <script>
+                            $( document ).ready(function() {
+                                $("#sign-in-out-button").on("click",function () {
+                                    signOut();
+                                    window.location.replace(${pageContext});
+                                })
+                            });
+                        </script>
                     </li>
                 </c:if>
             </ul>
