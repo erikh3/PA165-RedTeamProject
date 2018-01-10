@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"  crossorigin="anonymous">
     <jsp:invoke fragment="head"/>
 </head>
-<body>
+<body style="background-color: #e8fced!important;">
 <!-- navigation bar -->
 <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
@@ -37,44 +37,30 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="${pageContext.request.contextPath}"><f:message key="navigation-menu.project-name"/></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}">PA165 BlaBlaCar</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><blablacar-tags:a href="/"><f:message key="navigation-menu.blablacar"/></blablacar-tags:a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><f:message key="navigation-menu.docs"/><b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-header">Javadocs</li>
-                        <li><a href="http://docs.oracle.com/javase/8/docs/api/">JDK 8 API</a></li>
-                        <li><a href="http://docs.oracle.com/javaee/6/api/">Java EE 6 API</a></li>
-                        <li><a href="http://docs.spring.io/spring/docs/current/javadoc-api/">Spring API</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Other</li>
-                        <li><a href="http://getbootstrap.com/css/">Bootstrap CSS</a></li>
-                        <li><a href="http://getbootstrap.com/components/">Bootstrap components</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><f:message key="navigation-menu.about"/><b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="https://is.muni.cz/predmet/fi/podzim2015/PA165">PA165</a></li>
-                        <li><a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html">SpringMVC</a></li>
-                        <li><a href="http://getbootstrap.com/">Bootstrap</a></li>
-                        <li><a href="https://maven.apache.org/">Maven</a></li>
-                    </ul>
-                </li>
+            <ul class="nav navbar-nav" style="float: none;">
                 <c:if test="${not empty userSession.userId}">
                     <li>
-                        <blablacar-tags:a href="/user"><f:message key="navigation-menu.starting"/></blablacar-tags:a>
+                        <blablacar-tags:a href="/user">Home</blablacar-tags:a>
                     </li>
-                    <li>
-                        <blablacar-tags:a href="/user/user-details">Logged in as: ${userSession.user.nickname}</blablacar-tags:a>
+                    <c:if test="${userSession.isAdmin}">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><blablacar-tags:a href="/comment/manage">Admin comments</blablacar-tags:a></li>
+                        </ul>
+                    </li>
+                    </c:if>
+                    <li class="pull-right">
+                        <blablacar-tags:a href="/user/user-details">Logged in as: ${userSession.user.name}</blablacar-tags:a>
                     </li>
                 </c:if>
+
                 <c:if test="${userSession.userIsLoggedIn}">
-                    <li>
-                        <div class="btn btn-default" id="sign-out-btn" >Sign out</div>
+                    <li class="pull-right">
+                        <a  href="#" id="sign-out-btn" >Sign out</a>
                     </li>
                 </c:if>
             </ul>
@@ -124,17 +110,19 @@
     <!-- page body -->
     <jsp:invoke fragment="body"/>
 
+    <div style="width:100%; height:1px; padding-bottom: 30px;"></div>
 
     <!-- footer -->
-    <footer class="footer">
-        <p>&copy;&nbsp;<%=java.time.Year.now().toString()%>&nbsp;Masaryk University</p>
+    <footer class="footer" style="position: fixed; right: 0; bottom: 0; left: 0; padding: 1rem; background-color: #333; color: #9d9d9d;">
+        <p style="margin:0">&copy;&nbsp;<%=java.time.Year.now().toString()%>&nbsp;Masaryk University</p>
     </footer>
 </div>
 <!-- javascripts placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src='<c:url value="/resources/javascript/application.js" />'></script>
-
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+<script src='<c:url value="/resources/javascript/GoogleOAuth.js"/>'></script>
 
 <jsp:invoke fragment="foot"/>
 </body>

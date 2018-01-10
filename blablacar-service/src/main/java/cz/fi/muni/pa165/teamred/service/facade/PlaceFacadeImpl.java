@@ -197,6 +197,33 @@ public class PlaceFacadeImpl implements PlaceFacade {
     }
 
     @Override
+    public List<RideDTO> getRidesWithOriginatingAndDestinationPlaceByName(String originatingPlace, String destinationPlace) {
+
+        if((originatingPlace == null || originatingPlace.isEmpty()) &&
+                (destinationPlace == null || destinationPlace.isEmpty())) {
+            throw new IllegalArgumentException();
+        } else if (originatingPlace == null || originatingPlace.isEmpty()) {
+            //TODO: Get with destination
+        } else if (destinationPlace == null || destinationPlace.isEmpty()) {
+            //TODO: Get with origin
+        }
+
+        log.debug("facade getRidesWithOriginatingAndDestinationPlaceByName({})", originatingPlace, destinationPlace);
+
+        List<Ride> resultRideList = placeService
+                .findRidesWithOriginatingAndDestinationPlaceByName(originatingPlace, destinationPlace);
+
+        if (resultRideList == null) {
+            log.debug("No rides with criteria have been found been found");
+            return null;
+        }
+
+        log.debug("Rides with criteria have been retrieved, amount of rides: " + resultRideList.size());
+
+        return beanMappingService.mapTo(resultRideList, RideDTO.class);
+    }
+
+    @Override
     public List<PlaceDTO> getAllPlaces() {
 
         log.debug("facade getAllPlaces({})");

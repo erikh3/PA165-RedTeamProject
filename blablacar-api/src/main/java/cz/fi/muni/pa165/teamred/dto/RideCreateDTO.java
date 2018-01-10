@@ -3,6 +3,7 @@ package cz.fi.muni.pa165.teamred.dto;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -28,9 +29,11 @@ public class RideCreateDTO {
     private  Long destinationPlaceId;
 
     @NotNull
+    @Min(value = 1,message = "Cannot be free")
     private double seatPrize;
 
     @NotNull
+    @Min(value = 1, message = "Must be at least one seat available")
     private int seatsAvailable;
 
 

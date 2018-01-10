@@ -3,3 +3,48 @@ Stylesheet used in PA165 Project
 
 Ride related elements stylesheet.
  */
+
+
+.background{
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    height: 300px;
+}
+.background-Brno{
+    background:url("../images/ride/brno.JPG");
+}
+.background-Bratislava{
+    background:url("../images/ride/bratislava.jpg");
+}
+.background-Praha{
+    background:url("../images/ride/praha.jpg");
+}
+.background-Ostrava{
+    background:url("../images/ride/ostrava.jpg");
+}
+.background-Košice{
+    background:url("../images/ride/kosice.jpg");
+}
+.no-padding{
+    padding: 0;
+}
+.green-shader{
+    background-color: rgba(120,218,85,0.7);
+    width: 100%;
+    height:100%;
+    padding: 2em;
+}
+.c-white{
+    color: #fff;
+}
+h2{
+    margin: 0;
+    margin-bottom: 1em;
+}
+#background1,
+#background2{
+    width: 100%;
+    height:100%;
+    background-size: cover;
+}

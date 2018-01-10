@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -36,24 +37,29 @@ import java.util.Objects;
 public class WelcomeController {
 
     @Autowired
-    private UserSession userSession;
-
-    @Autowired
     private UserFacade userFacade;
 
     @Autowired
     private PlaceFacade placeFacade;
 
     @Autowired
-    private UserSession session;
+    private UserSession userSession;
 
     private static final JacksonFactory jacksonFactory = new JacksonFactory();
     private static final HttpTransport transport = new NetHttpTransport();
     private static final String clientId = "332736943859-mrr2173fc1kseq1l2i4h0na68mnpmbp3.apps.googleusercontent.com";
 
+    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
+            .setAudience(Collections.singletonList(clientId))
+            .build();
+
     //matches all url "/*"
     @RequestMapping
     public String doWelcome(Model model){
+
+        if(userSession.isUserIsLoggedIn()) {
+            return "homepage";
+        }
         //Return to view
         return "welcome";
     }
@@ -69,29 +75,18 @@ public class WelcomeController {
         }
 
         String token = paramMap.get("idtoken");
-
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
-                .setAudience(Collections.singletonList(clientId))
-                .build();
-
         GoogleIdToken idToken = null;
+
         try {
             idToken = verifier.verify(token);
-        } catch (GeneralSecurityException e) {
+        } catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "welcome";
-        } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "welcome";
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "welcome";
+            return "redirect:/";
         }
 
         if (idToken == null) {
-            redirectAttributes.addFlashAttribute("alert_warning", "Seems like you are here for the first time..." +
-                    "We can not create an account for you now. Try again later, please.");
-            return "welcome";
+            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            return "redirect:/";
         }
         GoogleIdToken.Payload payload = idToken.getPayload();
 
@@ -101,7 +96,7 @@ public class WelcomeController {
         try{
             foundUser = userFacade.findUserByLoginId(googleId);
         }catch (NullPointerException e) {
-            //this means that user is null
+            //this means that user is null - doesn't exist in our app yet
         }
 
         //Create new user in our app
@@ -123,62 +118,67 @@ public class WelcomeController {
             } catch (Exception ex) {
                 redirectAttributes.addFlashAttribute("alert_warning", "Seems like you are here for the first time..." +
                     "We can not create an account for you now. Try again later, please.");
-                return "welcome";
+                return "redirect:/";
             }
         }
 
-        if(foundUser != null) {
-            Long id = foundUser.getId();
-            session.setUserId(foundUser.getId());
-            session.setAdmin(foundUser.isAdmin());
-            session.setUser(foundUser);
-            session.setUserIsLoggedIn(true);
+        if(foundUser == null) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Seems like you are here for the first time..." +
+                    "We can not create an account for you now. Try again later, please.");
+            return "redirect:/";
         }
+
+        userSession.setUserId(foundUser.getId());
+        userSession.setAdmin(foundUser.isAdmin());
+        userSession.setUser(foundUser);
+        userSession.setUserIsLoggedIn(true);
 
         String givenName = (String) payload.get("given_name");
         redirectAttributes.addFlashAttribute("alert_success", "Hello " + givenName + "! You have been successfully logged in");
 
-        return "welcome";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/tokensignout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String doTokenSignOut(@RequestParam Map<String,String> paramMap,
                                  ModelMap modelMap,
+                                 RedirectAttributes redirectAttributes) {
+
+        userSession.setUserIsLoggedIn(false);
+        userSession.setAdmin(false);
+        userSession.setUser(null);
+        userSession.setUserId(null);
+
+        redirectAttributes.addFlashAttribute("alert_success", "You have been successfully signed out!");
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/tokensignoutsecure", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String doTokenSignOutVerified(@RequestParam Map<String,String> paramMap,
+                                 ModelMap modelMap,
                                  RedirectAttributes redirectAttributes,
-                                 UriComponentsBuilder uriBuilder) {
+                                 UriComponentsBuilder uriBuilder,
+                                 HttpServletRequest request) {
 
         if(paramMap == null && paramMap.get("idtoken") == null) {
-            //Allow to sign out without token - token verification is not possible
-            session.setUserId(null);
-
-            redirectAttributes.addFlashAttribute("alert_success", "You have been successfully signed out!");
-            return "welcome";
+            redirectAttributes.addFlashAttribute("alert_danger", "No token submitted for secure sign out! " +
+                    "Token required for identity verification...");
+            return "redirect:" + request.getRequestURI();
         }
 
         String token = paramMap.get("idtoken");
-
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
-                .setAudience(Collections.singletonList(clientId))
-                .build();
-
         GoogleIdToken idToken = null;
 
         try {
             idToken = verifier.verify(token);
-        } catch (GeneralSecurityException e) {
+        } catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
-        } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+            return "redirect:" + request.getRequestURI();
         }
 
         if (idToken == null) {
             redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
-            return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+            return "redirect:" + request.getRequestURI();
         }
         GoogleIdToken.Payload payload = idToken.getPayload();
 
@@ -188,39 +188,42 @@ public class WelcomeController {
         try{
             foundUser = userFacade.findUserByLoginId(googleId);
         }catch (NullPointerException e) {
-            //this means  that user is null
+            //this means  that user is null - app DB possibly unaccesible
         }
 
         if (foundUser == null) {
-            redirectAttributes.addFlashAttribute("alert_danger", "Token verification failed! Try again later...");
+            redirectAttributes.addFlashAttribute("alert_danger", "Could not verify your identity. Try again later...");
             return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
         }
 
-        if(Objects.equals(session.getUserId(),foundUser.getId())) {
+        if(Objects.equals(userSession.getUserId(),foundUser.getId())) {
             //Token verification successful
-            session.setUserId(null);
+            userSession.setUserIsLoggedIn(false);
+            userSession.setAdmin(false);
+            userSession.setUser(null);
+            userSession.setUserId(null);
 
             redirectAttributes.addFlashAttribute("alert_success", "You have been successfully signed out!");
-
-            userSession.setUserIsLoggedIn(false);
-            userSession.setUser(null);
-            userSession.setAdmin(false);
-
-            return "welcome";
+            return "redirect:/";
 
         }
 
-        return "redirect:" + uriBuilder.path("/user").buildAndExpand().encode().toUriString();
+        return "redirect:" + request.getRequestURI();
     }
 
     @ModelAttribute(name = "placeForm")
-    public PlaceForm addPlaceForm(){return new PlaceForm();}
+    public PlaceForm addPlaceForm(){
+        return new PlaceForm();
+    }
 
     @ModelAttribute(name = "places")
-    public List<PlaceDTO> addPlaces(){return placeFacade.getAllPlaces();}
+    public List<PlaceDTO> addPlaces(){
+        return placeFacade.getAllPlaces();
+    }
 
     @ModelAttribute(name = "userSession")
     public UserSession addUserSession(){
         return userSession;
     }
+
 }

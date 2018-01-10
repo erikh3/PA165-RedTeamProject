@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%--
   Created by IntelliJ IDEA.
@@ -13,28 +13,26 @@
   Time: 11:17 AM
   To change this template use File | Settings | File Templates.
 --%>
-<fmt:message key = "page.welcome.title" var = "title"/>
-<blablacar-tags:page-template title="${title}">
+<blablacar-tags:page-template title="Passenger rides">
     <jsp:attribute name="head">
         <!--Load only necessary files-->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/ride.css"  crossorigin="anonymous">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/ride.css"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/style.css"
+              crossorigin="anonymous">
     </jsp:attribute>
     <jsp:attribute name="body">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a class="btn btn-default" href="${pageContext.request.contextPath}/ride/list">
-                            All rides
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        <nav>
+            <a class="btn btn-default" href="${pageContext.request.contextPath}/ride/list">
+                All rides
+            </a>
         </nav>
+        <div class="jumbotron">
+
         <c:if test="${fn:length(rides) eq 0}">
                         <p>No rides</p>
         </c:if>
-        <c:if test="${not (fn:length(rides) eq 0)}">
+            <c:if test="${not (fn:length(rides) eq 0)}">
             <table class="table rides-list table-hover">
                 <thead>
                 <tr>
@@ -52,7 +50,7 @@
                                 <c:out value="${ride.driver.name}"></c:out>
                             </td>
                             <td>
-                                <c:out value="${ride.departure}"></c:out>
+                                <fmt:formatDate value="${ride.departure}" pattern="dd.MM.yyyy" />
                             </td>
                             <td>
                                 <c:out value="${ride.sourcePlace.name}"></c:out>
@@ -67,14 +65,24 @@
                                 <c:out value="${ride.seatPrice}"></c:out>
                             </td>
                             <td>
-                                <c:if test = "${(not fn:contains(ride.passengers, userSession.user)) && (not (ride.driver.id eq userSession.userId)) && (ride.availableSeats gt 0) }">
-                                    <form:form action="${pageContext.request.contextPath}/ride/addPassenger" id="join-ride" method="get">
-                                        <button type="submit" class="btn btn-primary" name="rideId" value="${ride.id}">Join ride</button>
+                                <a class="btn btn-default"
+                                   href="${pageContext.request.contextPath}/ride/showRide/${ride.id}">View Ride</a>
+                            </td>
+                            <td>
+                                <c:if test="${(not fn:contains(ride.passengers, userSession.user)) && (not (ride.driver.id eq userSession.userId)) && (ride.availableSeats gt 0) }">
+                                    <form:form action="${pageContext.request.contextPath}/ride/addPassenger"
+                                               id="join-ride" method="get">
+                                        <button type="submit" class="btn btn-primary" name="rideId" value="${ride.id}">
+                                            Join ride
+                                        </button>
                                     </form:form>
                                 </c:if>
-                                <c:if test = "${fn:contains(ride.passengers, userSession.user)}">
-                                    <form:form action="${pageContext.request.contextPath}/ride/removePassenger" id="join-ride" method="get">
-                                        <button type="submit" class="btn btn-primary" name="rideId" value="${ride.id}">Leave ride</button>
+                                <c:if test="${fn:contains(ride.passengers, userSession.user)}">
+                                    <form:form action="${pageContext.request.contextPath}/ride/removePassenger"
+                                               id="join-ride" method="get">
+                                        <button type="submit" class="btn btn-primary" name="rideId" value="${ride.id}">
+                                            Leave ride
+                                        </button>
                                     </form:form>
                                 </c:if>
                             </td>
@@ -83,6 +91,7 @@
             </c:forEach>
             </table>
         </c:if>
+        </div>
 
     </jsp:attribute>
     <jsp:attribute name="foot">

@@ -11,49 +11,73 @@
   Time: 11:17 AM
   To change this template use File | Settings | File Templates.
 --%>
-<fmt:message key = "page.welcome.title" var = "title"/>
-<blablacar-tags:page-template title="${title}">
+<blablacar-tags:page-template title="Create New Ride">
     <jsp:attribute name="head">
         <!--Load only necessary files-->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/ride.css"  crossorigin="anonymous">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/ride.css"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/style.css"
+              crossorigin="anonymous">
     </jsp:attribute>
     <jsp:attribute name="body">
 
-        <form:form action="${pageContext.request.contextPath}/ride/create" id="ride-create-form" method="post" modelAttribute="rideCreateDTO" class="form-group">
-            <form:input path="driverId" type="text" value="${rideCreateDTO.driverId}" cssClass="hidden" />
-            <label for="select-from">From</label>
-            <form:select id="select-from" path="sourcePlaceId" type="text" form="ride-create-form" class="form-control" >
-                <c:forEach items="${places}" var="placeF">
-                   <option value="${placeF.id}">
-                       ${placeF.name}
-                   </option>
-                </c:forEach>
-            </form:select>
-            <label for="select-to">To</label>
-            <form:select id="select-to" path="destinationPlaceId" type="text" form="ride-create-form" class="form-control" >
-                <c:forEach items="${places}" var="placeT">
-                   <option value="${placeT.id}">
-                           ${placeT.name}
-                   </option>
-                </c:forEach>
-            </form:select>
-            <label for="input-departure">Departure time</label>
-            <form:input id="input-departure" path="departure" type="date" form="ride-create-form" class="form-control"/>
-            <label for="input-seat-prize">Seat Prize</label>
-            <form:input id="input-seat-prize" path="seatPrize" type="number" class="form-control" />
-            <label for="input-seats-available">Seats Available</label>
-            <form:input id="input-seats-available" path="seatsAvailable" type="number" class="form-control" />
+        <div class="row">
 
-            <button type="submit" class="btn btn-default">Create ride</button>
-        </form:form>
+            <form:form action="${pageContext.request.contextPath}/ride/create" id="ride-create-form" method="post"
+                       modelAttribute="rideCreateDTO" cssClass="form-horizontal">
 
-        <script>
-            $(document).ready(function(){
+                <div class="form-group ${name_error?'has-error':''}">
+                    <form:input path="driverId" type="text" value="${rideCreateDTO.driverId}" cssClass="hidden"/>
 
-            });
-        </script>
+                    <form:label path="sourcePlaceId" cssClass="col-sm-2 control-label">From</form:label>
+                    <div class="col-sm-10">
+                        <form:select id="select-from" path="sourcePlaceId" type="text" form="ride-create-form"
+                                     cssClass="form-control">
+                            <c:forEach items="${places}" var="placeF">
+                               <option value="${placeF.id}">
+                                       ${placeF.name}
+                               </option>
+                            </c:forEach>
+                        </form:select>
+                        <form:errors path="sourcePlaceId" cssClass="help-block"/>
+                    </div>
 
+                    <form:label path="destinationPlaceId" cssClass="col-sm-2 control-label">To</form:label>
+                    <div class="col-sm-10">
+                        <form:select id="select-to" path="destinationPlaceId" type="text" form="ride-create-form"
+                                     cssClass="form-control">
+                            <c:forEach items="${places}" var="placeT">
+                               <option value="${placeT.id}">
+                                       ${placeT.name}
+                               </option>
+                            </c:forEach>
+                        </form:select>
+                        <form:errors path="destinationPlaceId" cssClass="help-block"/>
+                    </div>
 
+                    <form:label path="departure" cssClass="col-sm-2 control-label">Departure time</form:label>
+                    <div class="col-sm-10">
+                        <form:input id="input-departure" path="departure" type="date" form="ride-create-form"
+                                    cssClass="form-control"/>
+                        <form:errors path="departure" cssClass="help-block"/>
+                    </div>
+
+                    <form:label path="seatPrize" cssClass="col-sm-2 control-label">Seat Prize</form:label>
+                    <div class="col-sm-10">
+                        <form:input id="input-seat-prize" path="seatPrize" type="number" cssClass="form-control"/>
+                        <form:errors path="seatPrize" cssClass="help-block"/>
+                    </div>
+
+                    <form:label path="seatsAvailable" cssClass="col-sm-2 control-label">Seats Available</form:label>
+                    <div class="col-sm-10">
+                        <form:input id="input-seats-available" path="seatsAvailable" type="number" cssClass="form-control"/>
+                        <form:errors path="seatsAvailable" cssClass="help-block"/>
+                    </div>
+
+                    <button type="submit" class="btn btn-default pull-right" style="margin-top:1%; margin-right:15px;">Create ride</button>
+                </div>
+            </form:form>
+        </div>
 
     </jsp:attribute>
     <jsp:attribute name="foot">

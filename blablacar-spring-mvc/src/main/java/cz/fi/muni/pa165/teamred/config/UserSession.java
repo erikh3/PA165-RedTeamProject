@@ -38,7 +38,7 @@ public class UserSession {
         this.user = user;
     }
 
-    public boolean isAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
