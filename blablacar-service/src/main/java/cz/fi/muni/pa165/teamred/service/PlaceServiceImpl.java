@@ -65,7 +65,8 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Ride> findRidesWithOriginatingAndDestinationPlace(Long originatingPlaceId, Long destinationPlaceId) throws IllegalArgumentException {
+    public List<Ride> findRidesWithOriginatingAndDestinationPlace(Long originatingPlaceId, Long destinationPlaceId)
+            throws IllegalArgumentException {
 
         if(originatingPlaceId == null || destinationPlaceId == null) {
             throw new IllegalArgumentException();
@@ -73,6 +74,26 @@ public class PlaceServiceImpl implements PlaceService {
 
         Place placeOriginating = placeDao.findById(originatingPlaceId);
         Place placeDestination = placeDao.findById(destinationPlaceId);
+
+        return findRidesWithOriginatingAndDestinationPlaceByObjects(placeOriginating,placeDestination);
+    }
+
+    @Override
+    public List<Ride> findRidesWithOriginatingAndDestinationPlaceByName(String originatingPlace, String destinationPlace)
+            throws IllegalArgumentException {
+
+        if(originatingPlace == null && destinationPlace == null) {
+            throw new IllegalArgumentException();
+        }
+
+        Place placeOriginating = placeDao.findByName(originatingPlace);
+        Place placeDestination = placeDao.findByName(destinationPlace);
+
+        return findRidesWithOriginatingAndDestinationPlaceByObjects(placeOriginating,placeDestination);
+    }
+
+    @Override
+    public List<Ride> findRidesWithOriginatingAndDestinationPlaceByObjects(Place placeOriginating, Place placeDestination) {
 
         if(placeOriginating == null || placeDestination == null) {
             return null;

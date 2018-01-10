@@ -77,4 +77,32 @@ public interface PlaceService {
      */
     List<Ride> findRidesWithOriginatingAndDestinationPlace(Long originatingPlaceId, Long destinationPlaceId)
             throws IllegalArgumentException;
+
+    /**
+     * Retrieves all {@link cz.fi.muni.pa165.teamred.entity.Ride} originating in one place and having destination in
+     * another place
+     *
+     * @param originatingPlace place for which originating {@link cz.fi.muni.pa165.teamred.entity.Ride}
+     *                           will be considered
+     * @param destinationPlace place for which destination {@link cz.fi.muni.pa165.teamred.entity.Ride}
+     *                           will be considered
+     * @return found rides with originating place and destination place specified or null if none found
+     * @throws IllegalArgumentException
+     */
+    List<Ride> findRidesWithOriginatingAndDestinationPlaceByName(String originatingPlace, String destinationPlace)
+            throws IllegalArgumentException;
+
+    /**
+     * Retrieves all {@link cz.fi.muni.pa165.teamred.entity.Ride} originating in one place and having destination in
+     * another place
+     *
+     * @param placeOriginating place for which originating {@link cz.fi.muni.pa165.teamred.entity.Ride}
+     *                           will be considered
+     * @param placeDestination place for which destination {@link cz.fi.muni.pa165.teamred.entity.Ride}
+     *                           will be considered
+     * @return found rides with originating place and destination place specified or null if none found
+     * @throws IllegalArgumentException
+     */
+    List<Ride> findRidesWithOriginatingAndDestinationPlaceByObjects(Place placeOriginating, Place placeDestination);
+
 }

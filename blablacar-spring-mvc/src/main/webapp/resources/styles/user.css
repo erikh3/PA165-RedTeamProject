@@ -8,7 +8,6 @@ User related elements stylesheet.
     background-position: top;
     background-size: 50%;
 }
-
 .green-shader{
     background-color: rgba(120,218,85,0.5);
     height:100%;
@@ -69,8 +68,9 @@ User related elements stylesheet.
 
 .top-button:hover,
 .bottom-button:hover{
-    background-color:rgba(120,218,85,0.7);
+    background-color:rgba(120,218,85,0.8);
     transition: .3s ease-in;
+    text-decoration: none;
 }
 
 

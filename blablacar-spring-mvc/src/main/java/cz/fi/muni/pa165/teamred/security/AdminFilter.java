@@ -3,7 +3,6 @@ package cz.fi.muni.pa165.teamred.security;
 import cz.fi.muni.pa165.teamred.config.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
@@ -12,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //TODO: LIST URL WITH ONLY ADMIN ACCESS
-@WebFilter(urlPatterns = {"/admin/*"})
+@WebFilter(urlPatterns = {"/comment/manage","/comment/delete"})
 public class AdminFilter implements Filter {
 
     @Autowired
-    private UserSession session;
+    private UserSession userSession;
 
     private WebApplicationContext appContext;
 
@@ -29,9 +28,9 @@ public class AdminFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        session = appContext.getBean(UserSession.class);
+        userSession = appContext.getBean(UserSession.class);
 
-        if (session.getUserId() == null || !session.isAdmin()) {
+        if (userSession.getUserId() == null || !userSession.getIsAdmin()) {
             response401((HttpServletResponse) servletResponse);
             return;
         }

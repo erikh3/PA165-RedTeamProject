@@ -204,12 +204,11 @@ public class RideFacadeTest {
     @Test
     void deleteRide() {
         doNothing().when(rideService).deleteRide(any());
+        when(rideService.findById(ride1.getId())).thenReturn(ride1);
 
         rideFacade.deleteRide(ride1.getId());
 
-        Ride testRide = new Ride();
-        testRide.setId(ride1.getId());
-        verify(rideService).deleteRide(testRide);
+        verify(rideService).deleteRide(ride1);
     }
 
     // Finding tests

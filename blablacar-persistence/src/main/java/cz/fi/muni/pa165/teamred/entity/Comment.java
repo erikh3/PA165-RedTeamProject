@@ -3,7 +3,6 @@ package cz.fi.muni.pa165.teamred.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Persistent entity Comment
@@ -91,7 +90,6 @@ public class Comment {
         this.ride = ride;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,14 +97,17 @@ public class Comment {
 
         Comment comment = (Comment) o;
 
-        return (Objects.equals(getCreated(), comment.getCreated()) &&
-                Objects.equals(getAuthor(), comment.getAuthor()) &&
-                Objects.equals(getRide(), comment.getRide()));
+        if (getCreated() != null ? !getCreated().equals(comment.getCreated()) : comment.getCreated() != null)
+            return false;
+        if (getText() != null ? !getText().equals(comment.getText()) : comment.getText() != null) return false;
+        if (getAuthor() != null ? !getAuthor().equals(comment.getAuthor()) : comment.getAuthor() != null) return false;
+        return getRide() != null ? getRide().equals(comment.getRide()) : comment.getRide() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = 31 + (getCreated() != null ? getCreated().hashCode() : 0);
+        int result = getCreated() != null ? getCreated().hashCode() : 0;
+        result = 31 * result + (getText() != null ? getText().hashCode() : 0);
         result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
         result = 31 * result + (getRide() != null ? getRide().hashCode() : 0);
         return result;

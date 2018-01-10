@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 
 <%--<fmt:message key = "page.user.title" var = "title"/>--%>
@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/user.css" crossorigin="anonymous">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/styles/style.css"
               crossorigin="anonymous">
+
     </jsp:attribute>
     <jsp:attribute name="body">
 
@@ -84,7 +85,6 @@
                 </div>
             </div>
         </div>
-
     </jsp:attribute>
     <jsp:attribute name="foot">
         <!--Load only necessary files-->

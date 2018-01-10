@@ -48,8 +48,6 @@ public class RideFacadeImpl implements RideFacade {
     public Long createRide(RideCreateDTO rideCreateDTO) {
         Ride mappedRide = beanMappingService.mapTo(rideCreateDTO, Ride.class);
 
-//        User mappedUser = beanMappingService.mapTo(userDTO, User.class);
-
         User user = userService.findUserById(rideCreateDTO.getDriverId());
         mappedRide.setDriver(user);
         user.addRideAsDriver(mappedRide);
@@ -72,8 +70,12 @@ public class RideFacadeImpl implements RideFacade {
 
     @Override
     public void deleteRide(Long rideId) {
-        Ride ride = new Ride();
-        ride.setId(rideId);
+        Ride ride = rideService.findById(rideId);
+
+        if(ride == null) {
+            throw new IllegalArgumentException();
+        }
+
         rideService.deleteRide(ride);
     }
 
@@ -81,7 +83,7 @@ public class RideFacadeImpl implements RideFacade {
     public RideDTO getRideWithId(Long rideId) {
         Ride ride = rideService.findById(rideId);
         log.debug("Found Ride in " + RideFacadeImpl.class + "with paramenters" + ride.toString());
-        return (ride == null) ? null : beanMappingService.mapTo(ride, RideDTO.class);
+        return beanMappingService.mapTo(ride, RideDTO.class);
     }
 
     @Override

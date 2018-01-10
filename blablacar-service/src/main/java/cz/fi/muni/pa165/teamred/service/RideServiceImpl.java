@@ -171,6 +171,9 @@ public class RideServiceImpl implements RideService {
         if (ride.getSourcePlace() == null){
             return false;
         }
+        if (ride.getDestinationPlace().equals(ride.getSourcePlace())){
+            return false;
+        }
         //<0 or <= 0 ?
         if (ride.getSeatPrice() <= 0){
             return false;
@@ -187,24 +190,10 @@ public class RideServiceImpl implements RideService {
         if (user == null) {
             return false;
         }
-        /*
-        String nickname = user.getNickname();
-        if (nickname == null || nickname.length() == 0) {
-            return false;
-        }
-        */
         String name = user.getName();
         if (name == null || name.length() == 0) {
             return false;
         }
-        /*
-        String surname = user.getSurname();
-        if (surname == null || surname.length() == 0) {
-            return false;
-        }
-        */
-        /*Checking birthdate with actual time check*/
-
         return true;
     }
 }

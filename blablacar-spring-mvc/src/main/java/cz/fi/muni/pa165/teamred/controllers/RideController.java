@@ -40,7 +40,6 @@ public class RideController {
     private PlaceFacade placeFacade;
     @Autowired
     private UserFacade userFacade;
-
     @Autowired
     private UserSession userSession;
 
@@ -54,16 +53,18 @@ public class RideController {
 
         log.debug("create(ride={})", ride);
 
+        if (ride.getDestinationPlaceId().equals(ride.getSourcePlaceId())){
+            model.addAttribute("alert_danger", "Destination place and source place are the same.");
+            return "rides/new";
+        }
         if (!isValidBinding(result, model)) {
-            model.addAttribute("rideCreateDTO", ride);
-            String referer = request.getHeader("Referer");
-            return "redirect:" + referer;
+            return "rides/new";
         }
 
         //create
         Long id = rideFacade.createRide(ride);
         //report success
-        redirectAttributes.addFlashAttribute("alert_success", "Ride " + id + " was created");
+        redirectAttributes.addFlashAttribute("alert_success", "Ride was created");
         //redirect to ride with this comment
         return "redirect:/ride/list-driver";
     }
@@ -83,14 +84,19 @@ public class RideController {
     }
 
 
+
     @RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String addRideForm(ModelMap model) {
+    public String createNewRide(){
+        return "rides/new";
+    }
+
+    @ModelAttribute
+    public void addRideForm(ModelMap model) {
         RideCreateDTO newRide = new RideCreateDTO();
         List<PlaceDTO> places = new ArrayList<>(placeFacade.getAllPlaces());
         newRide.setDriverId(userSession.getUserId());
         model.addAttribute("rideCreateDTO", newRide);
         model.addAttribute("places" , places);
-        return "rides/new";
     }
 
     @RequestMapping(value = "/showRide/{rideId}", method = RequestMethod.GET)
@@ -127,9 +133,9 @@ public class RideController {
         rideFacade.editAvailableSeats(ride.getId(), ride.getAvailableSeats());
         rideFacade.editDeparture(ride.getId(), ride.getDeparture());
 
-        redirectAttributes.addFlashAttribute("alert_success", "Ride " + userSession.getUserId() + " was udated");
+        redirectAttributes.addFlashAttribute("alert_success", "Ride " + userSession.getUserId() + " was updated");
 
-        return "redirect:ride/showRide/" + ride.getId();
+        return "redirect:/ride/showRide/" + ride.getId();
     }
 
     @RequestMapping(value = "/addPassenger")
@@ -146,8 +152,8 @@ public class RideController {
 
         model.addAttribute("rides", rideFacade.getAllRides());
 
-        redirectAttributes.addFlashAttribute("alert_success", "Joined ride " + rideId);
-        return "redirect:/ride/list";
+        redirectAttributes.addFlashAttribute("alert_success", "Congratulations, you joined ride!");
+        return "redirect:/ride/list-pass";
     }
 
     @RequestMapping(value = "/removePassenger")
@@ -163,7 +169,7 @@ public class RideController {
         removePassengerDTO.setRideId(rideId);
         rideFacade.removePassenger(removePassengerDTO);
 
-        redirectAttributes.addFlashAttribute("alert_success", "Removed from ride " + rideId);
+        redirectAttributes.addFlashAttribute("alert_success", "Removed from ride.");
         return "redirect:/ride/list";
     }
 
@@ -199,23 +205,42 @@ public class RideController {
         return "rides/all";
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String listSearchResult(Model model, HttpServletRequest request, HttpServletResponse response) {
+        model.addAttribute("placeForm", new PlaceForm());
+        model.addAttribute("places", placeFacade.getAllPlaces());
+        return "rides/search"; //create new view with search on top
+    }
+
     @RequestMapping("")
     public String redirectTo404Page(Model model, HttpServletRequest request, HttpServletResponse response) {
         return "error404";
     }
 
-    @RequestMapping(value = "/find", method = RequestMethod.POST)
-    public String findRides(@Valid @ModelAttribute("placeForm") PlaceForm placeForm,
-                                   BindingResult result,
-                                   Model model,
-                                   RedirectAttributes redirectAttributes,
-                                   HttpServletResponse response,
-                                   HttpServletRequest request) {
-        model.addAttribute("rides",placeFacade.getRidesWithOriginatingAndDestinationPlace(placeForm.getFromId(),placeForm.getToId()));
-        model.addAttribute("places", placeFacade.getAllPlaces());
-        return "welcome";
+//    @RequestMapping(value = "/find", method = RequestMethod.POST)
+//    public String findRides(@Valid @ModelAttribute("placeForm") PlaceForm placeForm,
+//                                   Model model,
+//                                   BindingResult result,
+//                                   RedirectAttributes redirectAttributest) {
+//        model.addAttribute("rides", placeFacade.getRidesWithOriginatingAndDestinationPlace(Long.valueOf(placeForm.getFrom()),Long.valueOf(placeForm.getTo())));
+//        return "rides/search";
+//    }
+    @RequestMapping(value = "/connection", method = RequestMethod.GET)
+    public String listSearchResult(@RequestParam(required=true) String placeFrom,
+                                   @RequestParam(required=true) String placeTo,
+                                   Model model) {
+
+        model.addAttribute("rides",placeFacade.getRidesWithOriginatingAndDestinationPlaceByName(placeFrom,placeTo));
+        return "rides/all"; //create new view with search on top
     }
 
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    public String findRides(@Valid @ModelAttribute("placeForm") PlaceForm placeForm,
+                            BindingResult result,
+                            RedirectAttributes redirectAttributest) {
+
+        return "redirect:/ride/connection?placeFrom=" + placeForm.getFrom() + "&placeTo=" + placeForm.getTo();
+    }
 
 
     @ModelAttribute(name = "userSession")

@@ -77,6 +77,15 @@ public interface PlaceFacade {
     List<RideDTO> getRidesWithOriginatingAndDestinationPlace(Long originatingPlaceId, Long destinationPlaceId);
 
     /**
+     * Retrieves all rides originating in place and having destination in another place
+     *
+     * @param originatingPlace place for which originating rides will be considered
+     * @param destinationPlace place for which destination rides will be considered
+     * @return found rides with originating place and destination place specified or null if none found
+     */
+    List<RideDTO> getRidesWithOriginatingAndDestinationPlaceByName(String originatingPlace, String destinationPlace);
+
+    /**
      * Retrieves all places
      *
      * @return list of places
