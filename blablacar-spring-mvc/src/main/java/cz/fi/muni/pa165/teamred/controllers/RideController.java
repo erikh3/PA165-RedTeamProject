@@ -152,8 +152,8 @@ public class RideController {
 
         model.addAttribute("rides", rideFacade.getAllRides());
 
-        redirectAttributes.addFlashAttribute("alert_success", "Joined ride " + rideId);
-        return "redirect:/ride/list";
+        redirectAttributes.addFlashAttribute("alert_success", "Congratulations, you joined ride!");
+        return "redirect:/ride/list-pass";
     }
 
     @RequestMapping(value = "/removePassenger")
@@ -169,7 +169,7 @@ public class RideController {
         removePassengerDTO.setRideId(rideId);
         rideFacade.removePassenger(removePassengerDTO);
 
-        redirectAttributes.addFlashAttribute("alert_success", "Removed from ride " + rideId);
+        redirectAttributes.addFlashAttribute("alert_success", "Removed from ride.");
         return "redirect:/ride/list";
     }
 
